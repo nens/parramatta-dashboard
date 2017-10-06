@@ -1,0 +1,71 @@
+.HeaderImage {
+  width: 300px;
+  padding: 10px 0 10px 10px;
+}
+.GridLayout {
+}
+.GridCell {
+  width: 300px;
+  height: 300px;
+  background-color: #fff;
+  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.29);
+  border: 2px solid #fff;
+}
+.TileTitle {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  border-bottom: 1px solid #cdcdcd;
+  background-color: #fff;
+  overflow: hidden;
+}
+.TileTitle div {
+  position: absolute;
+  color: #747474;
+  top: 12px;
+  left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 40px);
+  font-size: 14px;
+}
+.TileHandle {
+  position: absolute;
+  right: 5px;
+  top: 7px;
+  color: #d8d8d8;
+}
+.LogoutButton {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  right: 10px;
+  top: 10px;
+  width: 145px;
+  height: 40px;
+  text-align: center;
+  background: #ffffff;
+  color: #333;
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+}
+.LogoutButton i {
+  position: absolute;
+  font-size: 15px;
+  top: 12px;
+  left: 22px;
+}
+.LogoutButton:hover {
+  background: #eeeeee;
+}
+.Footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 12px;
+  padding: 5px;
+  color: #ccc;
+}

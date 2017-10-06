@@ -1,0 +1,26 @@
+.StatisticsTile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+}
+.StatisticsTile div {
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  flex-direction: column;
+  text-align: center;
+
+}
+.StatisticsTile div p {
+    font-size: 50px;
+    color: #747474;
+    margin: 20px;
+}
+.StatisticsTile div span {
+    font-size: 20px;
+    color: #747474;
+}

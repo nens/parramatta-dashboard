@@ -1,0 +1,7 @@
+.MapTile {}
+.MapStyle{
+  position: absolute;
+  height: calc(100% - 40px);
+  bottom: -2px;
+  width: 100%;
+}

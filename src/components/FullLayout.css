@@ -1,0 +1,77 @@
+.FullLayout {
+  position: relative;
+  height: 100%;
+}
+.TitleBar {
+  position: absolute;
+  height: 50px;
+  width: 100%;
+  box-shadow: 2px 0px 4px 2px rgba(0, 0, 0, 0.29);
+  background: #ffffff;
+  font-size: 18px;
+  color: #747474;
+  z-index: 999991;
+}
+.BackButton {
+  position: absolute;
+  cursor: pointer;
+  left: 15px;
+  top: 15px;
+  color: #747474;
+}
+.BackButton i {
+  font-size: 22px;
+}
+.Title {
+  position: absolute;
+  left: 50px;
+  top: 15px;
+  width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ViewInLizardButton {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 8px;
+  cursor: pointer;
+  color: #2196f3;
+}
+.SidebarWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 70px;
+  background-color: #fff;
+  box-shadow: 1px -6px 6px 2px rgba(0, 0, 0, 0.34);
+  width: 195px;
+  z-index: 999990;
+}
+.SidebarItem {
+  width: 150px;
+  height: 150px;
+  background-color: aliceblue;
+  box-shadow: 3px 2px 5px -1px rgba(0, 0, 0, 0.08);
+  margin: 0 10px 40px 23px;
+  position: relative;
+}
+.Active {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+  border: 1px solid #009bf2;
+  box-shadow: none;
+}
+.SidebarItemLabel {
+  position: absolute;
+  bottom: -22px;
+  text-align: center;
+  width: 100%;
+  font-size: 12px;
+  color: #747474;
+  text-transform: uppercase;
+}
