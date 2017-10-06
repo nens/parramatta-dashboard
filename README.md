@@ -3,7 +3,7 @@ Parramatta Dashboard
 
 This is the React/Redux-based dashboard web-app for the City of Parramatta.
 
-
+![Screenshot](https://raw.githubusercontent.com/nens/parramatta-dashboard/master/screenshot.jpg)
 
 Installation
 ============
