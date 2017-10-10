@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FullMap from "./FullMap";
+import FullTimeseries from "./FullTimeseries";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
@@ -48,6 +49,14 @@ class FullLayout extends Component {
             tile={selectedTile}
             isInteractive={true}
             bbox={selectedTile.bbox}
+          />
+        );
+        break;
+      case "timeseries":
+        element =  (
+          <FullTimeseries
+            timeseries={selectedTile.timeseries}
+            tile={selectedTile}
           />
         );
         break;

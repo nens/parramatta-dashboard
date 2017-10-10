@@ -49,7 +49,7 @@ class FullMap extends Component {
         ];
 
     return (
-      <div className={styles.FullMap} style={{width, height}}>
+      <div className={styles.FullMap} style={{ width, height }}>
         <Map
           bounds={bounds}
           attributionControl={false}
@@ -66,9 +66,9 @@ class FullMap extends Component {
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
           {/* <Marker position={[-33.815, 151.0087]} /> */}
-          {tile.rasters ? tile.rasters.map(raster =>
-            this.tileLayerForRaster(raster)
-          ) : null}
+          {tile.rasters
+            ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
+            : null}
 
           {/*
           // TODO: Assets?!?!?
@@ -76,7 +76,9 @@ class FullMap extends Component {
           ) : null}
           */}
         </Map>
-        <Legend />
+        {tile.rasters.length > 0 ? (
+          <Legend tile={tile} />
+        ) : null}
       </div>
     );
   }
@@ -91,7 +93,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getRaster: uuid => dispatch(getRaster(uuid)),
+    getRaster: uuid => dispatch(getRaster(uuid))
   };
 }
 

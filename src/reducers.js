@@ -4,16 +4,18 @@ import { DateTime } from "lizard-api-client";
 import omit from "lodash/omit";
 import {
   ADD_ASSET,
+  ADD_LEGEND,
+  ADD_TILE,
+  ADD_TIMESERIES,
+  CLOSE_TILE,
+  FETCH_BOOTSTRAP,
+  FETCH_LEGEND,
   FETCH_RASTER,
+  RECEIVE_BOOTSTRAP_ERROR,
+  RECEIVE_BOOTSTRAP_SUCCESS,
   RECEIVE_RASTER,
   REMOVE_RASTER,
-  FETCH_BOOTSTRAP,
-  RECEIVE_BOOTSTRAP_SUCCESS,
-  RECEIVE_BOOTSTRAP_ERROR,
-  ADD_TILE,
-  SELECT_TILE,
-  CLOSE_TILE,
-  ADD_TIMESERIES
+  SELECT_TILE
 } from "./actions";
 
 function assets(
@@ -29,6 +31,43 @@ function assets(
       newAssetsOfType[action.id] = action.instance;
       newAssets[action.assetType] = newAssetsOfType;
       return newAssets;
+    default:
+      return state;
+  }
+}
+
+function legends(state = {}, action) {
+  let newState;
+  let newLegend;
+  switch (action.type) {
+    case FETCH_LEGEND:
+      newState = { ...state };
+
+      if (action.uuid in newState) {
+        newLegend = { ...newState[action.uuid] };
+        newLegend.isFetching = true;
+      } else {
+        newLegend = {
+          isFetching: false,
+          data: null,
+          error: null
+        };
+      }
+      newState[action.uuid] = newLegend;
+      return newState;
+    case ADD_LEGEND:
+      newState = { ...state };
+      newLegend = { ...newState[action.uuid] };
+      newLegend.isFetching = false;
+      if (action.data === null) {
+        newLegend.data = null;
+        newLegend.error = "Error while fetching raster!";
+      } else {
+        newLegend.data = action.data;
+        newLegend.error = null;
+      }
+      newState[action.uuid] = newLegend;
+      return newState;
     default:
       return state;
   }
@@ -108,74 +147,77 @@ function session(
   }
 }
 
-function tiles(state = [
-  {
-    id: 1,
-    title: "DEM Sydney",
-    type: "raster",
-    rasters: [
-      {
-        uuid: "eae92c48",
-        opacity: 0.5
-      }
-    ]
-  },
-  {
-    id: 2,
-    title: "Water depth",
-    type: "raster",
-    rasters: [
-      {
-        uuid: "a8472933-0a9d-44c2-b74a-a72614d9be2b",
-        opacity: 0.5
-      }
-    ],
-    bbox: new BoundingBox(
-      149.22454833984378, // westmost
-      -34.94448806230625, // southmost
-      152.80883789062503, // eastmost
-      -32.699488680852674 // northmost
-    ),
-    datetime: new DateTime({
-      type: "relative",
-      to: "end",
-      offset: 3 * 60 * 60 // 3 hours before end of series
-    })
-  },
-  {
-    id: 3,
-    title: "Measuring stations",
-    type: "assets",
-    assetTypes: ["measuringstation"]
-  },
-  {
-    id: 4,
-    title: "Timeseries",
-    type: "timeseries",
-    period: [
-      new DateTime({
+function tiles(
+  state = [
+    {
+      id: 1,
+      title: "DEM Sydney",
+      type: "raster",
+      rasters: [
+        {
+          uuid: "eae92c48",
+          opacity: 0.5
+        }
+      ]
+    },
+    {
+      id: 2,
+      title: "Water depth",
+      type: "raster",
+      rasters: [
+        {
+          uuid: "a8472933-0a9d-44c2-b74a-a72614d9be2b",
+          opacity: 0.5
+        }
+      ],
+      bbox: new BoundingBox(
+        149.22454833984378, // westmost
+        -34.94448806230625, // southmost
+        152.80883789062503, // eastmost
+        -32.699488680852674 // northmost
+      ),
+      datetime: new DateTime({
         type: "relative",
         to: "end",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        offset: 3 * 60 * 60 // 3 hours before end of series
       })
-    ],
-    timeseries: [
-      "34b144a0-7849-4e3f-aaa8-b0fffc86abbf",
-      "48d39158-b98e-4267-bd7e-a73fabec53c9"
-    ]
-  },
-  {
-    id: 5,
-    title: "Alarms triggered",
-    type: "statistics",
-    number: 2
-  }
-], action) {
+    },
+    {
+      id: 3,
+      title: "Measuring stations",
+      type: "assets",
+      assetTypes: ["measuringstation"]
+    },
+    {
+      id: 4,
+      title: "Timeseries",
+      type: "timeseries",
+      period: [
+        new DateTime({
+          type: "relative",
+          to: "end",
+          offset: -3 * 24 * 3600
+        }),
+        new DateTime({
+          type: "relative",
+          to: "end",
+          offset: 6 * 3600
+        })
+      ],
+      timeseries: [
+        "34b144a0-7849-4e3f-aaa8-b0fffc86abbf",
+        "48d39158-b98e-4267-bd7e-a73fabec53c9"
+      ]
+    },
+    {
+      id: 5,
+      title: "Alarms triggered",
+      type: "statistics",
+      number: 2
+    }
+  ],
+  action
+) {
   switch (action.type) {
     case ADD_TILE:
       let newState = { ...state };
@@ -232,6 +274,7 @@ function ui(
 
 const rootReducer = combineReducers({
   assets,
+  legends,
   rasters,
   session,
   tiles,

@@ -26,6 +26,7 @@ class GridLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      canMove: false,
       layout: layoutFromLocalStorage || null,
       width: window.innerWidth,
       height: window.innerHeight
@@ -89,7 +90,7 @@ class GridLayout extends Component {
     z1 = e.accelerationIncludingGravity.z;
   }
   render() {
-    const { width } = this.state;
+    const { width, canMove } = this.state;
     const { tiles, history } = this.props;
     const tileComponents = tiles.map(tile => {
       switch (tile.type) {
@@ -161,8 +162,8 @@ class GridLayout extends Component {
           <Ink />
         </div>
         <ReactGridLayout
-          isDraggable={false}
-          isResizable={false}
+          isDraggable={canMove}
+          isResizable={canMove}
           className="layout"
           layout={this.state.layout}
           cols={12}

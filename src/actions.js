@@ -7,6 +7,10 @@ import {
 // AssetActions
 export const ADD_ASSET = "ADD_ASSET";
 
+// LegendActions
+export const FETCH_LEGEND = "FETCH_LEGEND";
+export const ADD_LEGEND = "ADD_LEGEND";
+
 // RasterActions
 export const FETCH_RASTER = "FETCH_RASTER";
 export const RECEIVE_RASTER = "RECEIVE_RASTER";
@@ -36,6 +40,33 @@ export const addAsset = (assetType, id, instance) => {
     instance: instance
   };
 };
+
+
+// Legend
+export const fetchLegend = uuid => {
+  return {
+    type: FETCH_LEGEND,
+    uuid: uuid
+  };
+};
+
+export const addLegend = (uuid, legendData) => {
+  return {
+    type: ADD_LEGEND,
+    uuid: uuid,
+    data: legendData
+  };
+};
+export function getLegend(uuid, wmsInfo, styles, steps = 15) {
+  return (dispatch, getState) => {
+    dispatch(fetchLegend(uuid));
+
+    wmsInfo.getLegend(styles, steps).then(data => {
+      console.log("Retrieving data:", data);
+      dispatch(addLegend(uuid, data));
+    });
+  }
+}
 
 
 // Raster
