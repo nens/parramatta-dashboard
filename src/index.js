@@ -21,3 +21,19 @@ const Root = ({ store }) => (
 
 ReactDOM.render(<Root store={store} />, document.getElementById("root"));
 registerServiceWorker();
+
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    const HotApp = require('./App').default;
+    ReactDOM.render(
+      <IntlProvider locale={navigator.language} messages={{}}>
+        <Provider store={store}>
+          <Router>
+            <HotApp />
+          </Router>
+        </Provider>
+      </IntlProvider>,
+      document.getElementById("root")
+    );
+  });
+}
