@@ -7,7 +7,7 @@ class Legend extends Component {
       <div
         className={styles.Legend}
       >
-        Legend
+        <div className={styles.LegendTitle}>Legenda</div>
       </div>
     );
   }
