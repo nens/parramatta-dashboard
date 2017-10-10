@@ -26,8 +26,11 @@ class GridLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      layout: layoutFromLocalStorage || null
+      layout: layoutFromLocalStorage || null,
+      width: window.innerWidth,
+      height: window.innerHeight
     };
+    this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
   }
   componentWillMount() {
     if (!this.state.layout && !layoutFromLocalStorage) {
@@ -53,6 +56,7 @@ class GridLayout extends Component {
     }
   }
   componentDidMount() {
+    window.addEventListener("resize", this.handleUpdateDimensions, false);
     if (typeof window.DeviceMotionEvent !== "undefined") {
       window.addEventListener("devicemotion", this.handleShake, false);
       setInterval(() => {
@@ -68,9 +72,16 @@ class GridLayout extends Component {
     }
   }
   componentWillUnMount() {
+    window.removeEventListener("resize", this.handleUpdateDimensions, false);
     if (typeof window.DeviceMotionEvent !== "undefined") {
       window.removeEventListener("devicemotion", this.handShake, false);
     }
+  }
+  handleUpdateDimensions() {
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight
+    });
   }
   handleShake(e) {
     x1 = e.accelerationIncludingGravity.x;
@@ -78,6 +89,7 @@ class GridLayout extends Component {
     z1 = e.accelerationIncludingGravity.z;
   }
   render() {
+    const { width } = this.state;
     const { tiles, history } = this.props;
     const tileComponents = tiles.map(tile => {
       switch (tile.type) {
@@ -149,11 +161,13 @@ class GridLayout extends Component {
           <Ink />
         </div>
         <ReactGridLayout
+          isDraggable={false}
+          isResizable={false}
           className="layout"
           layout={this.state.layout}
           cols={12}
           rowHeight={30}
-          width={1200}
+          width={width}
           draggableHandle=".drag-handle"
           onLayoutChange={layout => {
             localStorage.setItem("parramatta-layout", JSON.stringify(layout));
