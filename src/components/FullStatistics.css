@@ -1,0 +1,15 @@
+.FullStatistics {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Number {
+  font-size: 125px;
+  color: #747474;
+  margin: 20px;
+}
+.Title {
+  font-size: 30px;
+  color: #747474;
+}

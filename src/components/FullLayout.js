@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FullMap from "./FullMap";
+import FullStatistics from "./FullStatistics";
 import FullTimeseries from "./FullTimeseries";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
@@ -52,8 +53,13 @@ class FullLayout extends Component {
           />
         );
         break;
+      case "statistics":
+        element = (
+          <FullStatistics tile={selectedTile} width={width} height={height} />
+        );
+        break;
       case "timeseries":
-        element =  (
+        element = (
           <FullTimeseries
             timeseries={selectedTile.timeseries}
             tile={selectedTile}
