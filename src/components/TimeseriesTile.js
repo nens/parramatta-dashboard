@@ -286,7 +286,7 @@ class TimeseriesChartComponent extends Component {
 
   render() {
     const { tile } = this.props;
-    console.log(this.props);
+
     if (!this.allTimeseriesHaveMetadata() || !this.allTimeseriesHaveEvents()) {
       return null;
     }

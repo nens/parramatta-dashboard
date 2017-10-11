@@ -1,7 +1,10 @@
 .Legend {
+  transition: all 200ms ease-in-out;
+  -moz-transition: all 200ms ease-in-out;
+  -webkit-transition: all 200ms ease-in-out;
   z-index: 9999993;
   position: absolute;
-  bottom: 0;
+  bottom: -390px;
   height: 450px;
   width: 250px;
   background-color: #fff;
@@ -10,9 +13,12 @@
   box-shadow: 2px 2px 0px 2px rgba(0, 0, 0, 0.29);
 }
 .LegendMobile {
+  transition: all 200ms ease-in-out;
+  -moz-transition: all 200ms ease-in-out;
+  -webkit-transition: all 200ms ease-in-out;
   z-index: 9999993;
   position: absolute;
-  bottom: 0;
+  bottom: -390px;
   height: 450px;
   width: 100%;
   background-color: #fff;
@@ -25,4 +31,10 @@
   color: #fff;
   padding: 20px;
   text-transform: uppercase;
+  cursor: pointer;
+}
+.LegendTitle i {
+  position: absolute;
+  right: 20px;
+  top: 18px;
 }
