@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import DocumentTitle from "react-document-title";
 import FullMap from "./FullMap";
 import FullStatistics from "./FullStatistics";
 import FullTimeseries from "./FullTimeseries";
@@ -72,48 +73,50 @@ class FullLayout extends Component {
     }
 
     return (
-      <div className={styles.FullLayout}>
-        {!isMobile ? (
-          <div
-            className={styles.SidebarWrapper}
-            style={{ height: height - 70 }}
-          >
-            <Scrollbars height={height}>
-              {allTiles.map((tile, i) => {
-                return (
-                  <NavLink to={`/full/${tile.id}`} key={i}>
-                    <div
-                      className={`${styles.SidebarItem} ${selectedTile.id ===
-                      tile.id
-                        ? styles.Active
-                        : null}`}
-                    >
-                      <div className={styles.SidebarItemLabel}>
-                        {tile.title}
+      <DocumentTitle title={selectedTile.title}>
+        <div className={styles.FullLayout}>
+          {!isMobile ? (
+            <div
+              className={styles.SidebarWrapper}
+              style={{ height: height - 70 }}
+            >
+              <Scrollbars height={height}>
+                {allTiles.map((tile, i) => {
+                  return (
+                    <NavLink to={`/full/${tile.id}`} key={i}>
+                      <div
+                        className={`${styles.SidebarItem} ${selectedTile.id ===
+                        tile.id
+                          ? styles.Active
+                          : null}`}
+                      >
+                        <div className={styles.SidebarItemLabel}>
+                          {tile.title}
+                        </div>
                       </div>
-                    </div>
-                  </NavLink>
-                );
-              })}
-            </Scrollbars>
-          </div>
-        ) : null}
-        <div className={styles.TitleBar}>
-          <NavLink to="/">
-            <div className={styles.BackButton}>
-              <i className="material-icons">arrow_back</i>
+                    </NavLink>
+                  );
+                })}
+              </Scrollbars>
             </div>
-          </NavLink>
-          <div className={styles.Title}>{selectedTile.title}</div>
-          <div
-            className={styles.ViewInLizardButton}
-            onClick={() => console.log("View in Lizard")}
-          >
-            View in Lizard
+          ) : null}
+          <div className={styles.TitleBar}>
+            <NavLink to="/">
+              <div className={styles.BackButton}>
+                <i className="material-icons">arrow_back</i>
+              </div>
+            </NavLink>
+            <div className={styles.Title}>{selectedTile.title}</div>
+            <div
+              className={styles.ViewInLizardButton}
+              onClick={() => console.log("View in Lizard")}
+            >
+              View in Lizard
+            </div>
           </div>
+          {element}
         </div>
-        {element}
-      </div>
+      </DocumentTitle>
     );
   }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import DocumentTitle from "react-document-title";
 import { connect } from "react-redux";
 import ReactGridLayout from "react-grid-layout";
 import Tile from "./Tile";
@@ -20,7 +21,6 @@ let x1 = 0,
   y2 = 0,
   z2 = 0;
 let sensitivity = 20;
-
 
 class GridLayout extends Component {
   constructor(props) {
@@ -145,41 +145,43 @@ class GridLayout extends Component {
     });
 
     return (
-      <div className={styles.GridLayout}>
-        <img
-          src={headerImage}
-          alt="Parramatta dashboard"
-          className={styles.HeaderImage}
-        />
-        <div
-          className={styles.LogoutButton}
-          onClick={() => {
-            localStorage.removeItem("parramatta-layout");
-            console.log("Log out");
-          }}
-        >
-          <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
-          <Ink />
+      <DocumentTitle title="Parramatta | Dashboard">
+        <div className={styles.GridLayout}>
+          <img
+            src={headerImage}
+            alt="Parramatta dashboard"
+            className={styles.HeaderImage}
+          />
+          <div
+            className={styles.LogoutButton}
+            onClick={() => {
+              localStorage.removeItem("parramatta-layout");
+              console.log("Log out");
+            }}
+          >
+            <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
+            <Ink />
+          </div>
+          <ReactGridLayout
+            isDraggable={canMove}
+            isResizable={canMove}
+            className="layout"
+            layout={this.state.layout}
+            cols={12}
+            rowHeight={30}
+            width={width}
+            draggableHandle=".drag-handle"
+            onLayoutChange={layout => {
+              localStorage.setItem("parramatta-layout", JSON.stringify(layout));
+            }}
+          >
+            {tileComponents.map((component, i) => {
+              return <div key={i}>{component}</div>;
+            })}
+          </ReactGridLayout>
+          <footer className={styles.Footer}>Nelen &amp; Schuurmans</footer>
         </div>
-        <ReactGridLayout
-          isDraggable={canMove}
-          isResizable={canMove}
-          className="layout"
-          layout={this.state.layout}
-          cols={12}
-          rowHeight={30}
-          width={width}
-          draggableHandle=".drag-handle"
-          onLayoutChange={layout => {
-            localStorage.setItem("parramatta-layout", JSON.stringify(layout));
-          }}
-        >
-          {tileComponents.map((component, i) => {
-            return <div key={i}>{component}</div>;
-          })}
-        </ReactGridLayout>
-        <footer className={styles.Footer}>Nelen &amp; Schuurmans</footer>
-      </div>
+      </DocumentTitle>
     );
   }
 }
