@@ -56,7 +56,12 @@ class FullLayout extends Component {
         break;
       case "statistics":
         element = (
-          <FullStatistics tile={selectedTile} width={width} height={height} />
+          <FullStatistics
+            tile={selectedTile}
+            width={width}
+            height={height}
+            isMobile={isMobile}
+          />
         );
         break;
       case "timeseries":
@@ -111,7 +116,10 @@ class FullLayout extends Component {
               className={styles.ViewInLizardButton}
               onClick={() => {
                 console.log("View in Lizard");
-                window.open("https://demo.lizard.net/favourites/7d1c6b5a-fb5e-4d0d-bb78-bfa1521a235f", "_blank");
+                window.open(
+                  "https://demo.lizard.net/favourites/7d1c6b5a-fb5e-4d0d-bb78-bfa1521a235f",
+                  "_blank"
+                );
               }}
             >
               View in Lizard
