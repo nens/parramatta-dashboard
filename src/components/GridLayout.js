@@ -156,7 +156,7 @@ class GridLayout extends Component {
             className={styles.LogoutButton}
             onClick={() => {
               localStorage.removeItem("parramatta-layout");
-              console.log("Log out");
+              window.location.href = "/accounts/logout/";
             }}
           >
             <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
