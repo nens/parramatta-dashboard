@@ -109,7 +109,10 @@ class FullLayout extends Component {
             <div className={styles.Title}>{selectedTile.title}</div>
             <div
               className={styles.ViewInLizardButton}
-              onClick={() => console.log("View in Lizard")}
+              onClick={() => {
+                console.log("View in Lizard");
+                window.open("https://demo.lizard.net/favourites/7d1c6b5a-fb5e-4d0d-bb78-bfa1521a235f", "_blank");
+              }}
             >
               View in Lizard
             </div>
