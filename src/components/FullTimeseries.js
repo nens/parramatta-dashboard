@@ -11,11 +11,9 @@ import {
   Legend,
   Line,
   Tooltip,
-  // ResponsiveContainer,
   XAxis,
   YAxis
 } from "recharts";
-// import * as d3 from "d3";
 import { scaleTime } from "d3-scale";
 import { timeMinute as minute } from "d3-time";
 import findIndex from "lodash/findIndex";
@@ -42,6 +40,7 @@ function combineEventSeries(series) {
 
   let timestamps = Object.keys(events)
     .map(parseFloat)
+    .slice()
     .sort();
 
   return timestamps.map(timestamp => {
@@ -294,12 +293,10 @@ class TimeseriesChartComponent extends Component {
   }
 
   render() {
-    const { tile } = this.props;
-
+    const { tile, width, height } = this.props;
     if (!this.allTimeseriesHaveMetadata() || !this.allTimeseriesHaveEvents()) {
       return null;
     }
-
     const combinedEvents = combineEventSeries(
       tile.timeseries.map(uuid => {
         return {
@@ -308,11 +305,8 @@ class TimeseriesChartComponent extends Component {
         };
       })
     );
-
     const axes = this.getAxesData();
-
     const grid = <CartesianGrid strokeDasharray="3 3" />;
-
     const xaxis = (
       <XAxis
         dataKey="timestamp"
@@ -322,13 +316,10 @@ class TimeseriesChartComponent extends Component {
         tickFormatter={this.tickFormatter}
       />
     );
-
     const legend = <Legend verticalAlign="bottom" height={36} />;
     const yaxes = this.getYAxes(axes);
     const margin = 0;
     const lines = this.getLinesAndBars(axes);
-
-    const { width, height } = this.props;
 
     return (
       <ComposedChart
@@ -338,7 +329,7 @@ class TimeseriesChartComponent extends Component {
         margin={{
           top: 75,
           bottom: margin,
-          left: 220,
+          left: width < 700 ? 0 : 220,
           right: 2 * margin
         }}
       >
