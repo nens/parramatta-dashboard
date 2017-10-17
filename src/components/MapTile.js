@@ -3,7 +3,7 @@ import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { getRaster, addAsset } from "../actions";
 import { getMeasuringStations } from "lizard-api-client";
-import { Map, TileLayer, Marker, WMSTileLayer } from "react-leaflet";
+import { Map, TileLayer, CircleMarker, WMSTileLayer } from "react-leaflet";
 import styles from "./MapTile.css";
 
 class MapTile extends Component {
@@ -74,9 +74,19 @@ class MapTile extends Component {
     const { isInteractive, tile } = this.props;
     const boundsForLeaflet = this.getBbox().toLeafletArray();
     const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
-    const markers = Object.values(assets).map((asset) => {
+    const markers = Object.values(assets).map(asset => {
       const { coordinates } = asset.geometry;
-      return <Marker position={[coordinates[1],coordinates[0]]} key={asset.id} />;
+      return (
+        <CircleMarker
+          radius={5}
+          color="#fff"
+          fillColor="green"
+          weight={1}
+          fillOpacity={1}
+          center={[coordinates[1], coordinates[0]]}
+          key={asset.id}
+        />
+      );
     });
 
     return (
