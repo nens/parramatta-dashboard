@@ -122,8 +122,8 @@ class GridLayout extends Component {
               handleDoubleClick={() => history.push(`/full/${tile.id}`)}
             >
               <TimeseriesTile
-                width="300"
-                height="300"
+                width={300}
+                height={300}
                 timeseries={tile.timeseries}
                 tile={tile}
               />
