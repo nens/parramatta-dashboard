@@ -101,7 +101,7 @@ class GridLayout extends Component {
               title={tile.title}
               handleDoubleClick={() => history.push(`/full/${tile.id}`)}
             >
-              <MapTile isInteractive={true} bbox={tile.bbox} tile={tile} />
+              <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />
             </Tile>
           );
         case "assets":
