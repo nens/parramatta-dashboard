@@ -41,7 +41,7 @@ class GridLayout extends Component {
           return {
             i: `${i}`,
             x: 0,
-            y: i*8,
+            y: i * 8,
             w: 12,
             h: y,
             minW: 2,
@@ -171,7 +171,11 @@ class GridLayout extends Component {
               window.location.href = "/accounts/logout/";
             }}
           >
-            <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
+            {width > 700 ? (
+              <span>
+                <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
+              </span>
+            ) : <i className="material-icons">lock</i>}
             <Ink />
           </div>
           <ReactGridLayout

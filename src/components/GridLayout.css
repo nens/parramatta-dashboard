@@ -2,6 +2,13 @@
   width: 300px;
   padding: 10px 0 10px 10px;
 }
+@media only screen and (max-width: 700px) {
+  .HeaderImage {
+    transform-origin: left;
+    transform: scale(.85);
+  }
+}
+
 .GridLayout {
 }
 .GridCell {
@@ -52,6 +59,13 @@
   color: #333;
   box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
 }
+@media only screen and (max-width: 700px) {
+  .LogoutButton {
+    width: 60px;
+    transform: scale(.85);
+  }
+}
+
 .LogoutButton i {
   position: absolute;
   font-size: 15px;
