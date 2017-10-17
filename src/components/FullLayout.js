@@ -67,6 +67,8 @@ class FullLayout extends Component {
       case "timeseries":
         element = (
           <FullTimeseries
+            width={width}
+            height={height}            
             timeseries={selectedTile.timeseries}
             tile={selectedTile}
           />
