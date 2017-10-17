@@ -73,14 +73,6 @@ class FullMap extends Component {
   }
   render() {
     const { isInteractive, bbox, tile, width, height } = this.props;
-
-    const bounds = bbox
-      ? [[bbox.southmost, bbox.westmost], [bbox.northmost, bbox.eastmost]]
-      : [
-          [-34.87831497192377, 149.9476776123047],
-          [-32.76800155639643, 152.0842590332031]
-        ];
-
     const boundsForLeaflet = this.getBbox().toLeafletArray();
     const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
     const markers = Object.values(assets).map(asset => {
