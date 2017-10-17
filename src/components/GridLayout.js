@@ -36,6 +36,18 @@ class GridLayout extends Component {
   componentWillMount() {
     if (!this.state.layout && !layoutFromLocalStorage) {
       this.setState({
+        mobileLayout: this.props.tiles.map((tile, i) => {
+          const y = 8;
+          return {
+            i: `${i}`,
+            x: 0,
+            y: i*8,
+            w: 12,
+            h: y,
+            minW: 2,
+            maxW: 12
+          };
+        }),
         layout: this.props.tiles.map((tile, i) => {
           const w = 4;
           const y = 8;
@@ -155,7 +167,7 @@ class GridLayout extends Component {
           <div
             className={styles.LogoutButton}
             onClick={() => {
-              localStorage.removeItem("parramatta-layout");
+              // localStorage.removeItem("parramatta-layout");
               window.location.href = "/accounts/logout/";
             }}
           >
@@ -166,13 +178,13 @@ class GridLayout extends Component {
             isDraggable={canMove}
             isResizable={canMove}
             className="layout"
-            layout={this.state.layout}
+            layout={width < 700 ? this.state.mobileLayout : this.state.layout}
             cols={12}
             rowHeight={30}
             width={width}
             draggableHandle=".drag-handle"
             onLayoutChange={layout => {
-              localStorage.setItem("parramatta-layout", JSON.stringify(layout));
+              // localStorage.setItem("parramatta-layout", JSON.stringify(layout));
             }}
           >
             {tileComponents.map((component, i) => {
