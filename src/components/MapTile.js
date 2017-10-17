@@ -71,18 +71,10 @@ class MapTile extends Component {
     );
   }
   render() {
-    const { isInteractive, bbox, tile } = this.props;
-    const bounds = bbox
-      ? [[bbox.southmost, bbox.westmost], [bbox.northmost, bbox.eastmost]]
-      : [
-          [-34.87831497192377, 149.9476776123047],
-          [-32.76800155639643, 152.0842590332031]
-        ];
-
+    const { isInteractive, tile } = this.props;
     const boundsForLeaflet = this.getBbox().toLeafletArray();
-
     const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
-    const markers = Object.values(assets).map((asset, index) => {
+    const markers = Object.values(assets).map((asset) => {
       const { coordinates } = asset.geometry;
       return <Marker position={[coordinates[1],coordinates[0]]} key={asset.id} />;
     });
