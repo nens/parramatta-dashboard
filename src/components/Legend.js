@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { getLegend } from "../actions";
+import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import styles from "./Legend.css";
 
@@ -12,11 +13,20 @@ class Legend extends Component {
       isOpen: false
     };
     this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
+
+    this.props.history.listen((location, action) => {
+      console.log("on route change");
+      this.props.doGetLegend(
+        this.props.uuid,
+        this.props.wmsInfo,
+        this.props.styles
+      );
+    });
   }
   componentDidMount() {
     const { uuid, wmsInfo, styles } = this.props;
-    window.addEventListener("resize", this.handleUpdateDimensions, false);
     this.props.doGetLegend(uuid, wmsInfo, styles);
+    window.addEventListener("resize", this.handleUpdateDimensions, false);
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleUpdateDimensions, false);
@@ -27,6 +37,7 @@ class Legend extends Component {
       height: window.innerHeight
     });
   }
+
   render() {
     const { width, isOpen } = this.state;
     const { legends, title } = this.props;
@@ -36,7 +47,7 @@ class Legend extends Component {
     let legendSteps = null;
     try {
       legendSteps = legend.data.legend;
-    } catch(e) {
+    } catch (e) {
       return null;
     }
 
@@ -90,4 +101,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Legend);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Legend));
