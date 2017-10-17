@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import DocumentTitle from "react-document-title";
+import TimeseriesTile from "./TimeseriesTile";
+import StatisticsTile from "./StatisticsTile";
+import MapTile from "./MapTile";
 import FullMap from "./FullMap";
 import FullStatistics from "./FullStatistics";
 import FullTimeseries from "./FullTimeseries";
@@ -31,7 +34,7 @@ class FullLayout extends Component {
   }
   render() {
     const { id } = this.props.match.params;
-    const { getTileById, allTiles } = this.props;
+    const { getTileById, allTiles, history } = this.props;
     const { height, width } = this.state;
     const tilesById = getTileById(id);
     const selectedTile = tilesById[0];
@@ -101,6 +104,29 @@ class FullLayout extends Component {
             >
               <Scrollbars height={height}>
                 {allTiles.map((tile, i) => {
+                  let previewTile = null;
+                  switch(tile.type) {
+                    case "raster":
+                      previewTile = <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />;
+                      break;
+                    case "assets":
+                      previewTile = <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />;
+                      break;
+                    case "timeseries":
+                      previewTile = <TimeseriesTile
+                        width={300}
+                        height={300}
+                        timeseries={tile.timeseries}
+                        tile={tile}
+                      />;
+                      break;
+                    case "statistics":
+                      previewTile = <StatisticsTile number={tile.number} title={tile.title} />;
+                      break;
+                    default:
+                      previewTile = null;
+                      break;
+                  }
                   return (
                     <NavLink to={`/full/${tile.id}`} key={i}>
                       <div
@@ -109,6 +135,7 @@ class FullLayout extends Component {
                           ? styles.Active
                           : null}`}
                       >
+                        {previewTile}
                         <div className={styles.SidebarItemLabel}>
                           {tile.title}
                         </div>
