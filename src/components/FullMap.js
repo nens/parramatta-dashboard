@@ -91,6 +91,25 @@ class FullMap extends Component {
       );
     });
 
+    let legend = null;
+    if (tile.rasters && tile.rasters.length > 0) {
+      const rasterUuid = tile.rasters[0].uuid;
+      if (!this.props.rasters[rasterUuid] || !this.props.rasters[rasterUuid].data) {
+        legend = null;
+      }
+      else {
+        const raster = this.props.rasters[rasterUuid].data;
+        legend = <Legend
+          tile={tile}
+          uuid={rasterUuid}
+          title={raster.name}
+          wmsInfo={raster.wms_info}
+          observationType={raster.observation_type}
+          styles={raster.options.styles}
+        />;
+      }
+    }
+    
     return (
       <div className={styles.FullMap} style={{ width, height }}>
         <Map
@@ -108,15 +127,12 @@ class FullMap extends Component {
           className={styles.MapStyle}
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
-          {/* <Marker position={[-33.815, 151.0087]} /> */}
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
           {markers}
         </Map>
-        {tile.rasters && tile.rasters.length > 0 ? (
-          <Legend tile={tile} />
-        ) : null}
+        {legend}
       </div>
     );
   }
