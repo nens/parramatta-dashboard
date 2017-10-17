@@ -79,6 +79,8 @@ class MapTile extends Component {
           [-32.76800155639643, 152.0842590332031]
         ];
 
+    const boundsForLeaflet = this.getBbox().toLeafletArray();
+
     const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
     const markers = Object.values(assets).map((asset, index) => {
       const { coordinates } = asset.geometry;
@@ -88,7 +90,7 @@ class MapTile extends Component {
     return (
       <div className={styles.MapTile}>
         <Map
-          bounds={bounds}
+          bounds={boundsForLeaflet}
           attributionControl={false}
           dragging={isInteractive}
           touchZoom={isInteractive}
@@ -102,7 +104,6 @@ class MapTile extends Component {
           className={styles.MapStyle}
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
-          {/* <Marker position={[-33.815, 151.0087]} /> */}
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
