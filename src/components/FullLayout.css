@@ -1,6 +1,7 @@
 .FullLayout {
   position: relative;
   height: 100%;
+  overflow: hidden;
 }
 .TitleBar {
   position: absolute;
