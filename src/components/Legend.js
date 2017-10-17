@@ -62,6 +62,7 @@ class Legend extends Component {
           ? legendSteps.map((step, i) => {
               return (
                 <div
+                  key={i}
                   className={styles.LegendStep}
                   style={{ backgroundColor: step.color }}
                 >
