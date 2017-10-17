@@ -135,9 +135,7 @@ export function receiveBootstrapErrorAction(error) {
 }
 
 export function fetchBootstrap(dispatch, sessionState) {
-  console.log("Returning this function");
   if (sessionState && (sessionState.isFetching || sessionState.hasBootstrap)) {
-    console.log("Already have bootstrap");
     return;
   }
 
