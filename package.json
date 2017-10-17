@@ -156,7 +156,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://demo.lizard.net/",
+      "target": "https://parramatta.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
