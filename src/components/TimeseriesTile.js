@@ -5,18 +5,13 @@ import { addTimeseries } from "../actions";
 import { getTimeseries } from "lizard-api-client";
 import {
   Bar,
-  CartesianGrid,
   ComposedChart,
-  // Legend,
   Line,
   ResponsiveContainer,
-  XAxis,
   YAxis
 } from "recharts";
-// import * as d3 from "d3";
 import { scaleTime } from "d3-scale";
 import { timeMinute as minute } from "d3-time";
-import { MAX_TIMESERIES_POINTS } from "../config";
 import findIndex from "lodash/findIndex";
 
 function combineEventSeries(series) {
@@ -27,15 +22,17 @@ function combineEventSeries(series) {
 
   let events = {}; // {timestamp: {uuid1: value1}}
 
-  series.forEach(serie =>
+  series.forEach(serie => {
+    // const isRatio = serie.timeseries.observation_type.scale === "ratio";
+    const isRatio = false; // TODO: BUG: Had to force this because ^^ serie.timeseries is undefined
     serie.events.forEach((event, idx) => {
       const timestamp = event.timestamp;
       if (!events.hasOwnProperty(timestamp)) {
         events[timestamp] = {};
       }
-      events[timestamp][serie.uuid] = event.value;
-    })
-  );
+      events[timestamp][serie.uuid] = isRatio ? event.sum : event.max;
+    });
+  });
 
   let timestamps = Object.keys(events)
     .map(parseFloat)
@@ -58,6 +55,46 @@ class TimeseriesChartComponent extends Component {
     };
   }
 
+  componentDidMount() {
+    if (!this.allTimeseriesHaveMetadata()) {
+      this.getAllTimeseriesMetadata();
+    } else {
+      this.componentDidUpdate();
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.allTimeseriesHaveMetadata()) {
+      return; // Still waiting for requests
+    }
+
+    if (!this.state.start || !this.state.end) {
+      this.updateStartEnd();
+      return;
+    }
+
+    if (!this.allTimeseriesHaveEvents()) {
+      this.props.tile.timeseries.forEach(uuid => {
+        if (this.state.eventsPerTimeseries.hasOwnProperty(uuid)) {
+          return;
+        }
+
+        let newEvents = { ...this.state.eventsPerTimeseries };
+        newEvents[uuid] = { fetching: true, events: null };
+        this.setState({ eventsPerTimeseries: newEvents });
+
+        const params = {
+          window: "hour"
+        };
+
+        if (this.props.timeseries[uuid].observation_type.scale === "ratio") {
+          params.fields = "sum";
+        }
+        this.updateTimeseries(uuid, this.state.start, this.state.end, params);
+      });
+    }
+  }
+
   allTimeseriesHaveMetadata() {
     const result = this.props.tile.timeseries.every(uuid =>
       this.props.timeseries.hasOwnProperty(uuid)
@@ -72,14 +109,6 @@ class TimeseriesChartComponent extends Component {
         !this.state.eventsPerTimeseries[uuid].fetching
     );
     return result;
-  }
-
-  componentDidMount() {
-    if (!this.allTimeseriesHaveMetadata()) {
-      this.getAllTimeseriesMetadata();
-    } else {
-      this.componentDidUpdate();
-    }
   }
 
   updateStartEnd() {
@@ -140,32 +169,6 @@ class TimeseriesChartComponent extends Component {
       }
     });
     return [start, end];
-  }
-
-  componentDidUpdate() {
-    if (!this.allTimeseriesHaveMetadata()) {
-      return; // Still waiting for requests
-    }
-
-    if (!this.state.start || !this.state.end) {
-      this.updateStartEnd();
-      return;
-    }
-
-    if (!this.allTimeseriesHaveEvents()) {
-      this.props.tile.timeseries.forEach(uuid => {
-        if (this.state.eventsPerTimeseries.hasOwnProperty(uuid)) {
-          return;
-        }
-
-        let newEvents = { ...this.state.eventsPerTimeseries };
-        newEvents[uuid] = { fetching: true, events: null };
-        this.setState({ eventsPerTimeseries: newEvents });
-        this.updateTimeseries(uuid, this.state.start, this.state.end, {
-          min_points: Math.min(this.props.width, MAX_TIMESERIES_POINTS)
-        });
-      });
-    }
   }
 
   getAllTimeseriesMetadata() {
@@ -242,21 +245,20 @@ class TimeseriesChartComponent extends Component {
       return (
         <YAxis
           key={idx}
+          hide={true}
           yAxisId={idx}
           orientation={["left", "right"][idx]}
           domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}
           label={this.axisLabel(axis)}
-          hide={this.props.isThumb}
         />
       );
     });
   }
 
   getLinesAndBars(axes) {
-    return this.props.tile.timeseries.forEach((uuid, idx) => {
+    return this.props.tile.timeseries.map((uuid, idx) => {
       const observationType = this.observationType(uuid);
       const axisIndex = this.indexForType(axes, observationType);
-
       if (observationType.scale === "interval") {
         return (
           <Line
@@ -266,7 +268,7 @@ class TimeseriesChartComponent extends Component {
             name={observationType.getLegendString()}
             type="monotone"
             dataKey={uuid}
-            stroke={["#00f", "#0f0", "#f00"][idx % 3]}
+            stroke={["#00f", "#000058", "#99f"][idx % 3]}
           />
         );
       } else if (observationType.scale === "ratio") {
@@ -277,15 +279,16 @@ class TimeseriesChartComponent extends Component {
             name={observationType.getLegendString()}
             barSize={20}
             dataKey={uuid}
-            fill={["#00f", "#0f0", "#f00"][idx % 3]}
+            fill={["#00f", "#000058", "#99f"][idx % 3]}
           />
         );
       }
+      return null;
     });
   }
 
   render() {
-    const { tile } = this.props;
+    const { tile, width, height } = this.props;
 
     if (!this.allTimeseriesHaveMetadata() || !this.allTimeseriesHaveEvents()) {
       return null;
@@ -301,43 +304,23 @@ class TimeseriesChartComponent extends Component {
     );
 
     const axes = this.getAxesData();
-
-    const grid = this.props.isThumb ? null : (
-      <CartesianGrid strokeDasharray="3 3" />
-    );
-
-    const xaxis = (
-      <XAxis
-        dataKey="timestamp"
-        type="number"
-        domain={[this.state.start, this.state.end]}
-        ticks={this.getTicks()}
-        tickFormatter={this.tickFormatter}
-        hide={this.props.isThumb}
-      />
-    );
-
-    // const yaxes = this.getYAxes(axes);
-    const margin = 0;
+    const grid = null;
+    const yaxes = this.getYAxes(axes);
     const lines = this.getLinesAndBars(axes);
 
     return (
       <ResponsiveContainer>
         <ComposedChart
-          width={this.props.width - margin}
-          height={this.props.height - margin}
+          width={width}
+          height={height}
           data={combinedEvents}
           margin={{
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 25
+            top: 50
           }}
         >
           {grid}
           {lines}
-          {xaxis}
-          {/* {yaxes} */}
+          {yaxes}
         </ComposedChart>
       </ResponsiveContainer>
     );
