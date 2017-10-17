@@ -143,7 +143,6 @@ export function fetchBootstrap(dispatch, sessionState) {
 
   getBootstrap().then(
     bootstrap => {
-      console.log("Received bootstrap:", bootstrap);
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },
     error => {

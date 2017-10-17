@@ -34,7 +34,7 @@ class FullLayout extends Component {
   }
   render() {
     const { id } = this.props.match.params;
-    const { getTileById, allTiles, history } = this.props;
+    const { getTileById, allTiles } = this.props;
     const { height, width } = this.state;
     const tilesById = getTileById(id);
     const selectedTile = tilesById[0];

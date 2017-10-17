@@ -17,8 +17,10 @@
     font-size: 50px;
     color: #747474;
     margin: 20px;
+    text-decoration: none !important;
 }
 .StatisticsTile div span {
     font-size: 20px;
     color: #747474;
+    text-decoration: none !important;
 }

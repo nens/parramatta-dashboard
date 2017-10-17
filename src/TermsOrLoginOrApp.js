@@ -32,7 +32,6 @@ class TermsOrLoginOrAppComponent extends Component {
 
   hasBootstrap() {
     const session = this.props.sessionState;
-    console.log("hasBootstrap sessionState:", session);
     const result = !!(session && session.hasBootstrap && session.bootstrap);
     return result;
   }
