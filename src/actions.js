@@ -29,8 +29,6 @@ export const CLOSE_TILE = "CLOSE_TILE";
 // TimeseriesActions
 export const ADD_TIMESERIES = "ADD_TIMESERIES";
 
-
-
 // Asset
 export const addAsset = (assetType, id, instance) => {
   return {
@@ -40,7 +38,6 @@ export const addAsset = (assetType, id, instance) => {
     instance: instance
   };
 };
-
 
 // Legend
 export const fetchLegend = uuid => {
@@ -64,9 +61,8 @@ export function getLegend(uuid, wmsInfo, styles, steps = 15) {
     wmsInfo.getLegend(styles, steps).then(data => {
       dispatch(addLegend(uuid, data));
     });
-  }
+  };
 }
-
 
 // Raster
 export const fetchRaster = uuid => {
@@ -116,7 +112,7 @@ export function getRaster(uuid, dispatch) {
     });
 
     return false; // No data present yet.
-  }
+  };
 }
 
 // Session
@@ -139,23 +135,22 @@ export function receiveBootstrapErrorAction(error) {
 }
 
 export function fetchBootstrap(dispatch, sessionState) {
-  return (dispatch, getState) => {
-    if (sessionState && (sessionState.isFetching || sessionState.hasBootstrap)) {
-      return;
-    }
-
-    dispatch(fetchBootstrapAction());
-
-    getBootstrap().then(
-      bootstrap => {
-        dispatch(receiveBootstrapSuccessAction(bootstrap));
-      },
-      error => {
-        dispatch(receiveBootstrapErrorAction(error));
-        console.error(error);
-      }
-    );
+  if (sessionState && (sessionState.isFetching || sessionState.hasBootstrap)) {
+    return;
   }
+
+  dispatch(fetchBootstrapAction());
+
+  getBootstrap().then(
+    bootstrap => {
+      console.log("Received bootstrap:", bootstrap);
+      dispatch(receiveBootstrapSuccessAction(bootstrap));
+    },
+    error => {
+      dispatch(receiveBootstrapErrorAction(error));
+      console.error(error);
+    }
+  );
 }
 
 // Tile
@@ -199,5 +194,5 @@ export function updateTimeseriesMetadata(dispatch, uuid) {
         dispatch(addTimeseries(uuid, results[0]));
       }
     });
-  }
+  };
 }

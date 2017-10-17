@@ -1,20 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
 import configureStore from "./configureStore";
-import { BrowserRouter as Router } from "react-router-dom";
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import TermsOrLoginOrApp from "./TermsOrLoginOrApp";
+import registerServiceWorker from "./registerServiceWorker";
 
 let store = configureStore();
 
 const Root = ({ store }) => (
   <IntlProvider locale={navigator.language} messages={{}}>
     <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
+      <TermsOrLoginOrApp />
     </Provider>
   </IntlProvider>
 );
@@ -23,14 +20,12 @@ ReactDOM.render(<Root store={store} />, document.getElementById("root"));
 registerServiceWorker();
 
 if (module.hot) {
-  module.hot.accept('./App', () => {
-    const HotApp = require('./App').default;
+  module.hot.accept("./TermsOrLoginOrApp", () => {
+    const HotApp = require("./TermsOrLoginOrApp").default;
     ReactDOM.render(
       <IntlProvider locale={navigator.language} messages={{}}>
         <Provider store={store}>
-          <Router>
-            <HotApp />
-          </Router>
+          <HotApp />
         </Provider>
       </IntlProvider>,
       document.getElementById("root")
