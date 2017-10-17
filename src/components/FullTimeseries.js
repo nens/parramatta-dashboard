@@ -362,7 +362,6 @@ class TimeseriesChartComponent extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log('state.timeseries', state.timeseries);
   return {
     timeseries: state.timeseries
   };

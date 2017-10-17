@@ -62,7 +62,6 @@ export function getLegend(uuid, wmsInfo, styles, steps = 15) {
     dispatch(fetchLegend(uuid));
 
     wmsInfo.getLegend(styles, steps).then(data => {
-      console.log("Retrieving data:", data);
       dispatch(addLegend(uuid, data));
     });
   }
