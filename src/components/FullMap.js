@@ -1,11 +1,44 @@
 import React, { Component } from "react";
+import { BOUNDS } from "../config";
 import { connect } from "react-redux";
-import { getRaster } from "../actions";
-import { Map, TileLayer, WMSTileLayer } from "react-leaflet";
+import { getRaster, addAsset } from "../actions";
+import { getMeasuringStations } from "lizard-api-client";
+import { Map, CircleMarker, TileLayer, WMSTileLayer } from "react-leaflet";
 import Legend from "./Legend";
 import styles from "./FullMap.css";
 
 class FullMap extends Component {
+  componentDidMount() {
+    const { tile } = this.props;
+    const inBboxFilter = this.getBbox().toLizardBbox();
+
+    if (tile.assetTypes) {
+      this.props.tile.assetTypes.forEach(assetType => {
+        // This is really impossible, need something more generic
+        if (assetType === "measuringstation") {
+          getMeasuringStations({
+            in_bbox: inBboxFilter,
+            page_size: 1000
+          }).then(results => {
+            results.forEach(measuringStation => {
+              this.props.addAsset(
+                "measuringstation",
+                measuringStation.id,
+                measuringStation
+              );
+            });
+          });
+        }
+      });
+    }
+  }
+  getBbox() {
+    // Either get it from the tile or return the global constant.
+    if (this.props && this.props.tile && this.props.tile.bbox) {
+      return this.props.tile.bbox;
+    }
+    return BOUNDS;
+  }
   tileLayerForRaster(raster) {
     let rasterObject = null;
     if (this.props.rasters.hasOwnProperty(raster.uuid)) {
@@ -39,19 +72,29 @@ class FullMap extends Component {
     );
   }
   render() {
-    const { isInteractive, bbox, tile, width, height } = this.props;
-
-    const bounds = bbox
-      ? [[bbox.southmost, bbox.westmost], [bbox.northmost, bbox.eastmost]]
-      : [
-          [-34.87831497192377, 149.9476776123047],
-          [-32.76800155639643, 152.0842590332031]
-        ];
+    const { isInteractive, tile, width, height } = this.props;
+    const boundsForLeaflet = this.getBbox().toLeafletArray();
+    const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
+    const markers = Object.values(assets).map(asset => {
+      const { coordinates } = asset.geometry;
+      return (
+        <CircleMarker
+          radius={5}
+          color="#fff"
+          fillColor="green"
+          weight={1}
+          fillOpacity={1}
+          center={[coordinates[1], coordinates[0]]}
+          key={asset.id}
+        />
+        // ^^ TODO: fillColor red/green based on alarm threshold exceeding?
+      );
+    });
 
     return (
       <div className={styles.FullMap} style={{ width, height }}>
         <Map
-          bounds={bounds}
+          bounds={boundsForLeaflet}
           attributionControl={false}
           dragging={isInteractive}
           touchZoom={isInteractive}
@@ -69,14 +112,9 @@ class FullMap extends Component {
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
-
-          {/*
-          // TODO: Assets?!?!?
-          {tile.assetTypes ? tile.assetTypes.map(asset =>
-          ) : null}
-          */}
+          {markers}
         </Map>
-        {tile.rasters.length > 0 ? (
+        {tile.rasters && tile.rasters.length > 0 ? (
           <Legend tile={tile} />
         ) : null}
       </div>
@@ -93,6 +131,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    addAsset: (assetType, id, instance) =>
+      dispatch(addAsset(assetType, id, instance)),
     getRaster: uuid => dispatch(getRaster(uuid))
   };
 }

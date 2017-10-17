@@ -1,22 +1,22 @@
 import React, { Component } from "react";
-import injectTapEventPlugin from "react-tap-event-plugin";
-import isDblTouchTap from "../util/isDblTouchTap";
+// import injectTapEventPlugin from "react-tap-event-plugin";
+// import isDblTouchTap from "../util/isDblTouchTap";
 import styles from "./Tile.css";
 
-injectTapEventPlugin();
+// injectTapEventPlugin();
 
 class Tile extends Component {
   render() {
-    const { handleDoubleClick, title, children } = this.props;
+    const { onClick, title, children } = this.props;
     return (
       <div
         className={styles.Tile}
-        onDoubleClick={handleDoubleClick}
-        onTouchTap={e => {
-          if (isDblTouchTap(e)) {
-            handleDoubleClick();
-          }
-        }}
+        onClick={onClick}
+        // onTouchTap={e => {
+        //   if (isDblTouchTap(e)) {
+        //     handleDoubleClick();
+        //   }
+        // }}
       >
         <div className={styles.TileTitle}>
           <div className="drag-handle">{title}</div>

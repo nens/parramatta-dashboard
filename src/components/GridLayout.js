@@ -99,9 +99,9 @@ class GridLayout extends Component {
             <Tile
               {...this.props}
               title={tile.title}
-              handleDoubleClick={() => history.push(`/full/${tile.id}`)}
+              onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <MapTile isInteractive={true} bbox={tile.bbox} tile={tile} />
+              <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />
             </Tile>
           );
         case "assets":
@@ -109,9 +109,9 @@ class GridLayout extends Component {
             <Tile
               {...this.props}
               title={tile.title}
-              handleDoubleClick={() => history.push(`/full/${tile.id}`)}
+              onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <MapTile isInteractive={true} bbox={tile.bbox} tile={tile} />
+              <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />
             </Tile>
           );
         case "timeseries":
@@ -119,7 +119,7 @@ class GridLayout extends Component {
             <Tile
               {...this.props}
               title={tile.title}
-              handleDoubleClick={() => history.push(`/full/${tile.id}`)}
+              onClick={() => history.push(`/full/${tile.id}`)}
             >
               <TimeseriesTile
                 width={300}
@@ -134,7 +134,7 @@ class GridLayout extends Component {
             <Tile
               {...this.props}
               title={tile.title}
-              handleDoubleClick={() => history.push(`/full/${tile.id}`)}
+              onClick={() => history.push(`/full/${tile.id}`)}
             >
               <StatisticsTile number={tile.number} title={tile.title} />
             </Tile>

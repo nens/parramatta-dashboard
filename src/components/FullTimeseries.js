@@ -53,246 +53,245 @@ function combineEventSeries(series) {
 
 class TimeseriesChartComponent extends Component {
   constructor() {
-      super();
-      this.state = {
-        start: null,
-        end: null,
+    super();
+    this.state = {
+      start: null,
+      end: null,
+      eventsPerTimeseries: {}
+    };
+  }
+
+  allTimeseriesHaveMetadata() {
+    const result = this.props.tile.timeseries.every(uuid =>
+      this.props.timeseries.hasOwnProperty(uuid)
+    );
+    return result;
+  }
+
+  allTimeseriesHaveEvents() {
+    const result = this.props.tile.timeseries.every(
+      uuid =>
+        this.state.eventsPerTimeseries.hasOwnProperty(uuid) &&
+        !this.state.eventsPerTimeseries[uuid].fetching
+    );
+    return result;
+  }
+
+  componentDidMount() {
+    if (!this.allTimeseriesHaveMetadata()) {
+      this.getAllTimeseriesMetadata();
+    } else {
+      this.componentDidUpdate();
+    }
+  }
+
+  updateStartEnd() {
+    const period = this.props.tile.period;
+
+    const startDatetime = period[0];
+    const endDatetime = period[1];
+
+    let startOfTs = null;
+    let endOfTs = null;
+
+    if (startDatetime.needsStartEnd() || endDatetime.needsStartEnd()) {
+      let startendOfTs = this.startEndOfTs();
+      startOfTs = startendOfTs[0];
+      endOfTs = startendOfTs[1];
+    }
+
+    const startTimestamp = startDatetime.asTimestamp(startOfTs, endOfTs);
+    const endTimestamp = endDatetime.asTimestamp(startOfTs, endOfTs);
+
+    if (
+      startTimestamp !== this.state.start ||
+      endTimestamp !== this.state.end
+    ) {
+      this.setState({
+        start: startTimestamp,
+        end: endTimestamp,
         eventsPerTimeseries: {}
-      };
+      });
     }
+  }
 
+  getTicks() {
+    // Calculate ticks using d3_scale.scaleTime.
+    const domain = [new Date(this.state.start), new Date(this.state.end)];
+    const scale = scaleTime()
+      .domain(domain)
+      .range([0, 1]);
+    const ticks = scale.ticks(minute, 5);
 
-    allTimeseriesHaveMetadata() {
-      const result = this.props.tile.timeseries.every(uuid =>
-        this.props.timeseries.hasOwnProperty(uuid)
-      );
-      return result;
-    }
+    return ticks.map(entry => entry.getTime());
+  }
 
-    allTimeseriesHaveEvents() {
-      const result = this.props.tile.timeseries.every(
-        uuid =>
-          this.state.eventsPerTimeseries.hasOwnProperty(uuid) &&
-          !this.state.eventsPerTimeseries[uuid].fetching
-      );
-      return result;
-    }
-
-    componentDidMount() {
-      if (!this.allTimeseriesHaveMetadata()) {
-        this.getAllTimeseriesMetadata();
+  startEndOfTs() {
+    // Get minimum start and maximum end of all timeseries
+    let start = null;
+    let end = null;
+    this.props.tile.timeseries.forEach(uuid => {
+      if (start === null) {
+        start = this.props.timeseries[uuid].start;
       } else {
-        this.componentDidUpdate();
+        start = Math.min(start, this.props.timeseries[uuid].start);
       }
+      if (end === null) {
+        end = this.props.timeseries[uuid].end;
+      } else {
+        end = Math.max(end, this.props.timeseries[uuid].end);
+      }
+    });
+    return [start, end];
+  }
+
+  componentDidUpdate() {
+    if (!this.allTimeseriesHaveMetadata()) {
+      return; // Still waiting for requests
     }
 
-    updateStartEnd() {
-      const period = this.props.tile.period;
-
-      const startDatetime = period[0];
-      const endDatetime = period[1];
-
-      let startOfTs = null;
-      let endOfTs = null;
-
-      if (startDatetime.needsStartEnd() || endDatetime.needsStartEnd()) {
-        let startendOfTs = this.startEndOfTs();
-        startOfTs = startendOfTs[0];
-        endOfTs = startendOfTs[1];
-      }
-
-      const startTimestamp = startDatetime.asTimestamp(startOfTs, endOfTs);
-      const endTimestamp = endDatetime.asTimestamp(startOfTs, endOfTs);
-
-      if (
-        startTimestamp !== this.state.start ||
-        endTimestamp !== this.state.end
-      ) {
-        this.setState({
-          start: startTimestamp,
-          end: endTimestamp,
-          eventsPerTimeseries: {}
-        });
-      }
+    if (!this.state.start || !this.state.end) {
+      this.updateStartEnd();
+      return;
     }
 
-    getTicks() {
-      // Calculate ticks using d3_scale.scaleTime.
-      const domain = [new Date(this.state.start), new Date(this.state.end)];
-      const scale = scaleTime()
-        .domain(domain)
-        .range([0, 1]);
-      const ticks = scale.ticks(minute, 5);
-
-      return ticks.map(entry => entry.getTime());
-    }
-
-    startEndOfTs() {
-      // Get minimum start and maximum end of all timeseries
-      let start = null;
-      let end = null;
+    if (!this.allTimeseriesHaveEvents()) {
       this.props.tile.timeseries.forEach(uuid => {
-        if (start === null) {
-          start = this.props.timeseries[uuid].start;
-        } else {
-          start = Math.min(start, this.props.timeseries[uuid].start);
+        if (this.state.eventsPerTimeseries.hasOwnProperty(uuid)) {
+          return;
         }
-        if (end === null) {
-          end = this.props.timeseries[uuid].end;
-        } else {
-          end = Math.max(end, this.props.timeseries[uuid].end);
+
+        let newEvents = { ...this.state.eventsPerTimeseries };
+        newEvents[uuid] = { fetching: true, events: null };
+        this.setState({ eventsPerTimeseries: newEvents });
+
+        const params = {
+          window: "hour"
+        };
+
+        if (this.props.timeseries[uuid].observation_type.scale === "ratio") {
+          params.fields = "sum";
         }
+        this.updateTimeseries(uuid, this.state.start, this.state.end, params);
       });
-      return [start, end];
     }
+  }
 
-    componentDidUpdate() {
-      if (!this.allTimeseriesHaveMetadata()) {
-        return; // Still waiting for requests
-      }
+  getAllTimeseriesMetadata() {
+    const result = this.props.tile.timeseries.forEach(uuid => {
+      this.updateTimeseries(uuid, null, null);
+    });
+    return result;
+  }
 
-      if (!this.state.start || !this.state.end) {
-        this.updateStartEnd();
-        return;
-      }
+  tickFormatter(tick) {
+    return moment(tick).format(" HH:mm");
+  }
 
-      if (!this.allTimeseriesHaveEvents()) {
-        this.props.tile.timeseries.forEach(uuid => {
-          if (this.state.eventsPerTimeseries.hasOwnProperty(uuid)) {
-            return;
-          }
-
+  updateTimeseries(uuid, start, end, params) {
+    getTimeseries(uuid, start, end, params).then(results => {
+      if (results && results.length) {
+        if (!this.props.timeseries[uuid]) {
+          this.props.addTimeseriesToState(uuid, results[0]);
+        }
+        if (start && end) {
           let newEvents = { ...this.state.eventsPerTimeseries };
-          newEvents[uuid] = { fetching: true, events: null };
+          newEvents[uuid] = { fetching: false, events: results[0].events };
           this.setState({ eventsPerTimeseries: newEvents });
-
-          const params = {
-            window: "hour"
-          };
-
-          if (this.props.timeseries[uuid].observation_type.scale === "ratio") {
-            params.fields = "sum";
-          }
-          this.updateTimeseries(uuid, this.state.start, this.state.end, params);
-        });
+        }
       }
-    }
+    });
+  }
 
-    getAllTimeseriesMetadata() {
-      const result = this.props.tile.timeseries.forEach(uuid => {
-        this.updateTimeseries(uuid, null, null);
-      });
-      return result;
-    }
+  axisLabel(observationType) {
+    return (
+      (observationType.unit || "") + (observationType.reference_frame || "")
+    );
+  }
 
-    tickFormatter(tick) {
-      return moment(tick).format(" HH:mm");
-    }
+  observationType(uuid) {
+    return this.props.timeseries[uuid].observation_type;
+  }
 
-    updateTimeseries(uuid, start, end, params) {
-      getTimeseries(uuid, start, end, params).then(results => {
-        if (results && results.length) {
-          if (!this.props.timeseries[uuid]) {
-            this.props.addTimeseriesToState(uuid, results[0]);
-          }
-          if (start && end) {
-            let newEvents = { ...this.state.eventsPerTimeseries };
-            newEvents[uuid] = { fetching: false, events: results[0].events };
-            this.setState({ eventsPerTimeseries: newEvents });
-          }
+  indexForType(axes, observationType) {
+    return findIndex(
+      axes,
+      ax =>
+        this.axisLabel(ax) === this.axisLabel(observationType) &&
+        ax.scale === observationType.scale
+    );
+  }
+
+  getAxesData() {
+    const axes = [];
+
+    this.props.tile.timeseries.forEach(uuid => {
+      const observationType = this.observationType(uuid);
+      const axis = this.indexForType(axes, observationType);
+
+      if (axis === -1) {
+        if (axes.length >= 2) {
+          console.error(
+            "Can't have a third Y axis for timeseries: ",
+            uuid,
+            " have:",
+            axes
+          );
+          return axes;
         }
-      });
-    }
+        axes.push(observationType);
+      }
+    });
 
-    axisLabel(observationType) {
+    return axes;
+  }
+
+  getYAxes(axes) {
+    return axes.map((axis, idx) => {
       return (
-        (observationType.unit || "") + (observationType.reference_frame || "")
+        <YAxis
+          key={idx}
+          yAxisId={idx}
+          orientation={["left", "right"][idx]}
+          domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}
+          label={this.axisLabel(axis)}
+        />
       );
-    }
+    });
+  }
 
-    observationType(uuid) {
-      return this.props.timeseries[uuid].observation_type;
-    }
+  getLinesAndBars(axes) {
+    return this.props.tile.timeseries.map((uuid, idx) => {
+      const observationType = this.observationType(uuid);
+      const axisIndex = this.indexForType(axes, observationType);
 
-    indexForType(axes, observationType) {
-      return findIndex(
-        axes,
-        ax =>
-          this.axisLabel(ax) === this.axisLabel(observationType) &&
-          ax.scale === observationType.scale
-      );
-    }
-
-    getAxesData() {
-      const axes = [];
-
-      this.props.tile.timeseries.forEach(uuid => {
-        const observationType = this.observationType(uuid);
-        const axis = this.indexForType(axes, observationType);
-
-        if (axis === -1) {
-          if (axes.length >= 2) {
-            console.error(
-              "Can't have a third Y axis for timeseries: ",
-              uuid,
-              " have:",
-              axes
-            );
-            return axes;
-          }
-          axes.push(observationType);
-        }
-      });
-
-      return axes;
-    }
-
-    getYAxes(axes) {
-      return axes.map((axis, idx) => {
+      if (observationType.scale === "interval") {
         return (
-          <YAxis
-            key={idx}
-            yAxisId={idx}
-            orientation={["left", "right"][idx]}
-            domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}
-            label={this.axisLabel(axis)}
+          <Line
+            key={uuid}
+            yAxisId={axisIndex}
+            connectNulls={true}
+            name={observationType.getLegendString()}
+            type="monotone"
+            dataKey={uuid}
+            stroke={["#00f", "#000058", "#99f"][idx % 3]}
           />
         );
-      });
-    }
-
-    getLinesAndBars(axes) {
-      return this.props.tile.timeseries.map((uuid, idx) => {
-        const observationType = this.observationType(uuid);
-        const axisIndex = this.indexForType(axes, observationType);
-
-        if (observationType.scale === "interval") {
-          return (
-            <Line
-              key={uuid}
-              yAxisId={axisIndex}
-              connectNulls={true}
-              name={observationType.getLegendString()}
-              type="monotone"
-              dataKey={uuid}
-              stroke={["#00f", "#000058", "#99f"][idx % 3]}
-            />
-          );
-        } else if (observationType.scale === "ratio") {
-          return (
-            <Bar
-              key={uuid}
-              yAxisId={axisIndex}
-              name={observationType.getLegendString()}
-              barSize={20}
-              dataKey={uuid}
-              fill={["#00f", "#000058", "#99f"][idx % 3]}
-            />
-          );
-        }
-        return null;
-      });
-    }
+      } else if (observationType.scale === "ratio") {
+        return (
+          <Bar
+            key={uuid}
+            yAxisId={axisIndex}
+            name={observationType.getLegendString()}
+            barSize={20}
+            dataKey={uuid}
+            fill={["#00f", "#000058", "#99f"][idx % 3]}
+          />
+        );
+      }
+      return null;
+    });
+  }
 
   render() {
     const { tile } = this.props;
@@ -312,9 +311,7 @@ class TimeseriesChartComponent extends Component {
 
     const axes = this.getAxesData();
 
-    const grid = (
-      <CartesianGrid strokeDasharray="3 3" />
-    );
+    const grid = <CartesianGrid strokeDasharray="3 3" />;
 
     const xaxis = (
       <XAxis
@@ -326,43 +323,38 @@ class TimeseriesChartComponent extends Component {
       />
     );
 
-
-    const legend = (
-      <Legend verticalAlign="bottom" height={36} />
-    );
+    const legend = <Legend verticalAlign="bottom" height={36} />;
     const yaxes = this.getYAxes(axes);
     const margin = 0;
     const lines = this.getLinesAndBars(axes);
 
-    const {width, height} = this.props;
+    const { width, height } = this.props;
 
     return (
-        <ComposedChart
-          width={width}
-          height={height}
-          data={combinedEvents}
-          margin={{
-            top: 75,
-            bottom: margin,
-            left: 220,
-            right: 2 * margin
-          }}
-        >
-          {grid}
-          {lines}
-          {xaxis}
-          {yaxes}
-          {legend}
-          <ReferenceLine x={new Date().getTime()} stroke="black" label="Now" />
-          <Tooltip />
-        </ComposedChart>
-
+      <ComposedChart
+        width={width}
+        height={height}
+        data={combinedEvents}
+        margin={{
+          top: 75,
+          bottom: margin,
+          left: 220,
+          right: 2 * margin
+        }}
+      >
+        {grid}
+        {lines}
+        {xaxis}
+        {yaxes}
+        {legend}
+        <ReferenceLine x={new Date().getTime()} stroke="black" label="Now" />
+        <Tooltip />
+      </ComposedChart>
     );
   }
 }
 
 function mapStateToProps(state) {
-  console.log('state.timeseries', state.timeseries);
   return {
     timeseries: state.timeseries
   };

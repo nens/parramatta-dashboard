@@ -3,7 +3,7 @@ import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { getRaster, addAsset } from "../actions";
 import { getMeasuringStations } from "lizard-api-client";
-import { Map, TileLayer, Marker, WMSTileLayer } from "react-leaflet";
+import { Map, TileLayer, CircleMarker, WMSTileLayer } from "react-leaflet";
 import styles from "./MapTile.css";
 
 class MapTile extends Component {
@@ -71,24 +71,29 @@ class MapTile extends Component {
     );
   }
   render() {
-    const { isInteractive, bbox, tile } = this.props;
-    const bounds = bbox
-      ? [[bbox.southmost, bbox.westmost], [bbox.northmost, bbox.eastmost]]
-      : [
-          [-34.87831497192377, 149.9476776123047],
-          [-32.76800155639643, 152.0842590332031]
-        ];
-
+    const { isInteractive, tile } = this.props;
+    const boundsForLeaflet = this.getBbox().toLeafletArray();
     const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
-    const markers = Object.values(assets).map((asset, index) => {
+    const markers = Object.values(assets).map(asset => {
       const { coordinates } = asset.geometry;
-      return <Marker position={[coordinates[1],coordinates[0]]} key={asset.id} />;
+      return (
+        <CircleMarker
+          radius={5}
+          color="#fff"
+          fillColor="green"
+          weight={1}
+          fillOpacity={1}
+          center={[coordinates[1], coordinates[0]]}
+          key={asset.id}
+        />
+        // ^^ TODO: fillColor red/green based on alarm threshold exceeding?
+      );
     });
 
     return (
       <div className={styles.MapTile}>
         <Map
-          bounds={bounds}
+          bounds={boundsForLeaflet}
           attributionControl={false}
           dragging={isInteractive}
           touchZoom={isInteractive}
@@ -102,7 +107,6 @@ class MapTile extends Component {
           className={styles.MapStyle}
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
-          {/* <Marker position={[-33.815, 151.0087]} /> */}
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
