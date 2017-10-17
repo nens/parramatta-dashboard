@@ -42,6 +42,18 @@ class FullLayout extends Component {
 
     let element = null;
     switch (selectedTile.type) {
+      case "assets":
+        element = (
+          <FullMap
+            {...this.props}
+            width={width}
+            height={height}
+            tile={selectedTile}
+            isInteractive={true}
+            bbox={selectedTile.bbox}
+          />
+        );
+        break;
       case "raster":
         element = (
           <FullMap
@@ -68,7 +80,7 @@ class FullLayout extends Component {
         element = (
           <FullTimeseries
             width={width}
-            height={height}            
+            height={height}
             timeseries={selectedTile.timeseries}
             tile={selectedTile}
           />

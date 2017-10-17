@@ -86,6 +86,7 @@ class MapTile extends Component {
           center={[coordinates[1], coordinates[0]]}
           key={asset.id}
         />
+        // ^^ TODO: fillColor red/green based on alarm threshold exceeding?
       );
     });
 
