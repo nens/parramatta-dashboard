@@ -127,7 +127,7 @@ class FullMap extends Component {
     }
 
     return (
-      <Popup>
+      <Popup minWidth={250}>
         <div className={styles.Popup}>
           <p>
             <strong>{asset.name}</strong>
@@ -171,27 +171,6 @@ class FullMap extends Component {
         markers.push(marker);
       });
     });
-
-    // const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
-    // const markers = Object.values(assets).map(asset => {
-    //   const { coordinates } = asset.geometry;
-    //   console.log('asset', asset);
-    //   console.log('...', tile.assetTypes);
-    //   return (
-    //     <CircleMarker
-    //       // onclick={() => this.clickMarker(assetType, asset.id)}
-    //       radius={5}
-    //       color="#fff"
-    //       fillColor="green"
-    //       weight={1}
-    //       fillOpacity={1}
-    //       center={[coordinates[1], coordinates[0]]}
-    //       key={asset.id}>
-    //      {this.getPopup(asset)}
-    //     </CircleMarker>
-    //     // ^^ TODO: fillColor red/green based on alarm threshold exceeding?
-    //   );
-    // });
 
     let legend = null;
     if (tile.rasters && tile.rasters.length > 0) {
