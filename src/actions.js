@@ -1,8 +1,13 @@
 import {
   getTimeseries,
+  getTimeseriesAlarms,
   getBootstrap,
   getRasterDetail
 } from "lizard-api-client";
+
+// AlarmActions
+export const FETCH_ALARMS = "FETCH_ALARMS";
+export const RECEIVE_ALARMS = "RECEIVE_ALARMS";
 
 // AssetActions
 export const ADD_ASSET = "ADD_ASSET";
@@ -28,6 +33,39 @@ export const CLOSE_TILE = "CLOSE_TILE";
 
 // TimeseriesActions
 export const ADD_TIMESERIES = "ADD_TIMESERIES";
+
+// Alarms
+export const fetchAlarmsAction = () => {
+  return {
+    type: FETCH_ALARMS
+  };
+};
+
+export const receiveAlarmsAction = alarms => {
+  return {
+    type: RECEIVE_ALARMS,
+    alarms: alarms
+  };
+};
+
+export function fetchAlarms(dispatch, sessionState) {
+  if (sessionState && sessionState.isFetching) {
+    return;
+  }
+
+  dispatch(fetchAlarmsAction());
+
+  getTimeseriesAlarms().then(
+    alarms => {
+      dispatch(receiveAlarmsAction(alarms));
+    },
+    error => {
+      // If there is an error, we simply have no alarms to show.
+      console.error(error);
+      dispatch(receiveAlarmsAction([]));
+    }
+  );
+}
 
 // Asset
 export const addAsset = (assetType, id, instance) => {

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { BOUNDS } from "../config";
 import { connect } from "react-redux";
-import { getRaster, addAsset, updateTimeseriesMetadata } from "../actions";
+import { find } from "lodash";
+
+import { getRaster, addAsset } from "../actions";
 import { getMeasuringStations } from "lizard-api-client";
 import {
   Map,
@@ -11,13 +13,15 @@ import {
   WMSTileLayer
 } from "react-leaflet";
 import Legend from "./Legend";
-import styles from "./FullMap.css";
+import styles from "./Map.css";
+import { updateTimeseriesMetadata } from "../actions";
 
-class FullMap extends Component {
+class MapComponent extends Component {
   constructor(props) {
+    console.log("Map props: ", props);
     super(props);
-    this.getPopup = this.getPopup.bind(this);
   }
+
   componentDidMount() {
     const { tile } = this.props;
     const inBboxFilter = this.getBbox().toLizardBbox();
@@ -81,16 +85,24 @@ class FullMap extends Component {
       />
     );
   }
-  clickMarker(assetType, assetId) {
-    const asset = this.props.assets[assetType][assetId];
-    if (!asset.timeseries) return;
-    asset.timeseries.forEach(this.props.updateTimeseries);
+
+  isAssetActive(asset) {
+    if (!this.props.alarms.data) return false;
+
+    console.log("Asset:", asset.timeseries);
+    // Get all active warnings, see if one belongs to this asset
+    return !!find(
+      this.props.alarms.data.filter(alarm => alarm.activeWarning()),
+      alarm => alarm.belongsToAsset(asset)
+    );
   }
+
   getPopup(asset) {
     let timeseriesTable;
     if (!asset.timeseries || !asset.timeseries.length) {
       timeseriesTable = <p>This asset has no timeseries.</p>;
     } else {
+      console.log("asset.timeseries", asset.timeseries);
       const timeseriesWithMetadata = asset.timeseries.filter(
         ts => this.props.timeseriesMetadata[ts.uuid]
       );
@@ -111,14 +123,18 @@ class FullMap extends Component {
           <table className={styles.PopupTable}>
             <thead>
               <tr>
-              <td><strong>Timeseries name</strong></td>
-              <td><strong>Last value</strong></td>
-              <td><strong>Unit</strong></td>
+                <td>
+                  <strong>Timeseries name</strong>
+                </td>
+                <td>
+                  <strong>Last value</strong>
+                </td>
+                <td>
+                  <strong>Unit</strong>
+                </td>
               </tr>
             </thead>
-            <tbody>
-            {rows}
-            </tbody>
+            <tbody>{rows}</tbody>
           </table>
         );
       } else {
@@ -138,44 +154,60 @@ class FullMap extends Component {
     );
   }
 
-  render() {
-    const { isInteractive, tile, width, height } = this.props;
-    const boundsForLeaflet = this.getBbox().toLeafletArray();
+  clickMarker(assetType, assetId) {
+    const asset = this.props.assets[assetType][assetId];
 
+    if (!asset.timeseries) return;
 
-    let markers = [];
+    asset.timeseries.forEach(this.props.updateTimeseries);
+  }
 
-    if (tile.assetTypes) {
-      tile.assetTypes.forEach(assetType => {
-        const assets = this.props.assets[assetType];
-        if (!assets) {
-          return;
-        }
+  markers() {
+    const { tile } = this.props;
+    if (!tile.assetTypes) return null;
 
-        Object.values(assets).forEach((asset, idx) => {
-          const {coordinates} = asset.geometry;
-          let marker = (
-            <CircleMarker
-              onclick={() =>
-                !this.props.isThumb && this.clickMarker(assetType, asset.id)}
-              radius={5}
-              color="#fff"
-              fillColor="green"
-              weight={1}
-              fillOpacity={1}
-              center={[coordinates[1], coordinates[0]]}
-              key={asset.id}
-            >
-              {this.getPopup(asset)}
-            </CircleMarker>
-          );
-          markers.push(marker);
-        });
+    const markers = [];
+
+    tile.assetTypes.forEach(assetType => {
+      const assets = this.props.assets[assetType] || {};
+      Object.values(assets).forEach(asset => {
+        const { coordinates } = asset.geometry;
+
+        const isActive = this.isAssetActive(asset);
+
+        const marker = (
+          <CircleMarker
+            onclick={() =>
+              !this.props.isThumb && this.clickMarker(assetType, asset.id)}
+            radius={5}
+            color="#fff"
+            fillColor={isActive ? "red" : "green"}
+            weight={1}
+            fillOpacity={1}
+            center={[coordinates[1], coordinates[0]]}
+            key={asset.id}
+          >
+            {this.getPopup(asset)}
+          </CircleMarker>
+        );
+        markers.push(marker);
       });
-    }
+    });
+
+    return markers;
+  }
+
+  render() {
+    return this.props.isFull ? this.renderFull() : this.renderSmall();
+  }
+
+  renderFull() {
+    const { tile, width, height } = this.props;
 
     let legend = null;
+
     if (tile.rasters && tile.rasters.length > 0) {
+      // Only show a legend for the first raster.
       const rasterUuid = tile.rasters[0].uuid;
       if (
         !this.props.rasters[rasterUuid] ||
@@ -198,28 +230,57 @@ class FullMap extends Component {
     }
 
     return (
-      <div className={styles.FullMap} style={{ width, height }}>
+      <div className={styles.MapTileFull} style={{ width, height }}>
         <Map
-          bounds={boundsForLeaflet}
+          bounds={this.getBbox().toLeafletArray()}
           attributionControl={false}
-          dragging={isInteractive}
-          touchZoom={isInteractive}
-          doubleClickZoom={isInteractive}
-          scrollWheelZoom={isInteractive}
-          boxZoom={isInteractive}
-          keyboard={isInteractive}
-          tap={isInteractive}
+          dragging={true}
+          touchZoom={true}
+          doubleClickZoom={true}
+          scrollWheelZoom={true}
+          boxZoom={true}
+          keyboard={true}
+          tap={true}
           zoomControl={false}
           attribution={false}
-          className={styles.MapStyle}
+          className={styles.MapStyleFull}
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
-          {markers}
+          {this.markers()}
+          {legend}
         </Map>
-        {legend}
+      </div>
+    );
+  }
+
+  renderSmall() {
+    const { tile } = this.props;
+
+    return (
+      <div className={styles.MapStyleTile}>
+        <Map
+          bounds={this.getBbox().toLeafletArray()}
+          attributionControl={false}
+          dragging={false}
+          touchZoom={false}
+          doubleClickZoom={false}
+          scrollWheelZoom={false}
+          boxZoom={false}
+          keyboard={false}
+          tap={false}
+          zoomControl={false}
+          attribution={false}
+          className={styles.MapStyleTile}
+        >
+          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
+          {tile.rasters
+            ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
+            : null}
+          {this.markers()}
+        </Map>
       </div>
     );
   }
@@ -229,6 +290,7 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
+    alarms: state.alarms,
     timeseriesMetadata: state.timeseries
   };
 }
@@ -243,4 +305,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FullMap);
+export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);
