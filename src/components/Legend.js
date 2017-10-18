@@ -83,7 +83,7 @@ class Legend extends Component {
               isOpen: !isOpen
             })}
         >
-          Legend ({title})
+          <span title={title}>Legend ({title})</span>
           <i className="material-icons">drag_handle</i>
         </div>
 
