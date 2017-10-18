@@ -110,11 +110,15 @@ class FullMap extends Component {
         timeseriesTable = (
           <table className={styles.PopupTable}>
             <thead>
-              <td>Timeseries name</td>
-              <td>Last value</td>
-              <td>Unit</td>
+              <tr>
+              <td><strong>Timeseries name</strong></td>
+              <td><strong>Last value</strong></td>
+              <td><strong>Unit</strong></td>
+              </tr>
             </thead>
+            <tbody>
             {rows}
+            </tbody>
           </table>
         );
       } else {
@@ -254,7 +258,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(addAsset(assetType, id, instance)),
     getRaster: uuid => dispatch(getRaster(uuid)),
     updateTimeseries: timeseries =>
-      dispatch(updateTimeseriesMetadata(timeseries.uuid))    
+      dispatch(updateTimeseriesMetadata(timeseries.uuid))
   };
 }
 

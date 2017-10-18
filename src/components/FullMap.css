@@ -5,3 +5,13 @@
   height: 100%;
   width: 100%;
 }
+.PopupTable, .PopupTable th, .PopupTable td {
+	    border-collapse: collapse;
+	    border: solid #ccc 1px;
+	    padding: 5px;
+	}
+
+	.PopupTable thead {
+	    color: white;
+	    background-color: #666;
+	}
