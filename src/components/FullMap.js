@@ -145,32 +145,34 @@ class FullMap extends Component {
 
     let markers = [];
 
-    this.props.tile.assetTypes.forEach(assetType => {
-      const assets = this.props.assets[assetType];
-      if (!assets) {
-        return;
-      }
+    if (tile.assetTypes) {
+      tile.assetTypes.forEach(assetType => {
+        const assets = this.props.assets[assetType];
+        if (!assets) {
+          return;
+        }
 
-      Object.values(assets).forEach((asset, idx) => {
-        const {coordinates} = asset.geometry;
-        let marker = (
-          <CircleMarker
-            onclick={() =>
-              !this.props.isThumb && this.clickMarker(assetType, asset.id)}
-            radius={5}
-            color="#fff"
-            fillColor="green"
-            weight={1}
-            fillOpacity={1}
-            center={[coordinates[1], coordinates[0]]}
-            key={asset.id}
-          >
-            {this.getPopup(asset)}
-          </CircleMarker>
-        );
-        markers.push(marker);
+        Object.values(assets).forEach((asset, idx) => {
+          const {coordinates} = asset.geometry;
+          let marker = (
+            <CircleMarker
+              onclick={() =>
+                !this.props.isThumb && this.clickMarker(assetType, asset.id)}
+              radius={5}
+              color="#fff"
+              fillColor="green"
+              weight={1}
+              fillOpacity={1}
+              center={[coordinates[1], coordinates[0]]}
+              key={asset.id}
+            >
+              {this.getPopup(asset)}
+            </CircleMarker>
+          );
+          markers.push(marker);
+        });
       });
-    });
+    }
 
     let legend = null;
     if (tile.rasters && tile.rasters.length > 0) {
