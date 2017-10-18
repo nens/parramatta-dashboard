@@ -122,9 +122,17 @@ class MapComponent extends Component {
         timeseriesTable = (
           <table className={styles.PopupTable}>
             <thead>
-              <td>Timeseries name</td>
-              <td>Last value</td>
-              <td>Unit</td>
+              <tr>
+                <td>
+                  <strong>Timeseries name</strong>
+                </td>
+                <td>
+                  <strong>Last value</strong>
+                </td>
+                <td>
+                  <strong>Unit</strong>
+                </td>
+              </tr>
             </thead>
             <tbody>{rows}</tbody>
           </table>
@@ -135,7 +143,7 @@ class MapComponent extends Component {
     }
 
     return (
-      <Popup>
+      <Popup minWidth={250} keepInView={true}>
         <div className={styles.Popup}>
           <p>
             <strong>{asset.name}</strong>
@@ -196,7 +204,6 @@ class MapComponent extends Component {
   renderFull() {
     const { tile, width, height } = this.props;
 
-    console.log("TILE = ", tile);
     let legend = null;
 
     if (tile.rasters && tile.rasters.length > 0) {
