@@ -127,7 +127,7 @@ class FullMap extends Component {
     }
 
     return (
-      <Popup minWidth={250}>
+      <Popup minWidth={250} keepInView={true}>
         <div className={styles.Popup}>
           <p>
             <strong>{asset.name}</strong>
