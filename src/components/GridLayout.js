@@ -7,7 +7,7 @@ import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
 import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
-import MapTile from "./MapTile";
+import Map from "./Map";
 import headerImage from "../graphics/parramatta-header-logo.svg";
 import styles from "./GridLayout.css";
 
@@ -113,7 +113,7 @@ class GridLayout extends Component {
               title={tile.title}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />
+              <Map isFull={false} bbox={tile.bbox} tile={tile} />
             </Tile>
           );
         case "assets":
@@ -123,7 +123,7 @@ class GridLayout extends Component {
               title={tile.title}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />
+              <Map isFull={false} bbox={tile.bbox} tile={tile} />
             </Tile>
           );
         case "timeseries":
@@ -148,7 +148,7 @@ class GridLayout extends Component {
               title={tile.title}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <StatisticsTile number={tile.number} title={tile.title} />
+              <StatisticsTile alarms={this.props.alarms} title={tile.title} />
             </Tile>
           );
         default:
@@ -204,7 +204,8 @@ class GridLayout extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
-    tiles: state.tiles
+    tiles: state.tiles,
+    alarms: state.alarms
   };
 };
 

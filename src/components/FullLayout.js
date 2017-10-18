@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import DocumentTitle from "react-document-title";
 import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
-import MapTile from "./MapTile";
-import FullMap from "./FullMap";
+import Map from "./Map";
 import FullStatistics from "./FullStatistics";
 import FullTimeseries from "./FullTimeseries";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -47,20 +46,21 @@ class FullLayout extends Component {
     switch (selectedTile.type) {
       case "assets":
         element = (
-          <FullMap
+          <Map
             {...this.props}
+            isFull={true}
             width={width}
             height={height}
             tile={selectedTile}
-            isInteractive={true}
             bbox={selectedTile.bbox}
           />
         );
         break;
       case "raster":
         element = (
-          <FullMap
+          <Map
             {...this.props}
+            isFull={true}
             width={width}
             height={height}
             tile={selectedTile}
@@ -105,23 +105,34 @@ class FullLayout extends Component {
               <Scrollbars height={height}>
                 {allTiles.map((tile, i) => {
                   let previewTile = null;
-                  switch(tile.type) {
+                  switch (tile.type) {
                     case "raster":
-                      previewTile = <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />;
+                      previewTile = (
+                        <Map isFull={false} bbox={tile.bbox} tile={tile} />
+                      );
                       break;
                     case "assets":
-                      previewTile = <MapTile isInteractive={false} bbox={tile.bbox} tile={tile} />;
+                      previewTile = (
+                        <Map isFull={false} bbox={tile.bbox} tile={tile} />
+                      );
                       break;
                     case "timeseries":
-                      previewTile = <TimeseriesTile
-                        width={300}
-                        height={300}
-                        timeseries={tile.timeseries}
-                        tile={tile}
-                      />;
+                      previewTile = (
+                        <TimeseriesTile
+                          width={300}
+                          height={300}
+                          timeseries={tile.timeseries}
+                          tile={tile}
+                        />
+                      );
                       break;
                     case "statistics":
-                      previewTile = <StatisticsTile number={tile.number} title={tile.title} />;
+                      previewTile = (
+                        <StatisticsTile
+                          alarms={this.props.alarms}
+                          title={tile.title}
+                        />
+                      );
                       break;
                     default:
                       previewTile = null;
@@ -180,7 +191,8 @@ const mapStateToProps = (state, ownProps) => {
       state.tiles.filter(tile => {
         if (Number(tile.id) === Number(id)) return tile;
         return false;
-      })
+      }),
+    alarms: state.alarms
   };
 };
 

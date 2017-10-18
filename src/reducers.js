@@ -8,6 +8,8 @@ import {
   ADD_TILE,
   ADD_TIMESERIES,
   CLOSE_TILE,
+  FETCH_ALARMS,
+  RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
   FETCH_RASTER,
@@ -212,8 +214,7 @@ function tiles(
     {
       id: 5,
       title: "Alarms triggered",
-      type: "statistics",
-      number: 2
+      type: "statistics"
     }
   ],
   action
@@ -272,7 +273,33 @@ function ui(
   }
 }
 
+function alarms(
+  state = {
+    data: null,
+    isFetching: false
+  },
+  action
+) {
+  switch (action.type) {
+    case FETCH_ALARMS:
+      let newState = { ...state };
+      newState.isFetching = true;
+      return newState;
+    case RECEIVE_ALARMS:
+      // We receive *all* of them at once,
+      // don't use old state.
+      console.log("Setting alarms.data to ", JSON.stringify(action.alarms));
+      return {
+        data: action.alarms,
+        isFetching: false
+      };
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
+  alarms,
   assets,
   legends,
   rasters,
