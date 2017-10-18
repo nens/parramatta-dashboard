@@ -166,16 +166,15 @@ class GridLayout extends Component {
           />
           <div
             className={styles.LogoutButton}
-            onClick={() => {
-              // localStorage.removeItem("parramatta-layout");
-              window.location.href = "/accounts/logout/";
-            }}
+            onClick={() => this.props.session.bootstrap.doLogout()}
           >
             {width > 700 ? (
               <span>
                 <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
               </span>
-            ) : <i className="material-icons">lock</i>}
+            ) : (
+              <i className="material-icons">lock</i>
+            )}
             <Ink />
           </div>
           <ReactGridLayout
