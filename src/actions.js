@@ -183,7 +183,7 @@ export const addTimeseries = (uuid, timeseries) => {
   };
 };
 
-export function updateTimeseriesMetadata(dispatch, uuid) {
+export function updateTimeseriesMetadata(uuid) {
   return (dispatch, getState) => {
     // Get timeseries with uuid, update its metadata. Does not
     // pass a start and end time, so does not receive any events,

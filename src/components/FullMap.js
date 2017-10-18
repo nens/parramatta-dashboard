@@ -1,13 +1,23 @@
 import React, { Component } from "react";
 import { BOUNDS } from "../config";
 import { connect } from "react-redux";
-import { getRaster, addAsset } from "../actions";
+import { getRaster, addAsset, updateTimeseriesMetadata } from "../actions";
 import { getMeasuringStations } from "lizard-api-client";
-import { Map, CircleMarker, TileLayer, WMSTileLayer } from "react-leaflet";
+import {
+  Map,
+  CircleMarker,
+  Popup,
+  TileLayer,
+  WMSTileLayer
+} from "react-leaflet";
 import Legend from "./Legend";
 import styles from "./FullMap.css";
 
 class FullMap extends Component {
+  constructor(props) {
+    super(props);
+    this.getPopup = this.getPopup.bind(this);
+  }
   componentDidMount() {
     const { tile } = this.props;
     const inBboxFilter = this.getBbox().toLizardBbox();
@@ -71,42 +81,134 @@ class FullMap extends Component {
       />
     );
   }
+  clickMarker(assetType, assetId) {
+    const asset = this.props.assets[assetType][assetId];
+    if (!asset.timeseries) return;
+    asset.timeseries.forEach(this.props.updateTimeseries);
+  }
+  getPopup(asset) {
+    let timeseriesTable;
+    if (!asset.timeseries || !asset.timeseries.length) {
+      timeseriesTable = <p>This asset has no timeseries.</p>;
+    } else {
+      const timeseriesWithMetadata = asset.timeseries.filter(
+        ts => this.props.timeseriesMetadata[ts.uuid]
+      );
+
+      if (timeseriesWithMetadata.length) {
+        // Create a table with units and latest values.
+        const rows = timeseriesWithMetadata.map((ts, idx) => {
+          const metadata = this.props.timeseriesMetadata[ts.uuid];
+          return (
+            <tr key={idx}>
+              <td>{metadata.name}</td>
+              <td>{metadata.last_value}</td>
+              <td>{metadata.observation_type.unit || ""}</td>
+            </tr>
+          );
+        });
+        timeseriesTable = (
+          <table className={styles.PopupTable}>
+            <thead>
+              <td>Timeseries name</td>
+              <td>Last value</td>
+              <td>Unit</td>
+            </thead>
+            {rows}
+          </table>
+        );
+      } else {
+        timeseriesTable = <p>Loading timeseries...</p>;
+      }
+    }
+
+    return (
+      <Popup>
+        <div className={styles.Popup}>
+          <p>
+            <strong>{asset.name}</strong>
+          </p>
+          {timeseriesTable}
+        </div>
+      </Popup>
+    );
+  }
+
   render() {
     const { isInteractive, tile, width, height } = this.props;
     const boundsForLeaflet = this.getBbox().toLeafletArray();
-    const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
-    const markers = Object.values(assets).map(asset => {
-      const { coordinates } = asset.geometry;
-      return (
-        <CircleMarker
-          radius={5}
-          color="#fff"
-          fillColor="green"
-          weight={1}
-          fillOpacity={1}
-          center={[coordinates[1], coordinates[0]]}
-          key={asset.id}
-        />
-        // ^^ TODO: fillColor red/green based on alarm threshold exceeding?
-      );
+
+
+    let markers = [];
+
+    this.props.tile.assetTypes.forEach(assetType => {
+      const assets = this.props.assets[assetType];
+      if (!assets) {
+        return;
+      }
+
+      Object.values(assets).forEach((asset, idx) => {
+        const {coordinates} = asset.geometry;
+        let marker = (
+          <CircleMarker
+            onclick={() =>
+              !this.props.isThumb && this.clickMarker(assetType, asset.id)}
+            radius={5}
+            color="#fff"
+            fillColor="green"
+            weight={1}
+            fillOpacity={1}
+            center={[coordinates[1], coordinates[0]]}
+            key={asset.id}
+          >
+            {this.getPopup(asset)}
+          </CircleMarker>
+        );
+        markers.push(marker);
+      });
     });
+
+    // const assets = tile.assetTypes ? this.props.assets[tile.assetTypes] : {};
+    // const markers = Object.values(assets).map(asset => {
+    //   const { coordinates } = asset.geometry;
+    //   console.log('asset', asset);
+    //   console.log('...', tile.assetTypes);
+    //   return (
+    //     <CircleMarker
+    //       // onclick={() => this.clickMarker(assetType, asset.id)}
+    //       radius={5}
+    //       color="#fff"
+    //       fillColor="green"
+    //       weight={1}
+    //       fillOpacity={1}
+    //       center={[coordinates[1], coordinates[0]]}
+    //       key={asset.id}>
+    //      {this.getPopup(asset)}
+    //     </CircleMarker>
+    //     // ^^ TODO: fillColor red/green based on alarm threshold exceeding?
+    //   );
+    // });
 
     let legend = null;
     if (tile.rasters && tile.rasters.length > 0) {
       const rasterUuid = tile.rasters[0].uuid;
-      if (!this.props.rasters[rasterUuid] || !this.props.rasters[rasterUuid].data) {
+      if (
+        !this.props.rasters[rasterUuid] ||
+        !this.props.rasters[rasterUuid].data
+      ) {
         legend = null;
-      }
-      else {
+      } else {
         const raster = this.props.rasters[rasterUuid].data;
-        legend = <Legend
-          tile={tile}
-          uuid={rasterUuid}
-          title={raster.name}
-          wmsInfo={raster.wms_info}
-          observationType={raster.observation_type}
-          styles={raster.options.styles}
-        />;
+        legend = (
+          <Legend
+            tile={tile}
+            uuid={rasterUuid}
+            title={raster.name}
+            wmsInfo={raster.wms_info}
+            observationType={raster.observation_type}
+            styles={raster.options.styles}
+          />
+        );
       }
     }
 
@@ -141,7 +243,8 @@ class FullMap extends Component {
 function mapStateToProps(state) {
   return {
     assets: state.assets,
-    rasters: state.rasters
+    rasters: state.rasters,
+    timeseriesMetadata: state.timeseries
   };
 }
 
@@ -149,7 +252,9 @@ function mapDispatchToProps(dispatch) {
   return {
     addAsset: (assetType, id, instance) =>
       dispatch(addAsset(assetType, id, instance)),
-    getRaster: uuid => dispatch(getRaster(uuid))
+    getRaster: uuid => dispatch(getRaster(uuid)),
+    updateTimeseries: timeseries =>
+      dispatch(updateTimeseriesMetadata(timeseries.uuid))    
   };
 }
 
