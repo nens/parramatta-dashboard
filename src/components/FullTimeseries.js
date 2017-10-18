@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
+import "moment/locale/en-au";
 import { addTimeseries } from "../actions";
 import { getTimeseries } from "lizard-api-client";
 import {
@@ -339,7 +340,9 @@ class TimeseriesChartComponent extends Component {
         {yaxes}
         {legend}
         <ReferenceLine x={new Date().getTime()} stroke="black" label="Now" />
-        <Tooltip />
+        <Tooltip labelFormatter={(label) => {
+          return moment(label).locale("en-au").format("LLL");
+        }} />
       </ComposedChart>
     );
   }
