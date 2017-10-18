@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { Map } from "immutable";
 import { getLegend } from "../actions";
 import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
@@ -13,15 +14,6 @@ class Legend extends Component {
       isOpen: false
     };
     this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
-
-    this.props.history.listen((location, action) => {
-      console.log("on route change");
-      this.props.doGetLegend(
-        this.props.uuid,
-        this.props.wmsInfo,
-        this.props.styles
-      );
-    });
   }
   componentDidMount() {
     const { uuid, wmsInfo, styles } = this.props;
@@ -38,18 +30,44 @@ class Legend extends Component {
     });
   }
 
+  getCorrectTextColor(hex) {
+    let threshold = 130;
+    // ^^ About half of 256. Lower threshold equals more dark text on dark background
+
+    let hRed = hexToR(hex);
+    let hGreen = hexToG(hex);
+    let hBlue = hexToB(hex);
+
+    function hexToR(h) {
+      return parseInt(cutHex(h).substring(0, 2), 16);
+    }
+    function hexToG(h) {
+      return parseInt(cutHex(h).substring(2, 4), 16);
+    }
+    function hexToB(h) {
+      return parseInt(cutHex(h).substring(4, 6), 16);
+    }
+    function cutHex(h) {
+      return h.charAt(0) === "#" ? h.substring(1, 7) : h;
+    }
+
+    let cBrightness = (hRed * 299 + hGreen * 587 + hBlue * 114) / 1000;
+    if (cBrightness > threshold) {
+      return "#000000";
+    } else {
+      return "#ffffff";
+    }
+  }
+
   render() {
     const { width, isOpen } = this.state;
-    const { legends, title } = this.props;
+    const { legends, title, uuid } = this.props;
     const isMobile = width < 700 ? true : false;
-    const legend = Object.values(legends)[0];
-
-    let legendSteps = null;
-    try {
-      legendSteps = legend.data.legend;
-    } catch (e) {
-      return null;
-    }
+    const legendsList = Map(legends).toJS();
+    const legendSteps =
+      legendsList[uuid] && legendsList[uuid].data
+        ? legendsList[uuid].data.legend
+        : [];
 
     return (
       <div
@@ -75,7 +93,10 @@ class Legend extends Component {
                 <div
                   key={i}
                   className={styles.LegendStep}
-                  style={{ backgroundColor: step.color }}
+                  style={{
+                    backgroundColor: step.color,
+                    color: this.getCorrectTextColor(step.color)
+                  }}
                 >
                   {step.value.toFixed(1)}
                 </div>

@@ -50,3 +50,6 @@
   width: 100%;
   height: 26px;
 }
+.LegendStepLabel {
+  filter: invert(100%);  
+}

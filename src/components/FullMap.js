@@ -109,7 +109,7 @@ class FullMap extends Component {
         />;
       }
     }
-    
+
     return (
       <div className={styles.FullMap} style={{ width, height }}>
         <Map
