@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import DocumentTitle from "react-document-title";
-import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
 import Map from "./Map";
 import FullStatistics from "./FullStatistics";
-import FullTimeseries from "./FullTimeseries";
+import TimeseriesChart from "./TimeseriesChart";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
@@ -81,7 +80,8 @@ class FullLayout extends Component {
         break;
       case "timeseries":
         element = (
-          <FullTimeseries
+          <TimeseriesChart
+            isFull={true}
             width={width}
             height={height}
             timeseries={selectedTile.timeseries}
@@ -118,7 +118,8 @@ class FullLayout extends Component {
                       break;
                     case "timeseries":
                       previewTile = (
-                        <TimeseriesTile
+                        <TimeseriesChart
+                          isFull={false}
                           width={300}
                           height={300}
                           timeseries={tile.timeseries}
