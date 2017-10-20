@@ -1,0 +1,11 @@
+# ansible host files
+hosts
+production_hosts
+auth.json
+deploy.retry
+staging
+integration
+webservers
+local
+production
+group_vars/all
