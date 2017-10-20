@@ -1,0 +1,10 @@
+build_user: buildout
+
+version: 1.0.0
+repo_name: beautiful-client
+
+deploy_type: integration
+
+sitename: {{ deploy_type }}".lizard.net"
+project_path: "/srv/{{ sitename }}"
+deploy_path: {{ project_path }}/src/lizard-client/dist
