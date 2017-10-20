@@ -378,7 +378,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderFull(combinedEvents) {
-    const { tile, width, height } = this.props;
+    const { width, height } = this.props;
 
     const axes = this.getAxesData();
     const grid = <CartesianGrid strokeDasharray="3 3" />;
@@ -427,7 +427,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderTile(combinedEvents) {
-    const { tile, width, height } = this.props;
+    const { width, height } = this.props;
 
     const axes = this.getAxesData();
     const yaxes = this.getYAxes(axes, false);
