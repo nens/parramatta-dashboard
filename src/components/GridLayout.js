@@ -5,7 +5,7 @@ import ReactGridLayout from "react-grid-layout";
 import Tile from "./Tile";
 import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
-import TimeseriesTile from "./TimeseriesTile";
+import TimeseriesChart from "./TimeseriesChart";
 import StatisticsTile from "./StatisticsTile";
 import Map from "./Map";
 import headerImage from "../graphics/parramatta-header-logo.svg";
@@ -133,7 +133,8 @@ class GridLayout extends Component {
               title={tile.title}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <TimeseriesTile
+              <TimeseriesChart
+                isFull={false}
                 width={300}
                 height={300}
                 timeseries={tile.timeseries}

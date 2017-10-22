@@ -49,7 +49,7 @@ class TermsOrLoginOrAppComponent extends Component {
       this.props.sessionState.bootstrap.doLogin();
     } else {
       return (
-        <Router>
+        <Router basename="/clients/parramatta">
           <App />
         </Router>
       );

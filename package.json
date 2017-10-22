@@ -1,6 +1,6 @@
 {
   "name": "parramatta-dashboard",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "name": "nens/parramatta-dashboard",
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/nens/parramatta-dashboard/issues"
   },
-  "homepage": "https://github.com/nens/parramatta-dashboard",
+  "homepage": "https://parramatta.lizard.net/clients/parramatta/",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.2",
@@ -100,6 +100,9 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "precommit": "lint-staged",
+    "release": "buck-trap -a",
+    "staging-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=staging --extra-vars=\"sitename=staging.nxt.lizard.net version=v$V\"",
+    "production-deploy": "read -p 'Version? (see above) ' V && test $V && ansible-playbook -i deploy/hosts -K deploy/deploy.yml --limit=production --extra-vars=\"sitename=nxt.lizard.net version=v$V\"",
     "i18n:update": "node translationRunner.js",
     "i18n:extract": "node extract.js",
     "i18n:extract-then-update": "node extract.js && node translationRunner.js"
