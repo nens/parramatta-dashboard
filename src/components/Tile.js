@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-// import injectTapEventPlugin from "react-tap-event-plugin";
-// import isDblTouchTap from "../util/isDblTouchTap";
 import styles from "./Tile.css";
-
-// injectTapEventPlugin();
 
 class Tile extends Component {
   render() {
@@ -12,11 +8,6 @@ class Tile extends Component {
       <div
         className={styles.Tile}
         onClick={onClick}
-        // onTouchTap={e => {
-        //   if (isDblTouchTap(e)) {
-        //     handleDoubleClick();
-        //   }
-        // }}
       >
         <div className={styles.TileTitle}>
           <div className="drag-handle">{title}</div>

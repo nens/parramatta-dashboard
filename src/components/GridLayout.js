@@ -14,13 +14,6 @@ import styles from "./GridLayout.css";
 const layoutFromLocalStorage = JSON.parse(
   localStorage.getItem("parramatta-layout")
 );
-let x1 = 0,
-  y1 = 0,
-  z1 = 0,
-  x2 = 0,
-  y2 = 0,
-  z2 = 0;
-let sensitivity = 20;
 
 class GridLayout extends Component {
   constructor(props) {
@@ -70,36 +63,15 @@ class GridLayout extends Component {
   }
   componentDidMount() {
     window.addEventListener("resize", this.handleUpdateDimensions, false);
-    if (typeof window.DeviceMotionEvent !== "undefined") {
-      window.addEventListener("devicemotion", this.handleShake, false);
-      setInterval(() => {
-        var change = Math.abs(x1 - x2 + y1 - y2 + z1 - z2);
-        if (change > sensitivity) {
-          localStorage.removeItem("parramatta-layout");
-          window.location.reload();
-        }
-        x2 = x1;
-        y2 = y1;
-        z2 = z1;
-      }, 150);
-    }
   }
   componentWillUnMount() {
     window.removeEventListener("resize", this.handleUpdateDimensions, false);
-    if (typeof window.DeviceMotionEvent !== "undefined") {
-      window.removeEventListener("devicemotion", this.handShake, false);
-    }
   }
   handleUpdateDimensions() {
     this.setState({
       width: window.innerWidth,
       height: window.innerHeight
     });
-  }
-  handleShake(e) {
-    x1 = e.accelerationIncludingGravity.x;
-    y1 = e.accelerationIncludingGravity.y;
-    z1 = e.accelerationIncludingGravity.z;
   }
   render() {
     const { width, canMove } = this.state;
