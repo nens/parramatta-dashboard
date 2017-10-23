@@ -358,7 +358,7 @@ class TimeseriesChartComponent extends Component {
         }
 
         if (isFull) {
-          label = `${alarm.name} (triggers when value ${alarm.comparison} ${threshold}${active})`;
+          label = `${alarm.name} ${threshold}${active})`;
         }
 
         // Figure out which Y axis the value is on so Recharts knows where to plot it
@@ -374,12 +374,10 @@ class TimeseriesChartComponent extends Component {
             y={threshold}
             yAxisId={axisIndex}
             stroke={color}>
-              <Label
-                value={label}
-                position="left"
-                style={{ textAnchor: "middle" }}
-                angle={270}
-              />
+            <Label
+              value={label}
+              position="insideBottomLeft"
+            />
           </ReferenceLine>
         );
       });
