@@ -5,12 +5,13 @@ import "moment/locale/en-au";
 import { addTimeseries } from "../actions";
 import { getTimeseries } from "lizard-api-client";
 import {
+  Area,
   Bar,
   CartesianGrid,
   ComposedChart,
   ReferenceLine,
+  Label,
   Legend,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -50,6 +51,26 @@ function combineEventSeries(series) {
     values.timestamp = timestamp;
     return values;
   });
+}
+
+
+function ReferenceLabel(props) {
+  const { fill, value, textAnchor, fontSize, viewBox, dy, dx } = props;
+  const x = viewBox.width + viewBox.x;
+  const y = viewBox.y - 6;
+  return (
+    <text
+      x={x}
+      y={y}
+      dy={dy}
+      dx={dx}
+      fill={fill}
+      fontSize={fontSize || 10}
+      textAnchor={textAnchor}
+    >
+      {value}
+    </text>
+  );
 }
 
 class TimeseriesChartComponent extends Component {
@@ -255,9 +276,14 @@ class TimeseriesChartComponent extends Component {
           key={idx}
           yAxisId={idx}
           orientation={["left", "right"][idx]}
-          domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}
-          label={this.axisLabel(axis)}
-        />
+          domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}>
+          <Label
+            value={this.axisLabel(axis)}
+            position="left"
+            style={{ textAnchor: "middle" }}
+            angle={270}
+          />
+        </YAxis>
       );
     });
   }
@@ -269,14 +295,17 @@ class TimeseriesChartComponent extends Component {
 
       if (observationType.scale === "interval") {
         return (
-          <Line
+          <Area
             key={uuid}
             yAxisId={axisIndex}
             connectNulls={true}
+            fill="url(#lineChartGradient)"
+            fillOpacity={1}
+            dot={false}
             name={observationType.getLegendString()}
             type="monotone"
             dataKey={uuid}
-            stroke={["#00f", "#000058", "#99f"][idx % 3]}
+            stroke={["#26A7F1", "#000058", "#99f"][idx % 3]}
           />
         );
       } else if (observationType.scale === "ratio") {
@@ -287,7 +316,7 @@ class TimeseriesChartComponent extends Component {
             name={observationType.getLegendString()}
             barSize={20}
             dataKey={uuid}
-            fill={["#00f", "#000058", "#99f"][idx % 3]}
+            fill={["#26A7F1", "#000058", "#99f"][idx % 3]}
           />
         );
       }
@@ -329,7 +358,7 @@ class TimeseriesChartComponent extends Component {
         }
 
         if (isFull) {
-          label = `${alarm.name} (triggers when value ${alarm.comparison} ${threshold}${active})`;
+          label = `${alarm.name} ${threshold}${active})`;
         }
 
         // Figure out which Y axis the value is on so Recharts knows where to plot it
@@ -344,9 +373,12 @@ class TimeseriesChartComponent extends Component {
             key={`alarmreference-${alarm.uuid}-${threshold}`}
             y={threshold}
             yAxisId={axisIndex}
-            stroke={color}
-            label={label}
-          />
+            stroke={color}>
+            <Label
+              value={label}
+              position="insideBottomLeft"
+            />
+          </ReferenceLine>
         );
       });
     });
@@ -404,18 +436,30 @@ class TimeseriesChartComponent extends Component {
         margin={{
           top: 75,
           bottom: margin,
-          left: width < 700 ? 0 : 220,
+          left: width < 700 ? 20 : 220,
           right: 2 * margin
         }}
       >
+        <defs>
+          <linearGradient id="lineChartGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#26A7F1" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#26A7F1" stopOpacity={0} />
+          </linearGradient>
+        </defs>
         {grid}
         {lines}
         {xaxis}
         {yaxes}
         {legend}
-        <ReferenceLine x={new Date().getTime()} stroke="black" label="Now" />
+        <ReferenceLine
+          x={new Date().getTime()}
+          strokeWidth={2}
+          stroke="#ccc"
+          label={<ReferenceLabel fill={"#000"} value={"Now"} />}
+        />
         {this.alarmReferenceLines(axes)}
         <Tooltip
+          isAnimationActive={false}
           labelFormatter={label => {
             return moment(label)
               .locale("en-au")
