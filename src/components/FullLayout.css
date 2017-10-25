@@ -36,11 +36,14 @@
   position: absolute;
   right: 10px;
   top: 10px;
+}
+.ViewInLizardButton a {
   text-transform: uppercase;
   font-size: 13px;
   padding: 8px;
   cursor: pointer;
   color: #2196f3;
+  text-decoration: none;
 }
 .SidebarWrapper {
   position: absolute;

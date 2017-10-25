@@ -165,18 +165,15 @@ class FullLayout extends Component {
               </div>
             </NavLink>
             <div className={styles.Title}>{selectedTile.title}</div>
-            <div
-              className={styles.ViewInLizardButton}
-              onClick={() => {
-                console.log("View in Lizard");
-                window.open(
-                  "https://demo.lizard.net/favourites/7d1c6b5a-fb5e-4d0d-bb78-bfa1521a235f",
-                  "_blank"
-                );
-              }}
-            >
-              View in Lizard
-            </div>
+            {selectedTile.viewInLizardLink ? (
+              <div className={styles.ViewInLizardButton}>
+                <a href={selectedTile.viewInLizardLink} target="_blank">
+                  View in Lizard
+                </a>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           {element}
         </div>
