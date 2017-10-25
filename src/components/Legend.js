@@ -73,7 +73,7 @@ class Legend extends Component {
       <div
         className={isMobile ? styles.LegendMobile : styles.Legend}
         style={{
-          bottom: isOpen ? 0 : -390
+          bottom: isOpen ? 0 : -300
         }}
       >
         <div

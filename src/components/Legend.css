@@ -4,8 +4,8 @@
   -webkit-transition: all 200ms ease-in-out;
   z-index: 9999993;
   position: absolute;
-  bottom: -390px;
-  height: 450px;
+  bottom: 0;
+  height: 360px;
   width: 250px;
   background-color: #fff;
   right: 20px;
@@ -18,8 +18,8 @@
   -webkit-transition: all 200ms ease-in-out;
   z-index: 9999993;
   position: absolute;
-  bottom: -390px;
-  height: 450px;
+  bottom: 0;
+  height: 360px;
   width: 100%;
   background-color: #fff;
   right: 0;
@@ -48,8 +48,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 26px;
+  height: 20px;
 }
 .LegendStepLabel {
-  filter: invert(100%);  
+  filter: invert(100%);
 }
