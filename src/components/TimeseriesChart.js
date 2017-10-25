@@ -18,7 +18,6 @@ import {
   YAxis
 } from "recharts";
 import { scaleTime } from "d3-scale";
-import { timeMinute as minute } from "d3-time";
 import findIndex from "lodash/findIndex";
 
 function combineEventSeries(series) {
@@ -52,7 +51,6 @@ function combineEventSeries(series) {
     return values;
   });
 }
-
 
 function ReferenceLabel(props) {
   const { fill, value, textAnchor, fontSize, viewBox, dy, dx } = props;
@@ -140,12 +138,30 @@ class TimeseriesChartComponent extends Component {
   getTicks() {
     // Calculate ticks using d3_scale.scaleTime.
     const domain = [new Date(this.state.start), new Date(this.state.end)];
-    const scale = scaleTime()
-      .domain(domain)
-      .range([0, 1]);
-    const ticks = scale.ticks(minute, 5);
+    const scale = scaleTime().domain(domain);
+
+    // One tick per 200 pixels, no more than 4.
+    const numTicks = Math.min(4, Math.floor(this.props.width / 200));
+    // Note that numTicks is only considered a hint
+    const ticks = scale.ticks(numTicks);
 
     return ticks.map(entry => entry.getTime());
+  }
+
+  tickFormatter(tick) {
+    const period = this.state.end - this.state.start;
+    const periodHours = period / (1000 * 3600);
+
+    const date = moment(tick).format("l");
+    const time = moment(tick).format("LT");
+
+    if (periodHours < 24) {
+      return time;
+    } else if (periodHours < 24 * 7) {
+      return date + " " + time;
+    } else {
+      return date;
+    }
   }
 
   startEndOfTs() {
@@ -204,10 +220,6 @@ class TimeseriesChartComponent extends Component {
       this.updateTimeseries(uuid, null, null);
     });
     return result;
-  }
-
-  tickFormatter(tick) {
-    return moment(tick).format(" HH:mm");
   }
 
   updateTimeseries(uuid, start, end, params) {
@@ -276,7 +288,8 @@ class TimeseriesChartComponent extends Component {
           key={idx}
           yAxisId={idx}
           orientation={["left", "right"][idx]}
-          domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}>
+          domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}
+        >
           <Label
             value={this.axisLabel(axis)}
             position="left"
@@ -292,6 +305,13 @@ class TimeseriesChartComponent extends Component {
     return this.props.tile.timeseries.map((uuid, idx) => {
       const observationType = this.observationType(uuid);
       const axisIndex = this.indexForType(axes, observationType);
+      let color;
+
+      if (this.props.tile.colors && this.props.tile.colors.length > idx) {
+        color = this.props.tile.colors[idx];
+      } else {
+        color = ["#26A7F1", "#000058", "#99f"][idx % 3]; // Some shades of blue
+      }
 
       if (observationType.scale === "interval") {
         return (
@@ -305,7 +325,7 @@ class TimeseriesChartComponent extends Component {
             name={observationType.getLegendString()}
             type="monotone"
             dataKey={uuid}
-            stroke={["#26A7F1", "#000058", "#99f"][idx % 3]}
+            stroke={color}
           />
         );
       } else if (observationType.scale === "ratio") {
@@ -316,7 +336,7 @@ class TimeseriesChartComponent extends Component {
             name={observationType.getLegendString()}
             barSize={20}
             dataKey={uuid}
-            fill={["#26A7F1", "#000058", "#99f"][idx % 3]}
+            fill={color}
           />
         );
       }
@@ -373,11 +393,9 @@ class TimeseriesChartComponent extends Component {
             key={`alarmreference-${alarm.uuid}-${threshold}`}
             y={threshold}
             yAxisId={axisIndex}
-            stroke={color}>
-            <Label
-              value={label}
-              position="insideBottomLeft"
-            />
+            stroke={color}
+          >
+            <Label value={label} position="insideBottomLeft" />
           </ReferenceLine>
         );
       });
@@ -420,7 +438,7 @@ class TimeseriesChartComponent extends Component {
         type="number"
         domain={[this.state.start, this.state.end]}
         ticks={this.getTicks()}
-        tickFormatter={this.tickFormatter}
+        tickFormatter={this.tickFormatter.bind(this)}
       />
     );
     const legend = <Legend verticalAlign="bottom" height={36} />;
