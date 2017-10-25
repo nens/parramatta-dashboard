@@ -98,6 +98,8 @@ class MapComponent extends Component {
   }
 
   getPopup(asset) {
+    if (!this.props.isFull) return null;
+
     let timeseriesTable;
     if (!asset.timeseries || !asset.timeseries.length) {
       timeseriesTable = <p>This asset has no timeseries.</p>;
@@ -178,7 +180,7 @@ class MapComponent extends Component {
         const marker = (
           <CircleMarker
             onclick={() =>
-              !this.props.isThumb && this.clickMarker(assetType, asset.id)}
+              this.props.isFull && this.clickMarker(assetType, asset.id)}
             radius={5}
             color="#fff"
             fillColor={isActive ? "red" : "green"}
@@ -244,6 +246,8 @@ class MapComponent extends Component {
           zoomControl={false}
           attribution={false}
           className={styles.MapStyleFull}
+          onclick={event =>
+            console.log("LATLNG:", event.latlng.lat, event.latlng.lng)}
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
           {tile.rasters
