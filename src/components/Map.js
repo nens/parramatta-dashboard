@@ -98,6 +98,8 @@ class MapComponent extends Component {
   }
 
   getPopup(asset) {
+    if (!this.props.isFull) return null;
+
     let timeseriesTable;
     if (!asset.timeseries || !asset.timeseries.length) {
       timeseriesTable = <p>This asset has no timeseries.</p>;
@@ -178,7 +180,7 @@ class MapComponent extends Component {
         const marker = (
           <CircleMarker
             onclick={() =>
-              !this.props.isThumb && this.clickMarker(assetType, asset.id)}
+              this.props.isFull && this.clickMarker(assetType, asset.id)}
             radius={5}
             color="#fff"
             fillColor={isActive ? "red" : "green"}
