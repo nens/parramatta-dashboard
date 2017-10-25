@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.6"></a>
+## [0.1.6](https://github.com/nens/parramatta-dashboard/compare/v0.1.5...v0.1.6) (2017-10-25)
+
+
+### Bug Fixes
+
+* **Cleanup:** Removed dead code ([5b0a524](https://github.com/nens/parramatta-dashboard/commit/5b0a524))
+* **favicon:** Adding Lizard's favicon instead of React's ([#18](https://github.com/nens/parramatta-dashboard/issues/18)) ([cb96926](https://github.com/nens/parramatta-dashboard/commit/cb96926))
+* **Legend:** Less high ([#16](https://github.com/nens/parramatta-dashboard/issues/16)) ([fed1652](https://github.com/nens/parramatta-dashboard/commit/fed1652))
+
+
+
 <a name="0.1.5"></a>
 ## [0.1.5](https://github.com/nens/parramatta-dashboard/compare/v0.1.4...v0.1.5) (2017-10-20)
 
