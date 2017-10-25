@@ -246,8 +246,6 @@ class MapComponent extends Component {
           zoomControl={false}
           attribution={false}
           className={styles.MapStyleFull}
-          onclick={event =>
-            console.log("LATLNG:", event.latlng.lat, event.latlng.lng)}
         >
           <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
           {tile.rasters
