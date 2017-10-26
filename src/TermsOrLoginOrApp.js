@@ -26,7 +26,6 @@ class TermsOrLoginOrAppComponent extends Component {
   }
 
   termsSigned() {
-    window.localStorage.setItem("termsSigned", "true");
     this.setState({ termsSigned: true });
   }
 
