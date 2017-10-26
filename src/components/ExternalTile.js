@@ -21,6 +21,9 @@ class ExternalTileComponent extends Component {
         className={styles.externalIframe}
         width={width}
         height={height}
+        style={{
+          left: width < 700 ? 0 : 100
+        }}
       />
     );
   }
