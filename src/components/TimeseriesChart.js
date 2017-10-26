@@ -5,7 +5,7 @@ import "moment/locale/en-au";
 import { addTimeseries } from "../actions";
 import { getTimeseries } from "lizard-api-client";
 import {
-  Area,
+  Line,
   Bar,
   CartesianGrid,
   ComposedChart,
@@ -315,11 +315,10 @@ class TimeseriesChartComponent extends Component {
 
       if (observationType.scale === "interval") {
         return (
-          <Area
+          <Line
             key={uuid}
             yAxisId={axisIndex}
             connectNulls={true}
-            fill="url(#lineChartGradient)"
             fillOpacity={1}
             dot={false}
             name={observationType.getLegendString()}
@@ -458,12 +457,6 @@ class TimeseriesChartComponent extends Component {
           right: 2 * margin
         }}
       >
-        <defs>
-          <linearGradient id="lineChartGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#26A7F1" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#26A7F1" stopOpacity={0} />
-          </linearGradient>
-        </defs>
         {grid}
         {lines}
         {xaxis}
