@@ -15,24 +15,24 @@ import { BoundingBox } from "./util/bounds";
    Looks like:
 
    {
-     id: 1,
-     title: "DEM Sydney",
-     type: "raster",
-     rasters: [
-       {
-         uuid: "eae92c48",
-         opacity: 0.5
-       }
-     ],
-     viewInLizardLink: "" // As in every tile, an optional link to a favourite or other
+   id: 1,
+   title: "DEM Sydney",
+   type: "raster",
+   rasters: [
+   {
+   uuid: "eae92c48",
+   opacity: 0.5
+   }
+   ],
+   viewInLizardLink: "" // As in every tile, an optional link to a favourite or other
    },
 
    Optionally a datetime field for raster timeseries:
 
    datetime: new DateTime({
-     type: "relative",
-     to: "end",
-     offset: 3 * 60 * 60 // 3 hours after end of series
+   type: "relative",
+   to: "end",
+   offset: 3 * 60 * 60 // 3 hours after end of series
    }),
 
    "end" means the end of the timeseries; it can also be relative to "now" or "start",
@@ -41,10 +41,10 @@ import { BoundingBox } from "./util/bounds";
    Optionally a bbox field to show where to open the map:
 
    bbox: new BoundingBox(
-     149.22454833984378, // westmost
-     -34.94448806230625, // southmost
-     152.80883789062503, // eastmost
-     -32.699488680852674 // northmost
+   149.22454833984378, // westmost
+   -34.94448806230625, // southmost
+   152.80883789062503, // eastmost
+   -32.699488680852674 // northmost
    ),
 
    Assets map
@@ -53,10 +53,10 @@ import { BoundingBox } from "./util/bounds";
    Shows all assets of a specific type.
 
    {
-     id: 2,
-     title: "Measuring stations",
-     type: "assets",
-     assetTypes: ["measuringstation"]
+   id: 2,
+   title: "Measuring stations",
+   type: "assets",
+   assetTypes: ["measuringstation"]
    },
 
    Can also take a bbox field.
@@ -65,9 +65,9 @@ import { BoundingBox } from "./util/bounds";
    ==========
 
    {
-     id: 3,
-     title: "Breached thresholds",
-     type: "statistics"
+   id: 3,
+   title: "Breached thresholds",
+   type: "statistics"
    },
 
    Shows statistics on all configured alarms.
@@ -76,30 +76,45 @@ import { BoundingBox } from "./util/bounds";
    ==========
 
    {
-     id: 4,
-     title: "Timeseries",
-     type: "timeseries",
-     period: [
-       new DateTime({
-         type: "relative",
-         to: "end",
-         offset: -3 * 24 * 3600
-       }),
-       new DateTime({
-         type: "relative",
-         to: "end",
-         offset: 6 * 3600
-       })
-     ],
-     timeseries: [
-       "34b144a0-7849-4e3f-aaa8-b0fffc86abbf",
-       "48d39158-b98e-4267-bd7e-a73fabec53c9"
-     ],
-     colors: ["#26A7F1", "#000058"]
+   id: 4,
+   title: "Timeseries",
+   type: "timeseries",
+   period: [
+   new DateTime({
+   type: "relative",
+   to: "end",
+   offset: -3 * 24 * 3600
+   }),
+   new DateTime({
+   type: "relative",
+   to: "end",
+   offset: 6 * 3600
+   })
+   ],
+   timeseries: [
+   "34b144a0-7849-4e3f-aaa8-b0fffc86abbf",
+   "48d39158-b98e-4267-bd7e-a73fabec53c9"
+   ],
+   colors: ["#26A7F1", "#000058"]
    },
 
    If 'colors' is empty, default colors are used.
-*/
+
+   External tile
+   =============
+
+   A tile that links to something external (like a meteo service).
+
+   It has two elements besides the title, an image to use in the small tile
+   and an URL to load in an *iframe* in the full tile.
+
+   {
+   id: 4,
+   title: 'An iframe tile',
+   imageUrl: 'http://url-to-image.gif',
+   url: 'http://www.nelen-schuurmans.nl'
+   }
+ */
 
 export const THE_TILES = [
   {
@@ -129,12 +144,25 @@ export const THE_TILES = [
     id: 2,
     title: "Measuring stations",
     type: "assets",
+    bbox: new BoundingBox(
+      150.96240520477298, // westmost
+      -33.81217200269498, // southmost
+      151.03141307830813, // eastmost
+      -33.78071682642826 // northmost
+    ),
     assetTypes: ["measuringstation"]
   },
   {
     id: 3,
     title: "Breached thresholds",
     type: "statistics"
+  },
+  {
+    id: 11,
+    title: "Rain",
+    type: "external",
+    imageUrl: "https://nationaleregenradar.nl/images/radar.gif",
+    url: "http://www.bom.gov.au/nsw/forecasts/parramatta.shtml"
   },
   {
     id: 4,

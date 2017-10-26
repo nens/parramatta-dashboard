@@ -17,11 +17,6 @@ import styles from "./Map.css";
 import { updateTimeseriesMetadata } from "../actions";
 
 class MapComponent extends Component {
-  constructor(props) {
-    console.log("Map props: ", props);
-    super(props);
-  }
-
   componentDidMount() {
     const { tile } = this.props;
     const inBboxFilter = this.getBbox().toLizardBbox();
@@ -89,7 +84,6 @@ class MapComponent extends Component {
   isAssetActive(asset) {
     if (!this.props.alarms.data) return false;
 
-    console.log("Asset:", asset.timeseries);
     // Get all active warnings, see if one belongs to this asset
     return !!find(
       this.props.alarms.data.filter(alarm => alarm.activeWarning()),
