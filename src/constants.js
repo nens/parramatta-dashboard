@@ -150,7 +150,22 @@ export const THE_TILES = [
       151.03141307830813, // eastmost
       -33.78071682642826 // northmost
     ),
-    assetTypes: ["measuringstation"]
+    assetTypes: ["measuringstation"],
+    wmsLayers: [
+      {
+        url:
+          "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+        layers: "gauges",
+        format: "image/png",
+        transparent: true,
+        height: 256,
+        width: 256,
+        zindex: 1004,
+        uuid: "3cd5c72",
+        slug: "gauges",
+        srs: "EPSG:3857"
+      }
+    ]
   },
   {
     id: 3,
