@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { find } from "lodash";
-
+import { divIcon } from "leaflet";
 import { getRaster, addAsset } from "../actions";
 import { getMeasuringStations } from "lizard-api-client";
 import {
   Map,
-  CircleMarker,
+  Marker,
   Popup,
   TileLayer,
   WMSTileLayer
@@ -161,35 +161,40 @@ class MapComponent extends Component {
   markers() {
     const { tile } = this.props;
     if (!tile.assetTypes) return null;
-
     const markers = [];
-
     tile.assetTypes.forEach(assetType => {
       const assets = this.props.assets[assetType] || {};
       Object.values(assets).forEach(asset => {
         const { coordinates } = asset.geometry;
-
         const isActive = this.isAssetActive(asset);
-
+        const iconAlarm = divIcon({
+          className: "my-div-icon",
+          html: `<svg fill="red" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+              </svg>`
+        });
+        const iconNoAlarm = divIcon({
+          className: "my-div-icon",
+          html: `<svg fill="green" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>`
+        });
         const marker = (
-          <CircleMarker
+          <Marker
+            key={asset.id}
+            icon={isActive ? iconAlarm : iconNoAlarm}
+            position={[coordinates[1], coordinates[0]]}
             onclick={() =>
               this.props.isFull && this.clickMarker(assetType, asset.id)}
-            radius={5}
-            color="#fff"
-            fillColor={isActive ? "red" : "green"}
-            weight={1}
-            fillOpacity={1}
-            center={[coordinates[1], coordinates[0]]}
-            key={asset.id}
           >
             {this.getPopup(asset)}
-          </CircleMarker>
+          </Marker>
         );
         markers.push(marker);
       });
     });
-
     return markers;
   }
 
