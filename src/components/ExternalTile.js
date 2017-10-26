@@ -13,6 +13,8 @@ class ExternalTileComponent extends Component {
   }
 
   renderIframe(title, url, width, height) {
+    const { showingBar } = this.props;
+
     return (
       <iframe
         title="externalTile"
@@ -22,7 +24,7 @@ class ExternalTileComponent extends Component {
         width={width}
         height={height}
         style={{
-          left: width < 700 ? 0 : 100
+          left: showingBar ? 205 : 0
         }}
       />
     );

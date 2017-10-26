@@ -97,6 +97,7 @@ class FullLayout extends Component {
             isFull={true}
             width={width}
             height={height}
+            showingBar={!isMobile}
           />
         );
         break;
