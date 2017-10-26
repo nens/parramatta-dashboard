@@ -225,6 +225,23 @@ class MapComponent extends Component {
       }
     }
 
+    const wmsLayers = tile.wmsLayers
+      ? tile.wmsLayers.map((layer, i) => {
+          return (
+            <WMSTileLayer
+              key={i}
+              url={layer.url}
+              format={layer.format}
+              layers={layer.layers}
+              transparent={layer.transparent}
+              width={layer.width}
+              height={layer.height}
+              srs={layer.srs}
+            />
+          );
+        })
+      : null;
+
     return (
       <div className={styles.MapTileFull} style={{ width, height }}>
         <Map
@@ -247,6 +264,7 @@ class MapComponent extends Component {
             : null}
           {this.markers()}
           {legend}
+          {wmsLayers}
         </Map>
       </div>
     );
