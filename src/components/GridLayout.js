@@ -130,6 +130,7 @@ class GridLayout extends Component {
             <Tile
               {...this.props}
               title={tile.title}
+              backgroundColor={"#cccccc"}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <ExternalTile

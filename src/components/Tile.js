@@ -3,9 +3,12 @@ import styles from "./Tile.css";
 
 class Tile extends Component {
   render() {
-    const { onClick, title, children } = this.props;
+    const { onClick, title, children, backgroundColor } = this.props;
     return (
       <div
+        style={{
+          backgroundColor: backgroundColor ? backgroundColor : "#ffffff"
+        }}
         className={styles.Tile}
         onClick={onClick}
       >
