@@ -7,6 +7,7 @@ import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
 import TimeseriesChart from "./TimeseriesChart";
 import StatisticsTile from "./StatisticsTile";
+import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import headerImage from "../graphics/parramatta-header-logo.svg";
 import styles from "./GridLayout.css";
@@ -122,6 +123,22 @@ class GridLayout extends Component {
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <StatisticsTile alarms={this.props.alarms} title={tile.title} />
+            </Tile>
+          );
+        case "external":
+          return (
+            <Tile
+              {...this.props}
+              title={tile.title}
+              backgroundColor={"#cccccc"}
+              onClick={() => history.push(`/full/${tile.id}`)}
+            >
+              <ExternalTile
+                isFull={false}
+                tile={tile}
+                width={300}
+                height={300}
+              />
             </Tile>
           );
         default:

@@ -62,6 +62,7 @@
   box-shadow: 3px 2px 5px -1px rgba(0, 0, 0, 0.08);
   margin: 0 10px 40px 23px;
   position: relative;
+  overflow: hidden;
 }
 .Active {
   box-sizing: border-box;

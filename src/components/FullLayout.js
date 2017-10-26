@@ -3,6 +3,7 @@ import DocumentTitle from "react-document-title";
 import StatisticsTile from "./StatisticsTile";
 import Map from "./Map";
 import FullStatistics from "./FullStatistics";
+import ExternalTile from "./ExternalTile";
 import TimeseriesChart from "./TimeseriesChart";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
@@ -89,6 +90,17 @@ class FullLayout extends Component {
           />
         );
         break;
+      case "external":
+        element = (
+          <ExternalTile
+            tile={selectedTile}
+            isFull={true}
+            width={width}
+            height={height}
+            showingBar={!isMobile}
+          />
+        );
+        break;
       default:
         element = null;
         break;
@@ -132,6 +144,16 @@ class FullLayout extends Component {
                         <StatisticsTile
                           alarms={this.props.alarms}
                           title={tile.title}
+                        />
+                      );
+                      break;
+                    case "external":
+                      previewTile = (
+                        <ExternalTile
+                          isFull={false}
+                          tile={tile}
+                          width={300}
+                          height={300}
                         />
                       );
                       break;

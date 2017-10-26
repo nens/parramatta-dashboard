@@ -172,24 +172,12 @@ function timeseries(state = {}, action) {
 
 function ui(
   state = {
-    tileKeys: [],
     currentTile: null
   },
   action
 ) {
   let newState;
   switch (action.type) {
-    case ADD_TILE:
-      // Add tile key to tileKeys
-      if (state.tileKeys.indexOf(action.tileKey) === -1) {
-        let newState = { ...state };
-        let newTileKeys = state.tileKeys.slice();
-        newTileKeys.push(action.tileKey);
-        newState.tileKeys = newTileKeys;
-        return newState;
-      } else {
-        return state;
-      }
     case SELECT_TILE:
       newState = { ...state };
       newState.currentTile = action.tileKey;
@@ -218,7 +206,6 @@ function alarms(
     case RECEIVE_ALARMS:
       // We receive *all* of them at once,
       // don't use old state.
-      console.log("Setting alarms.data to ", JSON.stringify(action.alarms));
       return {
         data: action.alarms,
         isFetching: false
