@@ -3,18 +3,15 @@ import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { find } from "lodash";
 import { divIcon } from "leaflet";
-import { getRaster, addAsset } from "../actions";
-import { getMeasuringStations } from "lizard-api-client";
+import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import {
-  Map,
-  Marker,
-  Popup,
-  TileLayer,
-  WMSTileLayer
-} from "react-leaflet";
+  getMeasuringStations,
+  makeGetter,
+  getOrFetch
+} from "lizard-api-client";
+import { Map, Marker, Popup, TileLayer, WMSTileLayer } from "react-leaflet";
 import Legend from "./Legend";
 import styles from "./Map.css";
-import { updateTimeseriesMetadata } from "../actions";
 
 class MapComponent extends Component {
   componentDidMount() {
@@ -49,13 +46,13 @@ class MapComponent extends Component {
     return BOUNDS;
   }
   tileLayerForRaster(raster) {
-    let rasterObject = null;
-    if (this.props.rasters.hasOwnProperty(raster.uuid)) {
-      rasterObject = this.props.rasters[raster.uuid].data;
-    }
+    let rasterObject = getOrFetch(
+      this.props.getRaster,
+      this.props.fetchRaster,
+      raster.uuid
+    );
 
     if (!rasterObject) {
-      this.props.getRaster(raster.uuid);
       return null;
     }
 
@@ -210,13 +207,15 @@ class MapComponent extends Component {
     if (tile.rasters && tile.rasters.length > 0) {
       // Only show a legend for the first raster.
       const rasterUuid = tile.rasters[0].uuid;
-      if (
-        !this.props.rasters[rasterUuid] ||
-        !this.props.rasters[rasterUuid].data
-      ) {
+      const raster = getOrFetch(
+        this.props.getRaster,
+        this.props.fetchRaster,
+        rasterUuid
+      );
+
+      if (!raster) {
         legend = null;
       } else {
-        const raster = this.props.rasters[rasterUuid].data;
         legend = (
           <Legend
             tile={tile}
@@ -309,6 +308,7 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
+    getRaster: makeGetter(state.rasters),
     alarms: state.alarms,
     timeseriesMetadata: state.timeseries
   };
@@ -318,7 +318,7 @@ function mapDispatchToProps(dispatch) {
   return {
     addAsset: (assetType, id, instance) =>
       dispatch(addAsset(assetType, id, instance)),
-    getRaster: uuid => dispatch(getRaster(uuid)),
+    fetchRaster: uuid => fetchRaster(dispatch, uuid),
     updateTimeseries: timeseries =>
       dispatch(updateTimeseriesMetadata(timeseries.uuid))
   };

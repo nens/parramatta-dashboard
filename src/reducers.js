@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import omit from "lodash/omit";
 import {
   ADD_ASSET,
   ADD_LEGEND,
@@ -10,14 +9,12 @@ import {
   RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
-  FETCH_RASTER,
   RECEIVE_BOOTSTRAP_ERROR,
   RECEIVE_BOOTSTRAP_SUCCESS,
-  RECEIVE_RASTER,
-  REMOVE_RASTER,
   SELECT_TILE
 } from "./actions";
 import { THE_TILES } from "./constants";
+import { makeReducer } from "lizard-api-client";
 
 function assets(
   state = {
@@ -69,45 +66,6 @@ function legends(state = {}, action) {
       }
       newState[action.uuid] = newLegend;
       return newState;
-    default:
-      return state;
-  }
-}
-
-function rasters(state = {}, action) {
-  let newState;
-  let newRaster;
-  switch (action.type) {
-    case FETCH_RASTER:
-      newState = { ...state };
-
-      if (action.uuid in newState) {
-        newRaster = { ...newState[action.uuid] };
-      } else {
-        newRaster = {
-          isFetching: false,
-          data: null,
-          error: null
-        };
-      }
-      newRaster.isFetching = true;
-      newState[action.uuid] = newRaster;
-      return newState;
-    case RECEIVE_RASTER:
-      newState = { ...state };
-      newRaster = { ...newState[action.uuid] };
-      newRaster.isFetching = false;
-      if (action.data === null) {
-        newRaster.data = null;
-        newRaster.error = "Error while fetching raster!";
-      } else {
-        newRaster.data = action.data;
-        newRaster.error = null;
-      }
-      newState[action.uuid] = newRaster;
-      return newState;
-    case REMOVE_RASTER:
-      return omit(state, action.uuid);
     default:
       return state;
   }
@@ -219,7 +177,7 @@ const rootReducer = combineReducers({
   alarms,
   assets,
   legends,
-  rasters,
+  rasters: makeReducer("rasters"),
   session,
   tiles,
   timeseries,

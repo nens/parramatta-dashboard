@@ -2,7 +2,8 @@ import {
   getTimeseries,
   getTimeseriesAlarms,
   getBootstrap,
-  getRasterDetail
+  getRasterDetail,
+  makeFetcher
 } from "lizard-api-client";
 
 // AlarmActions
@@ -15,11 +16,6 @@ export const ADD_ASSET = "ADD_ASSET";
 // LegendActions
 export const FETCH_LEGEND = "FETCH_LEGEND";
 export const ADD_LEGEND = "ADD_LEGEND";
-
-// RasterActions
-export const FETCH_RASTER = "FETCH_RASTER";
-export const RECEIVE_RASTER = "RECEIVE_RASTER";
-export const REMOVE_RASTER = "REMOVE_RASTER";
 
 // SessionActions
 export const FETCH_BOOTSTRAP = "FETCH_BOOTSTRAP";
@@ -99,57 +95,6 @@ export function getLegend(uuid, wmsInfo, styles, steps = 15) {
     wmsInfo.getLegend(styles, steps).then(data => {
       dispatch(addLegend(uuid, data));
     });
-  };
-}
-
-// Raster
-export const fetchRaster = uuid => {
-  return {
-    type: FETCH_RASTER,
-    uuid
-  };
-};
-
-const receiveRaster = (uuid, data) => {
-  return {
-    type: RECEIVE_RASTER,
-    uuid,
-    data
-  };
-};
-
-export const removeRaster = uuid => {
-  return {
-    type: REMOVE_RASTER,
-    uuid
-  };
-};
-
-export function getRaster(uuid, dispatch) {
-  return (dispatch, getState) => {
-    const currentData = getState().rasters[uuid];
-
-    if (currentData) {
-      if (currentData.data) {
-        // Already present.
-        return true;
-      }
-      if (currentData.isFetching || currentData.error) {
-        // It's not there, but we're not going to do anything either.
-        return false;
-      }
-    }
-
-    // We need to go fetch it.
-
-    // Set isFetching to true.
-    dispatch(fetchRaster(uuid));
-    // Send a request, store the resulting raster.
-    getRasterDetail(uuid).then(data => {
-      dispatch(receiveRaster(uuid, data));
-    });
-
-    return false; // No data present yet.
   };
 }
 
@@ -233,3 +178,5 @@ export function updateTimeseriesMetadata(uuid) {
     });
   };
 }
+
+export const fetchRaster = makeFetcher("rasters", getRasterDetail);
