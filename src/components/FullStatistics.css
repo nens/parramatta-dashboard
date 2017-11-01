@@ -1,8 +1,9 @@
 .FullStatistics {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding: 100px 0 0 0;
 }
 .Number {
   font-size: 125px;
@@ -12,4 +13,24 @@
 .Title {
   font-size: 30px;
   color: #747474;
+  padding: 20px;
+}
+.Table {
+  border-spacing: 0;
+  border-collapse: separate;
+  width: 90%;
+}
+.Table tr td {
+  padding: 10px;
+}
+.Table thead {
+  background-color: #ddd;
+  color: #818181;
+}
+
+.Active {
+  color: red;
+}
+.InActive {
+  color: green;
 }
