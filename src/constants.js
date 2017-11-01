@@ -126,6 +126,17 @@ export const THE_TILES = [
         uuid: "a8472933-0a9d-44c2-b74a-a72614d9be2b",
         opacity: 0.5
       }
+    ]
+  },
+  {
+    id: 12,
+    title: "dashboard som Waterstand (tijdreeks)",
+    type: "raster",
+    rasters: [
+      {
+        uuid: "0cf9f6bb-e2a2-432c-a410-6f83e8ee865a",
+        opacity: 0.5
+      }
     ],
     bbox: new BoundingBox(
       150.96240520477298, // westmost
@@ -177,7 +188,7 @@ export const THE_TILES = [
     title: "Rain",
     type: "external",
     imageUrl: "https://nationaleregenradar.nl/images/radar.gif",
-    url: "http://www.bom.gov.au/nsw/forecasts/parramatta.shtml"
+    url: "https://www.bom.gov.au/nsw/forecasts/parramatta.shtml"
   },
   {
     id: 4,
@@ -215,6 +226,12 @@ export const THE_TILES = [
       })
     ],
     timeseries: ["707b11ff-5331-4ba6-821e-673f2a715292"],
+    rasterIntersections: [
+      {
+        uuid: "0cf9f6bb-e2a2-432c-a410-6f83e8ee865a",
+        measuringStation: "205505"
+      }
+    ],
     colors: ["#26A7F1", "#000058"]
   },
   {
