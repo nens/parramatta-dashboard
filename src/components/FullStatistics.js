@@ -9,7 +9,6 @@ class FullStatistics extends Component {
   }
   getAlarmsTable() {
     const { alarms } = this.props;
-    console.log(alarms);
     const alarmsSortedByName = alarms.data
       ? alarms.data.slice().sort((a, b) => {
           if (a.name < b.name) {
