@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
 import configureStore from "./configureStore";
 import TermsOrLoginOrApp from "./TermsOrLoginOrApp";
-import registerServiceWorker from "./registerServiceWorker";
 
 let store = configureStore();
 
@@ -17,7 +16,6 @@ const Root = ({ store }) => (
 );
 
 ReactDOM.render(<Root store={store} />, document.getElementById("root"));
-registerServiceWorker();
 
 if (module.hot) {
   module.hot.accept("./TermsOrLoginOrApp", () => {
