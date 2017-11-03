@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.8"></a>
+## [0.1.8](https://github.com/nens/parramatta-dashboard/compare/v0.1.7...v0.1.8) (2017-11-03)
+
+
+### Bug Fixes
+
+* **ServiceWorker:** This disables the serviceWorker. ([#48](https://github.com/nens/parramatta-dashboard/issues/48)) ([2e19975](https://github.com/nens/parramatta-dashboard/commit/2e19975))
+
+
+
 <a name="0.1.7"></a>
 ## [0.1.7](https://github.com/nens/parramatta-dashboard/compare/v0.1.6...v0.1.7) (2017-11-01)
 
