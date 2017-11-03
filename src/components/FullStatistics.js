@@ -70,8 +70,15 @@ class FullStatistics extends Component {
         className={styles.FullStatistics}
         style={{ height, paddingLeft: isMobile ? 0 : 200 }}
       >
-        <div className={styles.Title}>{tile.title} ({numberOfAlarms})</div>
-        {this.getAlarmsTable()}
+        <div style={{
+          position: "relative",
+          top: 60,
+          left: 20,
+          width: "100%"
+        }}>
+          <div className={styles.Title}>{tile.title} ({numberOfAlarms})</div>
+          {this.getAlarmsTable()}
+        </div>
       </div>
     );
   }

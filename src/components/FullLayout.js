@@ -163,13 +163,15 @@ class FullLayout extends Component {
                   }
                   return (
                     <NavLink to={`/full/${tile.id}`} key={i}>
-                      <div
-                        className={`${styles.SidebarItem} ${selectedTile.id ===
-                        tile.id
-                          ? styles.Active
-                          : null}`}
-                      >
-                        {previewTile}
+                      <div className={styles.SidebarItemWrapper} title={tile.title}>
+                        <div
+                          className={`${styles.SidebarItem} ${selectedTile.id ===
+                          tile.id
+                            ? styles.Active
+                            : null}`}
+                        >
+                          {previewTile}
+                        </div>
                         <div className={styles.SidebarItemLabel}>
                           {tile.title}
                         </div>
