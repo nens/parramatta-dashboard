@@ -31,7 +31,7 @@ import { BoundingBox } from "./util/bounds";
 
    datetime: new DateTime({
    type: "relative",
-   to: "end",
+   to: "now",
    offset: 3 * 60 * 60 // 3 hours after end of series
    }),
 
@@ -82,12 +82,12 @@ import { BoundingBox } from "./util/bounds";
    period: [
    new DateTime({
    type: "relative",
-   to: "end",
+   to: "now",
    offset: -3 * 24 * 3600
    }),
    new DateTime({
    type: "relative",
-   to: "end",
+   to: "now",
    offset: 6 * 3600
    })
    ],
@@ -123,18 +123,7 @@ export const THE_TILES = [
     type: "raster",
     rasters: [
       {
-        uuid: "a8472933-0a9d-44c2-b74a-a72614d9be2b",
-        opacity: 0.5
-      }
-    ]
-  },
-  {
-    id: 12,
-    title: "dashboard som Waterstand (tijdreeks)",
-    type: "raster",
-    rasters: [
-      {
-        uuid: "0cf9f6bb-e2a2-432c-a410-6f83e8ee865a",
+        uuid: "fbf70418-51a3-4c5b-bcd8-45c468623f92",
         opacity: 0.5
       }
     ],
@@ -146,10 +135,24 @@ export const THE_TILES = [
     ),
     datetime: new DateTime({
       type: "relative",
-      to: "end",
-      offset: 3 * 60 * 60 // 3 hours after end of series
+      to: "now",
+      offset: -3 * 60 * 60 // 3 hours before end of raster-store timeseries
     }),
-    viewInLizardLink: "https://parramatta.lizard.net/"
+    viewInLizardLink:
+      "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,scenario$969e390,raster$969e6e1/point@-33.7916,150.9768,14/-3Days0Hours+3Days0Hours",
+    wmsLayers: [
+      {
+        url:
+          "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+        layers: "cadaster",
+        format: "image/png",
+        transparent: true,
+        height: 256,
+        width: 256,
+        zindex: 1004,
+        srs: "EPSG:3857"
+      }
+    ]
   },
   {
     id: 2,
@@ -172,8 +175,17 @@ export const THE_TILES = [
         height: 256,
         width: 256,
         zindex: 1004,
-        uuid: "3cd5c72",
-        slug: "gauges",
+        srs: "EPSG:3857"
+      },
+      {
+        url:
+          "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+        layers: "fwa",
+        format: "image/png",
+        transparent: true,
+        height: 256,
+        width: 256,
+        zindex: 1003,
         srs: "EPSG:3857"
       }
     ]
@@ -188,48 +200,64 @@ export const THE_TILES = [
     title: "Rain",
     type: "external",
     imageUrl: "https://nationaleregenradar.nl/images/radar.gif",
-    url: "https://www.bom.gov.au/nsw/forecasts/parramatta.shtml"
+    url: "http://www.bom.gov.au/nsw/flood/sydney.shtml",
+    viewInLizardLink:
+      "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$dcf2f11,scenario$969e390,raster$969e6e1/point@-33.7973,150.9801,14/-0Days18Hours+2Days22Hours"
   },
   {
     id: 4,
-    title: "Redbank Rd (Toongabbie Ck)",
+    title: "Westmead and North Parramatta", //  Timeseries van station: Redbank Rd (Toongabbie Ck)
     type: "timeseries",
     period: [
       new DateTime({
         type: "relative",
-        to: "end",
+        to: "now",
         offset: -3 * 24 * 3600
       }),
       new DateTime({
         type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        to: "now",
+        offset: 16 * 3600
       })
     ],
-    timeseries: ["db99e1dd-01b2-4601-8c5f-b81873ba182b"],
-    colors: ["#26A7F1", "#000058"]
+    timeseries: ["935739d4-f33a-41b6-8d5d-f77ad799034e"], //"db99e1dd-01b2-4601-8c5f-b81873ba182b"],
+    colors: ["#26A7F1", "#000058"],
+    viewInLizardLink:
+      "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
+    rasterIntersections: [
+      {
+        uuid: "9ebca383-82cb-4c09-9534-8ed27bf4b9df",
+        geometry: {
+          type: "Point",
+          coordinates: [150.99194, -33.79943, 0.0]
+        }
+      }
+    ]
   },
   {
     id: 5,
-    title: "North Parramatta (Darling Mills Ck)",
+    title: "Darling Mills Ck", // station name: North Parramatta (Darling Mills Ck)
     type: "timeseries",
     period: [
       new DateTime({
         type: "relative",
-        to: "end",
+        to: "now",
         offset: -3 * 24 * 3600
       }),
       new DateTime({
         type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        to: "now",
+        offset: 16 * 3600
       })
     ],
     timeseries: ["707b11ff-5331-4ba6-821e-673f2a715292"],
     rasterIntersections: [
       {
-        uuid: "0cf9f6bb-e2a2-432c-a410-6f83e8ee865a",
-        measuringStation: "205505"
+        uuid: "9ebca383-82cb-4c09-9534-8ed27bf4b9df",
+        geometry: {
+          type: "Point",
+          coordinates: [151.0029, -33.811, 0.0]
+        }
       }
     ],
     colors: ["#26A7F1", "#000058"]
@@ -241,55 +269,47 @@ export const THE_TILES = [
     period: [
       new DateTime({
         type: "relative",
-        to: "end",
+        to: "now",
         offset: -3 * 24 * 3600
       }),
       new DateTime({
         type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        to: "now",
+        offset: 16 * 3600
       })
     ],
     timeseries: ["34b144a0-7849-4e3f-aaa8-b0fffc86abbf"],
     colors: ["#26A7F1", "#000058"]
   },
   {
-    id: 7,
-    title: "Loyalty Rd Basin (Darling Mills Ck)",
-    type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "end",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "end",
-        offset: 6 * 3600
-      })
-    ],
-    timeseries: ["3b00360a-8253-4ee9-9e8d-06c274a5f388"],
-    colors: ["#26A7F1", "#000058"]
-  },
-  {
     id: 8,
-    title: "Marsden Weir",
+    title: "Parramatta CBD", // Marsden Weir
     type: "timeseries",
     period: [
       new DateTime({
         type: "relative",
-        to: "end",
+        to: "now",
         offset: -3 * 24 * 3600
       }),
       new DateTime({
         type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        to: "now",
+        offset: 16 * 3600
       })
     ],
     timeseries: ["9eb37739-c2c9-4db7-a084-d2a1c744f36e"],
-    colors: ["#26A7F1", "#000058"]
+    colors: ["#26A7F1", "#000058"],
+    viewInLizardLink:
+      "https://parramatta.lizard.net/favourites/6f10234f-e6a3-4969-b64c-3e27dddca676",
+    rasterIntersections: [
+      {
+        uuid: "9ebca383-82cb-4c09-9534-8ed27bf4b9df",
+        geometry: {
+          type: "Point",
+          coordinates: [151.0029, -33.811, 0.0]
+        }
+      }
+    ]
   },
   {
     id: 9,
@@ -298,13 +318,13 @@ export const THE_TILES = [
     period: [
       new DateTime({
         type: "relative",
-        to: "end",
+        to: "now",
         offset: -3 * 24 * 3600
       }),
       new DateTime({
         type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        to: "now",
+        offset: 16 * 3600
       })
     ],
     timeseries: ["94630f07-7353-4d9e-89b0-0c692274af3e"],
@@ -312,21 +332,54 @@ export const THE_TILES = [
   },
   {
     id: 10,
-    title: "Lake Parramatta Rain",
+    title: "Lake Parramatta",
     type: "timeseries",
     period: [
       new DateTime({
         type: "relative",
-        to: "end",
+        to: "now",
         offset: -3 * 24 * 3600
       }),
       new DateTime({
         type: "relative",
-        to: "end",
-        offset: 6 * 3600
+        to: "now",
+        offset: 16 * 3600
       })
     ],
-    timeseries: ["e3e48d7a-4cb9-4361-9e6a-c3e6572a64e8"],
+    timeseries: [
+      "e3e48d7a-4cb9-4361-9e6a-c3e6572a64e8",
+      "3ef3cb28-2196-4649-9a26-730d3d3213fd"
+    ],
+    colors: ["#26A7F1", "#000058"],
+    viewInLizardLink:
+      "https://parramatta.lizard.net/favourites/51406619-b9f2-4eb4-bd6e-134cb1f36748",
+    rasterIntersections: [
+      {
+        uuid: "9ebca383-82cb-4c09-9534-8ed27bf4b9df",
+        geometry: {
+          type: "Point",
+          coordinates: [151.0062, -33.7924, 0.0]
+        }
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Loyalty Rd Basin (Darling Mills Ck)",
+    type: "timeseries",
+    period: [
+      new DateTime({
+        type: "relative",
+        to: "now",
+        offset: -3 * 24 * 3600
+      }),
+      new DateTime({
+        type: "relative",
+        to: "now",
+        offset: 16 * 3600
+      })
+    ],
+    timeseries: ["3b00360a-8253-4ee9-9e8d-06c274a5f388"],
     colors: ["#26A7F1", "#000058"]
   }
 ];

@@ -326,7 +326,7 @@ class TimeseriesChartComponent extends Component {
       point = this.props.measuringstations[intersection.measuringStation]
         .geometry;
     } else {
-      point = intersection.point;
+      point = intersection.geometry;
     }
 
     raster.getDataAtPoint(point, start, end, params).then(results => {
