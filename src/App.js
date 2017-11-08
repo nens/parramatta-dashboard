@@ -22,16 +22,10 @@ class App extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    alarmsState: state.alarms
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return {
-    fetchAlarms: alarmsState => fetchAlarms(dispatch, alarmsState)
+    fetchAlarms: () => fetchAlarms(dispatch)
   };
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(null, mapDispatchToProps)(App));

@@ -40,11 +40,7 @@ class FullStatistics extends Component {
               ? alarm.warning_threshold.warning_level
               : null}
           </td>
-          <td>
-            {alarm.warning_value
-              ? alarm.warning_value
-              : null}
-          </td>
+          <td>{alarm.warning_value ? alarm.warning_value : null}</td>
         </tr>
       );
     });
@@ -64,19 +60,23 @@ class FullStatistics extends Component {
   }
   render() {
     const { tile, height, isMobile, alarms } = this.props;
-    const numberOfAlarms = (alarms.data) ? alarms.data.length : 0;
+    const numberOfAlarms = alarms.data ? alarms.data.length : 0;
     return (
       <div
         className={styles.FullStatistics}
         style={{ height, paddingLeft: isMobile ? 0 : 200 }}
       >
-        <div style={{
-          position: "relative",
-          top: 60,
-          left: 20,
-          width: "100%"
-        }}>
-          <div className={styles.Title}>{tile.title} ({numberOfAlarms})</div>
+        <div
+          style={{
+            position: "relative",
+            top: 60,
+            left: 20,
+            width: "100%"
+          }}
+        >
+          <div className={styles.Title}>
+            {tile.title} ({numberOfAlarms})
+          </div>
           {this.getAlarmsTable()}
         </div>
       </div>
@@ -92,7 +92,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchAlarms: alarmsState => fetchAlarms(dispatch, alarmsState)
+    fetchAlarms: () => fetchAlarms(dispatch)
   };
 };
 

@@ -79,7 +79,7 @@ class MapComponent extends Component {
   }
 
   isAssetActive(asset) {
-    if (!this.props.alarms.data) return false;
+    if (!this.props.alarms.timeseriesData) return false;
 
     // Get all active warnings, see if one belongs to this asset
     return !!find(

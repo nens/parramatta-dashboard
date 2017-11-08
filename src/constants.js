@@ -116,6 +116,22 @@ import { BoundingBox } from "./util/bounds";
    }
  */
 
+const CHART_START_TIME = new DateTime({
+  type: "relative",
+  to: "now",
+  offset: -3 * 24 * 3600,
+  modulo: 300 // Round down to nearest 5 minutes
+});
+
+const CHART_END_TIME = new DateTime({
+  type: "relative",
+  to: "now",
+  offset: 16 * 3600,
+  modulo: 300 // Round down to nearest 5 minutes
+});
+
+const CHART_PERIOD = [CHART_START_TIME, CHART_END_TIME];
+
 export const THE_TILES = [
   {
     id: 1,
@@ -208,18 +224,7 @@ export const THE_TILES = [
     id: 4,
     title: "Westmead and North Parramatta", //  Timeseries van station: Redbank Rd (Toongabbie Ck)
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: ["935739d4-f33a-41b6-8d5d-f77ad799034e"], //"db99e1dd-01b2-4601-8c5f-b81873ba182b"],
     colors: ["#26A7F1", "#000058"],
     viewInLizardLink:
@@ -238,18 +243,7 @@ export const THE_TILES = [
     id: 5,
     title: "Darling Mills Ck", // station name: North Parramatta (Darling Mills Ck)
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: ["707b11ff-5331-4ba6-821e-673f2a715292"],
     rasterIntersections: [
       {
@@ -266,18 +260,7 @@ export const THE_TILES = [
     id: 6,
     title: "Johnstons Bridge (Toongabbie Ck)",
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: ["34b144a0-7849-4e3f-aaa8-b0fffc86abbf"],
     colors: ["#26A7F1", "#000058"]
   },
@@ -285,18 +268,7 @@ export const THE_TILES = [
     id: 8,
     title: "Parramatta CBD", // Marsden Weir
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: ["9eb37739-c2c9-4db7-a084-d2a1c744f36e"],
     colors: ["#26A7F1", "#000058"],
     viewInLizardLink:
@@ -315,18 +287,7 @@ export const THE_TILES = [
     id: 9,
     title: "Blacktown Ck (Int. Peace Park)",
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: ["94630f07-7353-4d9e-89b0-0c692274af3e"],
     colors: ["#26A7F1", "#000058"]
   },
@@ -334,18 +295,7 @@ export const THE_TILES = [
     id: 10,
     title: "Lake Parramatta",
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: [
       "e3e48d7a-4cb9-4361-9e6a-c3e6572a64e8",
       "3ef3cb28-2196-4649-9a26-730d3d3213fd"
@@ -367,18 +317,7 @@ export const THE_TILES = [
     id: 7,
     title: "Loyalty Rd Basin (Darling Mills Ck)",
     type: "timeseries",
-    period: [
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: -3 * 24 * 3600
-      }),
-      new DateTime({
-        type: "relative",
-        to: "now",
-        offset: 16 * 3600
-      })
-    ],
+    period: CHART_PERIOD,
     timeseries: ["3b00360a-8253-4ee9-9e8d-06c274a5f388"],
     colors: ["#26A7F1", "#000058"]
   }
