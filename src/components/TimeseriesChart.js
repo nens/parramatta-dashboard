@@ -4,12 +4,11 @@ import moment from "moment";
 import "moment/locale/en-au";
 import {
   addAsset,
-  getOrFetchRasterEvents,
-  getOrFetchTimeseriesEvents,
-  getOrFetchTimeseriesMetadata,
+  getRasterEvents,
+  getTimeseriesEvents,
   fetchRaster
 } from "../actions";
-import { getMeasuringStation, makeGetter, getOrFetch } from "lizard-api-client";
+import { makeGetter } from "lizard-api-client";
 import {
   Line,
   Bar,
@@ -87,15 +86,9 @@ class TimeseriesChartComponent extends Component {
   getDateTimeState() {
     const period = this.props.tile.period;
 
-    const startDatetime = period[0];
-    const endDatetime = period[1];
-
-    const startTimestamp = startDatetime.asTimestamp();
-    const endTimestamp = endDatetime.asTimestamp();
-
     return {
-      start: startTimestamp,
-      end: endTimestamp
+      start: period[0].asTimestamp(),
+      end: period[1].asTimestamp()
     };
   }
 
@@ -103,56 +96,41 @@ class TimeseriesChartComponent extends Component {
     this.setState(this.getDateTimeState());
   }
 
-  allUuids() {
-    // Return UUIDs of all timeseries plus those of all rasters
-    return this.props.tile.timeseries.concat(
-      (this.props.tile.rasterIntersections || []).map(
-        intersection => intersection.uuid
-      )
-    );
-  }
+  componentWillMount() {
+    this.updateTimeseries();
 
-  componentDidMount() {
-    // Get metadata for each timeseries, without the metadata we don't know whether
-    // data is ratio or interval, so we don't know which aggregation to request.
     this.interval = setInterval(
       this.updateDateTimeState.bind(this),
       5 * 60 * 1000
     );
+  }
 
-    (this.props.tile.timeseries || []).forEach(uuid =>
-      this.props.getOrFetchTimeseriesMetadata(this.props.timeseries, uuid)
-    );
-
-    if (this.props.tile.rasterIntersections) {
-      this.props.tile.rasterIntersections.forEach(intersection => {
-        getOrFetch(
-          this.props.getRaster,
-          this.props.fetchRaster,
-          intersection.uuid
-        );
-
-        if (
-          intersection.measuringStation &&
-          !this.props.measuringstations[intersection.measuringStation]
-        ) {
-          // Fetch it.
-          getMeasuringStation(
-            intersection.measuringStation
-          ).then(measuringStation => {
-            this.props.addAsset(
-              "measuringstation",
-              measuringStation.id,
-              measuringStation
-            );
-          });
-        }
-      });
+  componentWillUpdate(nextProps, nextState) {
+    if (
+      nextState.start !== this.state.start ||
+      nextState.end !== this.state.end
+    ) {
+      this.updateTimeseries();
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
+  }
+
+  updateTimeseries() {
+    (this.props.tile.timeseries || []).map(uuid =>
+      this.props.getTimeseriesEvents(uuid, this.state.start, this.state.end)
+    );
+
+    (this.props.tile.rasterIntersections || []).map(intersection =>
+      this.props.getRasterEvents(
+        this.props.getRaster(intersection.uuid).object,
+        intersection.geometry,
+        this.state.start,
+        this.state.end
+      )
+    );
   }
 
   getTicks() {
@@ -184,43 +162,13 @@ class TimeseriesChartComponent extends Component {
     }
   }
 
-  componentDidUpdate() {
-    this.props.tile.timeseries.forEach(uuid => {
-      if (!this.props.timeseries[uuid]) {
-        return; // Still fetching
-      }
-      const params = {
-        window: "hour"
-      };
-      if (this.props.timeseries[uuid].observation_type.scale === "ratio") {
-        params.fields = "sum";
-      }
-      this.props.getOrFetchTimeseriesEvents(
-        this.props.timeseriesEvents,
-        uuid,
-        this.state.start,
-        this.state.end,
-        params
-      );
-    });
-
-    (this.props.tile.rasterIntersections || []).forEach(intersection => {
-      const raster = getOrFetch(
-        this.props.getRaster,
-        this.props.fetchRaster,
-        intersection.uuid
-      );
-
-      if (!raster) return;
-
-      this.props.getOrFetchRasterEvents(
-        this.props.rasterEvents,
-        raster,
-        intersection.geometry,
-        this.state.start,
-        this.state.end
-      );
-    });
+  allUuids() {
+    // Return UUIDs of all timeseries plus those of all rasters
+    return this.props.tile.timeseries.concat(
+      (this.props.tile.rasterIntersections || []).map(
+        intersection => intersection.uuid
+      )
+    );
   }
 
   axisLabel(observationType) {
@@ -237,11 +185,7 @@ class TimeseriesChartComponent extends Component {
       }
     } else {
       // It's a raster.
-      const raster = getOrFetch(
-        this.props.getRaster,
-        this.props.fetchRaster,
-        uuid
-      );
+      const raster = this.props.getRaster(uuid).object;
       return raster ? raster.observation_type : null;
     }
   }
@@ -423,16 +367,20 @@ class TimeseriesChartComponent extends Component {
 
         const axisIndex = this.indexForType(axes, observationType);
 
-        return (
-          <ReferenceLine
-            key={`alarmreference-${alarm.uuid}-${threshold.value}`}
-            y={threshold.value}
-            yAxisId={axisIndex}
-            stroke={color}
-          >
-            <Label value={label} position="insideBottomLeft" />
-          </ReferenceLine>
-        );
+        if (axisIndex === 0 || axisIndex === 1) {
+          return (
+            <ReferenceLine
+              key={`alarmreference-${alarm.uuid}-${threshold.value}`}
+              y={threshold.value}
+              yAxisId={axisIndex}
+              stroke={color}
+            >
+              <Label value={label} position="insideBottomLeft" />
+            </ReferenceLine>
+          );
+        } else {
+          return null;
+        }
       });
     });
 
@@ -601,32 +549,10 @@ function mapDispatchToProps(dispatch) {
     addAsset: (assetType, id, instance) =>
       dispatch(addAsset(assetType, id, instance)),
     fetchRaster: uuid => fetchRaster(dispatch, uuid),
-    getOrFetchTimeseriesMetadata: (timeseriesState, timeseriesUuid) =>
-      getOrFetchTimeseriesMetadata(dispatch, timeseriesState, timeseriesUuid),
-    getOrFetchTimeseriesEvents: (
-      timeseriesEvents,
-      timeseriesUuid,
-      start,
-      end,
-      params
-    ) =>
-      getOrFetchTimeseriesEvents(
-        dispatch,
-        timeseriesEvents,
-        timeseriesUuid,
-        start,
-        end,
-        params
-      ),
-    getOrFetchRasterEvents: (rasterEvents, raster, geometry, start, end) =>
-      getOrFetchRasterEvents(
-        dispatch,
-        rasterEvents,
-        raster,
-        geometry,
-        start,
-        end
-      )
+    getTimeseriesEvents: (uuid, start, end) =>
+      dispatch(getTimeseriesEvents(uuid, start, end)),
+    getRasterEvents: (raster, geometry, start, end) =>
+      dispatch(getRasterEvents(raster, geometry, start, end))
   };
 }
 

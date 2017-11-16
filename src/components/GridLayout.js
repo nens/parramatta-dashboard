@@ -5,7 +5,7 @@ import ReactGridLayout from "react-grid-layout";
 import Tile from "./Tile";
 import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
-import TimeseriesChart from "./TimeseriesChart";
+import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
@@ -106,7 +106,7 @@ class GridLayout extends Component {
               title={tile.title}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <TimeseriesChart
+              <TimeseriesTile
                 isFull={false}
                 width={300}
                 height={300}

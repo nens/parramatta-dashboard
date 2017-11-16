@@ -210,7 +210,7 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
 };
 
 export function updateTimeseriesMetadata(uuid) {
-  return (dispatch, getState) => {
+  return dispatch => {
     // Get timeseries with uuid, update its metadata. Does not
     // pass a start and end time, so does not receive any events,
     // although the metadata may contain a last value.
@@ -222,123 +222,102 @@ export function updateTimeseriesMetadata(uuid) {
   };
 }
 
-export function getOrFetchTimeseriesMetadata(
-  dispatch,
-  timeseriesState,
-  timeseriesUuid
-) {
-  // Only gets the timeseries metadata, no events (as no start and end are passed).
+export function getTimeseriesMetadataAction(uuid) {
+  return (dispatch, getState) => {
+    const timeseriesState = getState().timeseries;
 
-  const timeseries = timeseriesState[timeseriesUuid];
-
-  if (timeseries) {
-    return timeseries;
-  }
-
-  getTimeseries(timeseriesUuid).then(results => {
-    if (results && results.length) {
-      results.forEach(result => {
-        // Metadata
-        dispatch(addTimeseries(timeseriesUuid, result));
+    if (!timeseriesState[uuid]) {
+      return getTimeseries(uuid).then(results => {
+        if (results && results.length) {
+          dispatch(addTimeseries(uuid, results[0]));
+          return results[0];
+        }
       });
+    } else {
+      return Promise.resolve(timeseriesState[uuid]);
     }
-  });
-
-  return null;
+  };
 }
 
-export function getOrFetchTimeseriesEvents(
-  dispatch,
-  timeseriesEvents,
-  timeseriesUuid,
-  start,
-  end,
-  params
-) {
-  const events = timeseriesEvents[timeseriesUuid];
-
-  if (events && events.start === start && events.end === end) {
-    return events.events;
-  } else if (!events || !events.isFetching) {
-    // Fetch it
-    dispatch(fetchTimeseriesEventsAction(timeseriesUuid, start, end));
-
-    getTimeseries(timeseriesUuid, start, end, params).then(results => {
-      if (results && results.length) {
-        results.forEach(result => {
-          // Metadata
-          dispatch(addTimeseries(timeseriesUuid, result));
-          // Events
-          dispatch(
-            receiveTimeseriesEventsAction(
-              timeseriesUuid,
-              start,
-              end,
-              result.events
-            )
-          );
-        });
-      }
-    });
-
-    return null;
-  }
-}
-
-export function getOrFetchRasterEvents(
-  dispatch,
-  rasterEvents,
-  raster,
-  geometry,
-  start,
-  end
-) {
-  if (!raster) return null;
-
-  const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
-  const rasterEvent = rasterEvents[raster.uuid];
-
-  if (rasterEvent) {
-    const events = rasterEvent[geomKey];
+export function getTimeseriesEvents(uuid, start, end, params) {
+  return (dispatch, getState) => {
+    const timeseriesEvents = getState().timeseriesEvents;
+    const events = timeseriesEvents[uuid];
 
     if (events && events.start === start && events.end === end) {
-      return events.events;
-    } else if (events && events.isFetching) {
-      return null;
-    }
-  }
+      return; // Up to date.
+    } else if (!events || !events.isFetching) {
+      // Fetch it
+      dispatch(fetchTimeseriesEventsAction(uuid, start, end));
 
-  // Fetch it
-  dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
+      getTimeseries(uuid, start, end, params).then(results => {
+        if (results && results.length === 1) {
+          const result = results[0];
 
-  const params = {
-    window: 3600000
-  };
-
-  if (raster.observation_type.scale === "ratio") {
-    params.fields = "sum";
-  } else {
-    params.fields = "average";
-  }
-
-  raster.getDataAtPoint(geometry, start, end, params).then(results => {
-    if (results && results.data) {
-      // Rewrite to a format compatible with normal timeseries.
-      const data = results.data.map(event => {
-        return {
-          timestamp: event[0],
-          sum: event[1],
-          max: event[1]
-        };
+          // Events
+          dispatch(
+            receiveTimeseriesEventsAction(uuid, start, end, result.events)
+          );
+        }
       });
-
-      dispatch(
-        receiveRasterEventsAction(raster.uuid, geomKey, start, end, data)
-      );
     }
-  });
+  };
+}
 
-  return null;
+export function getTimeseriesAction(uuid, start, end, params) {
+  return dispatch => {
+    dispatch(getTimeseriesMetadataAction(uuid)).then(timeseriesMetadata =>
+      dispatch(getTimeseriesEvents(timeseriesMetadata.uuid, start, end, params))
+    );
+  };
+}
+
+export function getRasterEvents(raster, geometry, start, end) {
+  return (dispatch, getState) => {
+    if (!raster) return null;
+    const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
+    const rasterEvent = getState().rasterEvents[raster.uuid];
+
+    let events;
+    if (rasterEvent) {
+      events = rasterEvent[geomKey];
+    }
+
+    if (events && events.start === start && events.end === end) {
+      // Up to date.
+      return;
+    } else if (!events || !events.isFetching) {
+      // Fetch it.
+      dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
+
+      const params = {
+        window: 3600000
+      };
+
+      if (raster.observation_type.scale === "ratio") {
+        params.fields = "sum";
+      } else {
+        params.fields = "average";
+      }
+
+      raster.getDataAtPoint(geometry, start, end, params).then(results => {
+        if (results && results.data) {
+          // Rewrite to a format compatible with normal timeseries.
+          const data = results.data.map(event => {
+            return {
+              timestamp: event[0],
+              sum: event[1],
+              max: event[1]
+            };
+          });
+
+          dispatch(
+            receiveRasterEventsAction(raster.uuid, geomKey, start, end, data)
+          );
+        }
+      });
+    }
+  };
 }
 
 export const fetchRaster = makeFetcher("rasters", getRasterDetail);

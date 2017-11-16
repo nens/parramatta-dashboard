@@ -36,9 +36,7 @@ class TermsOrLoginOrAppComponent extends Component {
   }
 
   render() {
-    if (!this.state.termsSigned) {
-      return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
-    } else if (!this.hasBootstrap()) {
+    if (!this.hasBootstrap()) {
       return (
         <div className={styles.LoadingIndicator}>
           <MDSpinner size={24} />
@@ -46,6 +44,8 @@ class TermsOrLoginOrAppComponent extends Component {
       );
     } else if (!this.props.sessionState.bootstrap.authenticated) {
       this.props.sessionState.bootstrap.doLogin();
+    } else if (!this.state.termsSigned) {
+      return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
     } else {
       return (
         <Router basename="/clients/parramatta">
