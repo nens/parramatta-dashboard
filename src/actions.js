@@ -37,8 +37,8 @@ export const RECEIVE_RASTER_EVENTS = "RECEIVE_RASTER_EVENTS";
 export const receiveAlarmsAction = (alarms, isTimeseries) => {
   return {
     type: RECEIVE_ALARMS,
-    isTimeseries: isTimeseries,
-    alarms: alarms
+    isTimeseries,
+    alarms
   };
 };
 
@@ -70,9 +70,9 @@ export function fetchAlarms(dispatch) {
 export const addAsset = (assetType, id, instance) => {
   return {
     type: ADD_ASSET,
-    assetType: assetType,
-    id: id,
-    instance: instance
+    assetType,
+    id,
+    instance
   };
 };
 
@@ -80,15 +80,15 @@ export const addAsset = (assetType, id, instance) => {
 export const fetchLegend = uuid => {
   return {
     type: FETCH_LEGEND,
-    uuid: uuid
+    uuid
   };
 };
 
-export const addLegend = (uuid, legendData) => {
+export const addLegend = (uuid, data) => {
   return {
     type: ADD_LEGEND,
-    uuid: uuid,
-    data: legendData
+    uuid,
+    data
   };
 };
 export function getLegend(uuid, wmsInfo, styles, steps = 15) {
@@ -142,7 +142,7 @@ export function fetchBootstrap(dispatch, sessionState) {
 export const addTile = (tileKey, tile) => {
   return {
     type: ADD_TILE,
-    tileKey: tileKey,
+    tileKey,
     tile: { ...tile }
   };
 };
@@ -150,7 +150,7 @@ export const addTile = (tileKey, tile) => {
 export const selectTile = tileKey => {
   return {
     type: SELECT_TILE,
-    tileKey: tileKey
+    tileKey
   };
 };
 
@@ -164,8 +164,8 @@ export const closeTile = () => {
 export const addTimeseries = (uuid, timeseries) => {
   return {
     type: ADD_TIMESERIES,
-    uuid: uuid,
-    timeseries: timeseries
+    uuid,
+    timeseries
   };
 };
 
@@ -275,6 +275,9 @@ export function getTimeseriesAction(uuid, start, end, params) {
 export function getRasterEvents(raster, geometry, start, end) {
   return (dispatch, getState) => {
     if (!raster) return null;
+    // There can be multiple points on a raster where we store raster events from.
+    // Therefore we create a key based on the coordinates of the point, and store
+    // the events in state.rasterEvents[rasterUuid][geomKey].
     const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
     const rasterEvent = getState().rasterEvents[raster.uuid];
 
