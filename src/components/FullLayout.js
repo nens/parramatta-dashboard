@@ -4,7 +4,7 @@ import StatisticsTile from "./StatisticsTile";
 import Map from "./Map";
 import FullStatistics from "./FullStatistics";
 import ExternalTile from "./ExternalTile";
-import TimeseriesChart from "./TimeseriesChart";
+import TimeseriesTile from "./TimeseriesTile";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
@@ -81,7 +81,7 @@ class FullLayout extends Component {
         break;
       case "timeseries":
         element = (
-          <TimeseriesChart
+          <TimeseriesTile
             isFull={true}
             width={width}
             height={height}
@@ -130,7 +130,7 @@ class FullLayout extends Component {
                       break;
                     case "timeseries":
                       previewTile = (
-                        <TimeseriesChart
+                        <TimeseriesTile
                           isFull={false}
                           width={300}
                           height={300}
@@ -163,7 +163,10 @@ class FullLayout extends Component {
                   }
                   return (
                     <NavLink to={`/full/${tile.id}`} key={i}>
-                      <div className={styles.SidebarItemWrapper} title={tile.title}>
+                      <div
+                        className={styles.SidebarItemWrapper}
+                        title={tile.title}
+                      >
                         <div
                           className={`${styles.SidebarItem} ${selectedTile.id ===
                           tile.id

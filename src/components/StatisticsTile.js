@@ -25,11 +25,7 @@ class StatisticsTile extends Component {
     const { width } = this.state;
 
     let content;
-    if (
-      this.props.alarms &&
-      !this.props.alarms.isFetching &&
-      this.props.alarms.data
-    ) {
+    if (this.props.alarms && this.props.alarms.data) {
       content = (
         <div>
           <p>{this.numTriggeredAlarms()}</p>

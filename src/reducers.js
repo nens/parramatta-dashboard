@@ -4,8 +4,11 @@ import {
   ADD_LEGEND,
   ADD_TILE,
   ADD_TIMESERIES,
+  FETCH_TIMESERIES_EVENTS,
+  RECEIVE_TIMESERIES_EVENTS,
+  FETCH_RASTER_EVENTS,
+  RECEIVE_RASTER_EVENTS,
   CLOSE_TILE,
-  FETCH_ALARMS,
   RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
@@ -128,6 +131,68 @@ function timeseries(state = {}, action) {
   }
 }
 
+function timeseriesEvents(state = {}, action) {
+  let newState;
+  switch (action.type) {
+    case FETCH_TIMESERIES_EVENTS:
+      newState = { ...state };
+      newState[action.uuid] = {
+        isFetching: true,
+        start: action.start,
+        end: action.end,
+        events: null
+      };
+      return newState;
+    case RECEIVE_TIMESERIES_EVENTS:
+      newState = { ...state };
+      newState[action.uuid] = {
+        isFetching: false,
+        start: action.start,
+        end: action.end,
+        events: action.events
+      };
+      return newState;
+    default:
+      return state;
+  }
+}
+
+function rasterEvents(state = {}, action) {
+  let newState;
+  let eventsForRaster = {};
+
+  switch (action.type) {
+    case FETCH_RASTER_EVENTS:
+      newState = { ...state };
+      if (newState[action.uuid]) {
+        eventsForRaster = { ...newState[action.uuid] };
+      }
+      eventsForRaster[action.geomKey] = {
+        isFetching: true,
+        start: action.start,
+        end: action.end,
+        events: null
+      };
+      newState[action.uuid] = eventsForRaster;
+      return newState;
+    case RECEIVE_RASTER_EVENTS:
+      newState = { ...state };
+      if (newState[action.uuid]) {
+        eventsForRaster = { ...newState[action.uuid] };
+      }
+      eventsForRaster[action.geomKey] = {
+        isFetching: false,
+        start: action.start,
+        end: action.end,
+        events: action.events
+      };
+      newState[action.uuid] = eventsForRaster;
+      return newState;
+    default:
+      return state;
+  }
+}
+
 function ui(
   state = {
     currentTile: null
@@ -151,23 +216,26 @@ function ui(
 
 function alarms(
   state = {
-    data: null,
-    isFetching: false
+    data: [],
+    rasterData: [],
+    timeseriesData: []
   },
   action
 ) {
   switch (action.type) {
-    case FETCH_ALARMS:
-      let newState = { ...state };
-      newState.isFetching = true;
-      return newState;
     case RECEIVE_ALARMS:
-      // We receive *all* of them at once,
-      // don't use old state.
-      return {
-        data: action.alarms,
-        isFetching: false
-      };
+      // We received either raster or timeseries alarms; combine them both into one
+      // 'data' array.
+      const newState = { ...state };
+      if (action.isTimeseries) {
+        newState.timeseriesData = action.alarms;
+      } else {
+        newState.rasterData = action.alarms;
+      }
+
+      newState.data = newState.timeseriesData.concat(newState.rasterData);
+      return newState;
+
     default:
       return state;
   }
@@ -181,6 +249,8 @@ const rootReducer = combineReducers({
   session,
   tiles,
   timeseries,
+  timeseriesEvents,
+  rasterEvents,
   ui
 });
 
