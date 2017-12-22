@@ -149,8 +149,8 @@
     "extends": "react-app"
   },
   "proxy": {
-    "/bootstrap/lizard/": {
-      "target": "https://demo.lizard.net/",
+    "/bootstrap/": {
+      "target": "https://nxt.staging.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
@@ -160,7 +160,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://parramatta.lizard.net/",
+      "target": "https://nxt.staging.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
