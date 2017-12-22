@@ -8,6 +8,7 @@ import {
   getTimeseriesEvents,
   fetchRaster
 } from "../actions";
+import { CHART_PERIOD } from "../constants";
 import { makeGetter } from "lizard-api-client";
 import {
   Line,
@@ -84,11 +85,11 @@ class TimeseriesChartComponent extends Component {
   }
 
   getDateTimeState() {
-    const period = this.props.tile.period;
-
+    // asTimestamp() turns a DateTime object (that may be relative to now) into
+    // an absolute fixed time.
     return {
-      start: period[0].asTimestamp(),
-      end: period[1].asTimestamp()
+      start: CHART_PERIOD[0].asTimestamp(),
+      end: CHART_PERIOD[1].asTimestamp()
     };
   }
 

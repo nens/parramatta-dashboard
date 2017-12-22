@@ -23,7 +23,6 @@ export const RECEIVE_BOOTSTRAP_SUCCESS = "RECEIVE_BOOTSTRAP_SUCCESS";
 export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 
 // TileActions
-export const ADD_TILE = "ADD_TILE";
 export const SELECT_TILE = "SELECT_TILE";
 export const CLOSE_TILE = "CLOSE_TILE";
 
@@ -127,7 +126,7 @@ export function fetchBootstrap(dispatch, sessionState) {
 
   dispatch(fetchBootstrapAction());
 
-  getBootstrap().then(
+  getBootstrap("parramatta-dashboard").then(
     bootstrap => {
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },
@@ -137,15 +136,6 @@ export function fetchBootstrap(dispatch, sessionState) {
     }
   );
 }
-
-// Tile
-export const addTile = (tileKey, tile) => {
-  return {
-    type: ADD_TILE,
-    tileKey,
-    tile: { ...tile }
-  };
-};
 
 export const selectTile = tileKey => {
   return {

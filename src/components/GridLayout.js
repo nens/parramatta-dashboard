@@ -11,6 +11,7 @@ import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import headerImage from "../graphics/parramatta-header-logo.svg";
 import styles from "./GridLayout.css";
+import { getAllTiles } from "../reducers";
 
 const layoutFromLocalStorage = JSON.parse(
   localStorage.getItem("parramatta-layout")
@@ -194,7 +195,7 @@ class GridLayout extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
-    tiles: state.tiles,
+    tiles: getAllTiles(state),
     alarms: state.alarms
   };
 };

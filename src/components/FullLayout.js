@@ -9,6 +9,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
 import styles from "./FullLayout.css";
+import { getAllTiles, getTileById } from "../reducers";
 
 class FullLayout extends Component {
   constructor(props) {
@@ -211,12 +212,8 @@ class FullLayout extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    allTiles: state.tiles,
-    getTileById: id =>
-      state.tiles.filter(tile => {
-        if (Number(tile.id) === Number(id)) return tile;
-        return false;
-      }),
+    allTiles: getAllTiles(state),
+    getTileById: id => getTileById(state, id),
     alarms: state.alarms
   };
 };

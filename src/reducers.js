@@ -2,7 +2,6 @@ import { combineReducers } from "redux";
 import {
   ADD_ASSET,
   ADD_LEGEND,
-  ADD_TILE,
   ADD_TIMESERIES,
   FETCH_TIMESERIES_EVENTS,
   RECEIVE_TIMESERIES_EVENTS,
@@ -16,7 +15,6 @@ import {
   RECEIVE_BOOTSTRAP_SUCCESS,
   SELECT_TILE
 } from "./actions";
-import { THE_TILES } from "./constants";
 import { makeReducer } from "lizard-api-client";
 
 function assets(
@@ -104,17 +102,6 @@ function session(
         bootstrap: null,
         error: action.error
       };
-    default:
-      return state;
-  }
-}
-
-function tiles(state = THE_TILES, action) {
-  switch (action.type) {
-    case ADD_TILE:
-      let newState = { ...state };
-      newState[action.tileKey] = action.tile;
-      return newState;
     default:
       return state;
   }
@@ -247,7 +234,6 @@ const rootReducer = combineReducers({
   legends,
   rasters: makeReducer("rasters"),
   session,
-  tiles,
   timeseries,
   timeseriesEvents,
   rasterEvents,
@@ -255,3 +241,24 @@ const rootReducer = combineReducers({
 });
 
 export default rootReducer;
+
+// Selectors
+// See https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170
+
+export const getAllTiles = function(state) {
+  if (!state.session || !state.session.hasBootstrap) return [];
+
+  const bootstrap = state.session.bootstrap;
+  if (bootstrap && bootstrap.configuration && bootstrap.configuration.tiles) {
+    return bootstrap.configuration.tiles;
+  } else {
+    return [];
+  }
+};
+
+export const getTileById = function(state, id) {
+  return getAllTiles(state).filter(tile => {
+    if (Number(tile.id) === Number(id)) return tile;
+    return false;
+  });
+};

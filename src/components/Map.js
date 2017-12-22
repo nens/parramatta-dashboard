@@ -7,8 +7,11 @@ import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import {
   getMeasuringStations,
   makeGetter,
-  getOrFetch
+  getOrFetch,
+  DateTime
 } from "lizard-api-client";
+import { BoundingBox } from "../util/bounds";
+
 import { Map, Marker, Popup, TileLayer, WMSTileLayer } from "react-leaflet";
 import Legend from "./Legend";
 import styles from "./Map.css";
@@ -41,7 +44,8 @@ class MapComponent extends Component {
   getBbox() {
     // Either get it from the tile or return the global constant.
     if (this.props && this.props.tile && this.props.tile.bbox) {
-      return this.props.tile.bbox;
+      const bbox = this.props.tile.bbox;
+      return new BoundingBox(bbox[0], bbox[1], bbox[2], bbox[3]);
     }
     return BOUNDS;
   }
@@ -59,7 +63,7 @@ class MapComponent extends Component {
     let wmsUrl;
     if (rasterObject.last_value_timestamp && this.props.tile.datetime) {
       wmsUrl = rasterObject.wms_info.addTimeToEndpoint(
-        this.props.tile.datetime,
+        new DateTime(this.props.tile.datetime),
         rasterObject.first_value_timestamp,
         rasterObject.last_value_timestamp
       );
