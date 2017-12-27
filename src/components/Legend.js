@@ -98,7 +98,7 @@ class Legend extends Component {
                     color: this.getCorrectTextColor(step.color)
                   }}
                 >
-                  {step.value.toFixed(1)}
+                  {step.value.toFixed(1)} {this.props.observationType.unit}
                 </div>
               );
             })
