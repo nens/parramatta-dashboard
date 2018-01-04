@@ -9,7 +9,11 @@ import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
-import headerImage from "../graphics/parramatta-header-logo.svg";
+import parramattaLogo from "../graphics/parramatta-header-logo.svg";
+import sydneyWater from "../graphics/sydney-water.png";
+import oehLogo from "../graphics/office-environment-heritage.png";
+import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
+
 import styles from "./GridLayout.css";
 import { getAllTiles } from "../reducers";
 
@@ -141,10 +145,26 @@ class GridLayout extends Component {
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
           <img
-            src={headerImage}
+            src={parramattaLogo}
             alt="Parramatta dashboard"
             className={styles.HeaderImage}
           />
+          <img
+            src={sydneyWater}
+            alt="Sydney Water logo"
+            className={styles.SecondaryHeaderImage}
+          />
+          <img
+            src={oehLogo}
+            alt="NSW Office of Environment &nbsp; Heritage logo"
+            className={styles.SecondaryHeaderImage}
+          />
+          <img
+            src={nswSesLogo}
+            alt="NSW State Emergency Service logo"
+            className={styles.SecondaryHeaderImage}
+          />
+          <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
           <div
             className={styles.LogoutButton}
             onClick={() => this.props.session.bootstrap.doLogout()}
