@@ -22,6 +22,12 @@
   .HeaderTitle {
     display: none;
   }
+  .SecondaryHeaderImage {
+    display: none;
+  }
+  .HeaderTitle {
+    display: none;
+  }
 }
 
 .GridLayout {

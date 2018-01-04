@@ -279,6 +279,7 @@ class GridLayout extends Component {
             )}
             <Ink />
           </div>
+
           <div
             className={styles.LogoutButton}
             onClick={() => this.props.session.bootstrap.doLogout()}
