@@ -45,7 +45,7 @@ class FullLayout extends Component {
 
     let element = null;
     switch (selectedTile.type) {
-      case "assets":
+      case "map":
         element = (
           <Map
             {...this.props}
@@ -53,19 +53,6 @@ class FullLayout extends Component {
             width={width}
             height={height}
             tile={selectedTile}
-            bbox={selectedTile.bbox}
-          />
-        );
-        break;
-      case "raster":
-        element = (
-          <Map
-            {...this.props}
-            isFull={true}
-            width={width}
-            height={height}
-            tile={selectedTile}
-            isInteractive={true}
             bbox={selectedTile.bbox}
           />
         );

@@ -80,17 +80,7 @@ class GridLayout extends Component {
     const { tiles, history } = this.props;
     const tileComponents = tiles.map(tile => {
       switch (tile.type) {
-        case "raster":
-          return (
-            <Tile
-              {...this.props}
-              title={tile.title}
-              onClick={() => history.push(`/full/${tile.id}`)}
-            >
-              <Map isFull={false} bbox={tile.bbox} tile={tile} />
-            </Tile>
-          );
-        case "assets":
+        case "map":
           return (
             <Tile
               {...this.props}
