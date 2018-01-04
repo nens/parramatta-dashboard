@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { find } from "lodash";
@@ -439,4 +440,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(MapComponent)
+);
