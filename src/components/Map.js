@@ -39,10 +39,11 @@ const iconNoAlarm = divIcon({
 class MapComponent extends Component {
   componentDidMount() {
     const { tile } = this.props;
+    console.log("ComponentDidMount", tile.title, this.props.isFull);
     const inBboxFilter = this.getBbox().toLizardBbox();
 
     if (tile.assetTypes) {
-      this.props.tile.assetTypes.forEach(assetType => {
+      tile.assetTypes.forEach(assetType => {
         // This is really impossible, need something more generic
         if (assetType === "measuringstation") {
           getMeasuringStations({
@@ -60,7 +61,10 @@ class MapComponent extends Component {
         }
       });
     }
+
+    console.log("End of ComponentDidMount");
   }
+
   getBbox() {
     // Either get it from the tile or return the global constant.
     if (this.props && this.props.tile && this.props.tile.bbox) {
@@ -147,8 +151,6 @@ class MapComponent extends Component {
         return `/full/${tile.id}`;
       }
     }
-
-    return `/full/1`;
   }
 
   getPopup(asset) {
@@ -202,7 +204,9 @@ class MapComponent extends Component {
     }
 
     const linkSpan = link ? (
-      <button onClick={() => this.props.history.push(link)}>View Chart</button>
+      <button onClick={() => this.context.router.history.push(link)}>
+        View Chart
+      </button>
     ) : null;
 
     return (
@@ -275,7 +279,6 @@ class MapComponent extends Component {
 
     const markers = [];
     tile.points.forEach((point, idx) => {
-      console.log("Point is", JSON.stringify(point));
       const { coordinates } = point.geometry;
       const isActive = this.isGeometryActive(point.geometry);
       const link = this.getTileLinkForGeometry(point.geometry);
@@ -377,7 +380,7 @@ class MapComponent extends Component {
           attribution={false}
           className={styles.MapStyleFull}
         >
-          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
+          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa79205/{z}/{x}/{y}.png" />
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
@@ -408,7 +411,7 @@ class MapComponent extends Component {
           attribution={false}
           className={styles.MapStyleTile}
         >
-          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png" />
+          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa79205/{z}/{x}/{y}.png" />
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
@@ -440,6 +443,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(MapComponent)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);

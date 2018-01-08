@@ -106,12 +106,7 @@ class FullLayout extends Component {
                 {allTiles.map((tile, i) => {
                   let previewTile = null;
                   switch (tile.type) {
-                    case "raster":
-                      previewTile = (
-                        <Map isFull={false} bbox={tile.bbox} tile={tile} />
-                      );
-                      break;
-                    case "assets":
+                    case "map":
                       previewTile = (
                         <Map isFull={false} bbox={tile.bbox} tile={tile} />
                       );
@@ -149,11 +144,14 @@ class FullLayout extends Component {
                       previewTile = null;
                       break;
                   }
+
+                  const shortTitle = tile.shortTitle || tile.title;
+
                   return (
                     <NavLink to={`/full/${tile.id}`} key={i}>
                       <div
                         className={styles.SidebarItemWrapper}
-                        title={tile.title}
+                        title={shortTitle}
                       >
                         <div
                           className={`${styles.SidebarItem} ${selectedTile.id ===
@@ -164,7 +162,7 @@ class FullLayout extends Component {
                           {previewTile}
                         </div>
                         <div className={styles.SidebarItemLabel}>
-                          {tile.title}
+                          {shortTitle}
                         </div>
                       </div>
                     </NavLink>

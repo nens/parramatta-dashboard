@@ -82,13 +82,16 @@ class GridLayout extends Component {
   render() {
     const { width, canMove } = this.state;
     const { tiles, history } = this.props;
+
     const tileComponents = tiles.map(tile => {
+      const shortTitle = tile.shortTitle || tile.title;
+
       switch (tile.type) {
         case "map":
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <Map isFull={false} bbox={tile.bbox} tile={tile} />
@@ -98,7 +101,7 @@ class GridLayout extends Component {
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <TimeseriesTile
@@ -114,7 +117,7 @@ class GridLayout extends Component {
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <StatisticsTile alarms={this.props.alarms} title={tile.title} />
@@ -124,7 +127,7 @@ class GridLayout extends Component {
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               backgroundColor={"#cccccc"}
               onClick={() => history.push(`/full/${tile.id}`)}
             >

@@ -69,6 +69,7 @@ class Legend extends Component {
         ? legendsList[uuid].data.legend
         : [];
 
+    const titleWithLegend = isOpen ? title : `Legend ${title}`;
     return (
       <div
         className={isMobile ? styles.LegendMobile : styles.Legend}
@@ -83,7 +84,7 @@ class Legend extends Component {
               isOpen: !isOpen
             })}
         >
-          <span title={title}>Legend ({title})</span>
+          <span title={title}>{titleWithLegend}</span>
           <i className="material-icons">drag_handle</i>
         </div>
 
