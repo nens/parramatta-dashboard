@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { find } from "lodash";
@@ -39,7 +38,6 @@ const iconNoAlarm = divIcon({
 class MapComponent extends Component {
   componentDidMount() {
     const { tile } = this.props;
-    console.log("ComponentDidMount", tile.title, this.props.isFull);
     const inBboxFilter = this.getBbox().toLizardBbox();
 
     if (tile.assetTypes) {
@@ -61,8 +59,6 @@ class MapComponent extends Component {
         }
       });
     }
-
-    console.log("End of ComponentDidMount");
   }
 
   getBbox() {
