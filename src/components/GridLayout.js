@@ -9,7 +9,11 @@ import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
-import headerImage from "../graphics/parramatta-header-logo.svg";
+import parramattaLogo from "../graphics/parramatta-header-logo.svg";
+import sydneyWater from "../graphics/sydney-water.png";
+import oehLogo from "../graphics/office-environment-heritage.png";
+import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
+
 import styles from "./GridLayout.css";
 import { getAllTiles } from "../reducers";
 
@@ -78,23 +82,16 @@ class GridLayout extends Component {
   render() {
     const { width, canMove } = this.state;
     const { tiles, history } = this.props;
+
     const tileComponents = tiles.map(tile => {
+      const shortTitle = tile.shortTitle || tile.title;
+
       switch (tile.type) {
-        case "raster":
+        case "map":
           return (
             <Tile
               {...this.props}
-              title={tile.title}
-              onClick={() => history.push(`/full/${tile.id}`)}
-            >
-              <Map isFull={false} bbox={tile.bbox} tile={tile} />
-            </Tile>
-          );
-        case "assets":
-          return (
-            <Tile
-              {...this.props}
-              title={tile.title}
+              title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <Map isFull={false} bbox={tile.bbox} tile={tile} />
@@ -104,7 +101,7 @@ class GridLayout extends Component {
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <TimeseriesTile
@@ -120,7 +117,7 @@ class GridLayout extends Component {
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <StatisticsTile alarms={this.props.alarms} title={tile.title} />
@@ -130,7 +127,7 @@ class GridLayout extends Component {
           return (
             <Tile
               {...this.props}
-              title={tile.title}
+              title={shortTitle}
               backgroundColor={"#cccccc"}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
@@ -151,10 +148,26 @@ class GridLayout extends Component {
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
           <img
-            src={headerImage}
+            src={parramattaLogo}
             alt="Parramatta dashboard"
             className={styles.HeaderImage}
           />
+          <img
+            src={sydneyWater}
+            alt="Sydney Water logo"
+            className={styles.SecondaryHeaderImage}
+          />
+          <img
+            src={oehLogo}
+            alt="NSW Office of Environment &nbsp; Heritage logo"
+            className={styles.SecondaryHeaderImage}
+          />
+          <img
+            src={nswSesLogo}
+            alt="NSW State Emergency Service logo"
+            className={styles.SecondaryHeaderImage}
+          />
+          <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
           <div
             className={styles.LogoutButton}
             onClick={() => this.props.session.bootstrap.doLogout()}

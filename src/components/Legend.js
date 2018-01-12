@@ -61,7 +61,7 @@ class Legend extends Component {
 
   render() {
     const { width, isOpen } = this.state;
-    const { legends, title, uuid } = this.props;
+    const { legends, uuid } = this.props;
     const isMobile = width < 700 ? true : false;
     const legendsList = Map(legends).toJS();
     const legendSteps =
@@ -83,7 +83,7 @@ class Legend extends Component {
               isOpen: !isOpen
             })}
         >
-          <span title={title}>Legend ({title})</span>
+          <span title="LEGEND">LEGEND</span>
           <i className="material-icons">drag_handle</i>
         </div>
 

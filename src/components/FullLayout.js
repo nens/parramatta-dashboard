@@ -45,7 +45,7 @@ class FullLayout extends Component {
 
     let element = null;
     switch (selectedTile.type) {
-      case "assets":
+      case "map":
         element = (
           <Map
             {...this.props}
@@ -53,19 +53,6 @@ class FullLayout extends Component {
             width={width}
             height={height}
             tile={selectedTile}
-            bbox={selectedTile.bbox}
-          />
-        );
-        break;
-      case "raster":
-        element = (
-          <Map
-            {...this.props}
-            isFull={true}
-            width={width}
-            height={height}
-            tile={selectedTile}
-            isInteractive={true}
             bbox={selectedTile.bbox}
           />
         );
@@ -119,12 +106,7 @@ class FullLayout extends Component {
                 {allTiles.map((tile, i) => {
                   let previewTile = null;
                   switch (tile.type) {
-                    case "raster":
-                      previewTile = (
-                        <Map isFull={false} bbox={tile.bbox} tile={tile} />
-                      );
-                      break;
-                    case "assets":
+                    case "map":
                       previewTile = (
                         <Map isFull={false} bbox={tile.bbox} tile={tile} />
                       );
@@ -162,11 +144,14 @@ class FullLayout extends Component {
                       previewTile = null;
                       break;
                   }
+
+                  const shortTitle = tile.shortTitle || tile.title;
+
                   return (
                     <NavLink to={`/full/${tile.id}`} key={i}>
                       <div
                         className={styles.SidebarItemWrapper}
-                        title={tile.title}
+                        title={shortTitle}
                       >
                         <div
                           className={`${styles.SidebarItem} ${selectedTile.id ===
@@ -177,7 +162,7 @@ class FullLayout extends Component {
                           {previewTile}
                         </div>
                         <div className={styles.SidebarItemLabel}>
-                          {tile.title}
+                          {shortTitle}
                         </div>
                       </div>
                     </NavLink>
