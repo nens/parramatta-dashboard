@@ -33,7 +33,7 @@ export function isSamePoint(a, b) {
     a.coordinates.length >= 2 &&
     b.coordinates &&
     b.coordinates.length >= 2 &&
-    a.coordinates[0] == b.coordinates[0] &&
-    a.coordinates[1] == b.coordinates[1]
+    a.coordinates[0] === b.coordinates[0] &&
+    a.coordinates[1] === b.coordinates[1]
   );
 }
