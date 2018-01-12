@@ -200,10 +200,11 @@ class GridLayout extends Component {
             >
               <TimeseriesTile
                 isFull={false}
-                width={300}
-                height={300}
                 timeseries={tile.timeseries}
                 tile={tile}
+                showAxis={true}
+                marginLeft={0}
+                marginTop={30}
               />
             </Tile>
           );
@@ -225,12 +226,7 @@ class GridLayout extends Component {
               backgroundColor={"#cccccc"}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <ExternalTile
-                isFull={false}
-                tile={tile}
-                width={300}
-                height={300}
-              />
+              <ExternalTile isFull={false} tile={tile} />
             </Tile>
           );
         default:

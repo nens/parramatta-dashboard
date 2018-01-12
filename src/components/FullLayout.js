@@ -71,10 +71,11 @@ class FullLayout extends Component {
         element = (
           <TimeseriesTile
             isFull={true}
-            width={width}
-            height={height}
             timeseries={selectedTile.timeseries}
             tile={selectedTile}
+            showAxis={true}
+            marginLeft={isMobile ? 0 : 195}
+            marginTop={50}
           />
         );
         break;
@@ -115,10 +116,11 @@ class FullLayout extends Component {
                       previewTile = (
                         <TimeseriesTile
                           isFull={false}
-                          width={300}
-                          height={300}
                           timeseries={tile.timeseries}
                           tile={tile}
+                          showAxis={false}
+                          marginLeft={0}
+                          marginTop={0}
                         />
                       );
                       break;

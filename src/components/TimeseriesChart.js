@@ -44,12 +44,6 @@ function indexForType(axes, observationType) {
 
 function combineEventSeries(series, axes, colors, full) {
   return series.map((serie, idx) => {
-    console.log(
-      "Events for series",
-      serie,
-      JSON.parse(JSON.stringify(serie.observation_type))
-    );
-
     const isRatio = serie.observation_type.scale === "ratio";
     const events = {
       x: serie.events.map(event => new Date(event.timestamp)),
@@ -375,6 +369,8 @@ class TimeseriesChartComponent extends Component {
   render() {
     const { tile } = this.props;
 
+    console.log("CALLING RENDER WITH PROPS", this.props);
+
     const timeseriesEvents = tile.timeseries
       .filter(
         uuid =>
@@ -413,7 +409,7 @@ class TimeseriesChartComponent extends Component {
     const combinedEvents = combineEventSeries(
       timeseriesEvents.concat(rasterEvents),
       axes,
-      this.props.tile.colors,
+      tile.colors,
       this.props.isFull
     );
 
@@ -423,8 +419,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   getYAxis(axes, idx) {
-    console.log("getYAxis for", axes);
-
     if (idx >= axes.length) return null;
 
     const observationType = axes[idx];
@@ -444,46 +438,54 @@ class TimeseriesChartComponent extends Component {
       zeroline: isRatio
     };
 
-    console.log("Returning yaxis", yaxis, "for idx", idx);
-
     return yaxis;
   }
 
-  getLayout(width, height, axes) {
-    console.log("Making layout for width height =", width, height);
-
-    const { isFull } = this.props;
-
-    const MARGIN = isFull ? 50 : 5;
+  getLayout(axes) {
+    const { width, height, isFull, showAxis } = this.props;
 
     // We have a bunch of lines with labels, the labels are annotations and
     // the lines are shapes, that's why we have one function to make them.
     // Only full mode shows the labels.
     const annotationsAndShapes = this.getAnnotationsAndShapes(axes);
 
+    let margin = {};
+
+    if (isFull || showAxis) {
+      margin = {
+        t: 20,
+        l: 50,
+        r: 50,
+        b: 40
+      };
+    } else {
+      margin = {
+        t: 5,
+        l: 5,
+        r: 5,
+        b: 5
+      };
+    }
+
     return {
-      width: isFull ? width - 165 - MARGIN : 150,
-      height: isFull ? height - 60 : 150,
+      width: width,
+      height: height,
       yaxis: {
         ...this.getYAxis(axes, 0),
-        visible: isFull
+        visible: showAxis
       },
       yaxis2: {
         ...this.getYAxis(axes, 1),
-        visible: isFull
+        visible: showAxis
       },
       showlegend: isFull,
       legend: {
         x: 0.02,
         borderwidth: 1
       },
-      margin: {
-        t: MARGIN,
-        l: MARGIN,
-        r: MARGIN,
-        b: MARGIN
-      },
+      margin: margin,
       xaxis: {
+        visible: showAxis,
         type: "date",
         showgrid: true
       },
@@ -493,29 +495,46 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderFull(axes, combinedEvents) {
-    const { width, height, tile } = this.props;
     const Plot = plotComponentFactory(window.Plotly);
 
     return (
-      <div className={styles.ChartContainer}>
-        <Plot
-          data={combinedEvents}
-          layout={this.getLayout(width, height, axes, true)}
-        />
+      <div
+        style={{
+          marginTop: this.props.marginTop,
+          marginLeft: this.props.marginLeft,
+          width: this.props.width,
+          height: this.props.height
+        }}
+      >
+        <Plot data={combinedEvents} layout={this.getLayout(axes)} />
       </div>
     );
   }
 
   renderTile(axes, combinedEvents) {
-    const { width, height, tile } = this.props;
+    if (!this.props.height || !this.props.width) {
+      console.log("NOT RENDERING");
+      return null;
+    }
+    console.log("RENDERING", this.props.height, this.props.width);
+
     const Plot = plotComponentFactory(window.Plotly);
 
     return (
-      <Plot
-        data={combinedEvents}
-        layout={this.getLayout(width, height, axes, false)}
-        config={{ displayModeBar: false }}
-      />
+      <div
+        style={{
+          marginTop: this.props.marginTop,
+          marginLeft: this.props.marginLeft,
+          width: this.props.width,
+          height: this.props.height
+        }}
+      >
+        <Plot
+          data={combinedEvents}
+          layout={this.getLayout(axes)}
+          config={{ displayModeBar: false }}
+        />
+      </div>
     );
   }
 }
