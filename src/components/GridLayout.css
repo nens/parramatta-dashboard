@@ -1,4 +1,5 @@
-.HeaderImage, .SecondaryHeaderImage {
+.HeaderImage,
+.SecondaryHeaderImage {
   max-width: 300px;
   max-height: 43px;
   padding: 10px 0 10px 10px;
@@ -13,7 +14,7 @@
 @media only screen and (max-width: 700px) {
   .HeaderImage {
     transform-origin: left;
-    transform: scale(.85);
+    transform: scale(0.85);
   }
   .SecondaryHeaderImage {
     display: none;
@@ -76,10 +77,9 @@
 @media only screen and (max-width: 700px) {
   .LogoutButton {
     width: 60px;
-    transform: scale(.85);
+    transform: scale(0.85);
   }
 }
-
 .LogoutButton i {
   position: absolute;
   font-size: 15px;
@@ -89,6 +89,40 @@
 .LogoutButton:hover {
   background: #eeeeee;
 }
+
+.SettingsButton {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  right: 160px;
+  top: 10px;
+  width: 145px;
+  height: 40px;
+  text-align: center;
+  background: #ffffff;
+  color: #333;
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+}
+@media only screen and (max-width: 700px) {
+  .SettingsButton {
+    right: 70px;
+    width: 60px;
+    transform: scale(0.85);
+  }
+}
+.SettingsButton i {
+  position: absolute;
+  font-size: 15px;
+  top: 12px;
+  left: 22px;
+}
+.SettingsButton:hover {
+  background: #eeeeee;
+}
+
 .Footer {
   position: fixed;
   bottom: 0;
@@ -96,4 +130,75 @@
   font-size: 12px;
   padding: 5px;
   color: #ccc;
+}
+
+.SettingsMenu {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+.CloseSettings {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  cursor: pointer;
+}
+.CloseSettings i {
+  font-size: 2em;
+}
+
+.SettingsInner {
+  padding-top: 20px;
+  display: grid;
+  grid-template-areas: "nav content";
+
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-gap: 10px;
+  padding-top: 20px;
+}
+
+.SettingsInner nav {
+  grid-area: nav;
+  margin-left: 0.5rem;
+}
+.SettingsInner nav div {
+  text-transform: uppercase;
+  display: flex;
+  justify-content: left;
+  cursor: pointer;
+  margin: 0 5px 10px 0;
+}
+.SettingsInner nav div i {
+  padding: 0 5px 0 0;
+}
+
+.SettingsInner main {
+  grid-area: content;
+  border-left: 1px solid #ccc;
+  padding: 0 0 0 20px;
+}
+
+@media (max-width: 768px) {
+  .SettingsInner {
+    grid-template-columns: 50px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-gap: 10px;
+    height: 100vh;
+  }
+
+  .SettingsInner nav {
+    margin: 0;
+    border: none;
+  }
+  .SettingsInner nav div {
+    justify-content: flex-end;
+  }
+  .SettingsInner nav span {
+    display: none;
+  }
+}
+
+.ActiveMenu {
+  font-weight: bolder;
 }
