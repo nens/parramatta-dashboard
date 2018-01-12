@@ -105,6 +105,16 @@
       "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
       "rasterIntersections": [
         {
+          "uuid": "3e5f56a",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              5.9223175048828125,
+              52.15118665954508
+            ]
+          }
+        },
+        {
           "uuid": "9ff9faa",
           "geometry": {
             "type": "Point",

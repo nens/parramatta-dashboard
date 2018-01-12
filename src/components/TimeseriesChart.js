@@ -10,71 +10,82 @@ import {
 } from "../actions";
 import { CHART_PERIOD } from "../constants";
 import { makeGetter } from "lizard-api-client";
-import {
-  Line,
-  Bar,
-  CartesianGrid,
-  ComposedChart,
-  ReferenceLine,
-  Label,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from "recharts";
 import { scaleTime } from "d3-scale";
 import findIndex from "lodash/findIndex";
+import plotComponentFactory from "react-plotly.js/factory";
+import styles from "./TimeseriesChart.css";
 
-function combineEventSeries(series) {
-  // Events has the form [{uuid: uuid1, events: [events1]}, ...]
-  //
-  // Return a sorted array of the form
-  // [{timestamp: timestamp, uuid1: value1, uuid2: value}}]
-
-  let events = {}; // {timestamp: {uuid1: value1}}
-
-  series.forEach(serie => {
-    const isRatio = serie.observation_type.scale === "ratio";
-
-    serie.events.forEach((event, idx) => {
-      const timestamp = event.timestamp;
-      if (!events.hasOwnProperty(timestamp)) {
-        events[timestamp] = {};
-      }
-      events[timestamp][serie.uuid] = isRatio ? event.sum : event.max;
-    });
-  });
-
-  let timestamps = Object.keys(events)
-    .map(parseFloat)
-    .slice()
-    .sort();
-
-  return timestamps.map(timestamp => {
-    const values = events[timestamp];
-    values.timestamp = timestamp;
-    return values;
-  });
+function axisLabel(observationType) {
+  return observationType.unit || observationType.reference_frame;
 }
 
-function ReferenceLabel(props) {
-  const { fill, value, textAnchor, fontSize, viewBox, dy, dx } = props;
-  const x = viewBox.width + viewBox.x;
-  const y = viewBox.y - 6;
-  return (
-    <text
-      x={x}
-      y={y}
-      dy={dy}
-      dx={dx}
-      fill={fill}
-      fontSize={fontSize || 10}
-      textAnchor={textAnchor}
-    >
-      {value}
-    </text>
+function getColor(colors, idx) {
+  let color;
+
+  if (colors && colors.length > idx) {
+    color = colors[idx];
+  } else {
+    color = ["#26A7F1", "#000058", "#99f"][idx % 3]; // Some shades of blue
+  }
+
+  return color;
+}
+
+function indexForType(axes, observationType) {
+  return findIndex(
+    axes,
+    ax =>
+      ax &&
+      observationType &&
+      axisLabel(ax) === axisLabel(observationType) &&
+      ax.scale === observationType.scale
   );
+}
+
+function combineEventSeries(series, axes, colors, full) {
+  return series.map((serie, idx) => {
+    console.log(
+      "Events for series",
+      serie,
+      JSON.parse(JSON.stringify(serie.observation_type))
+    );
+
+    const isRatio = serie.observation_type.scale === "ratio";
+    const events = {
+      x: serie.events.map(event => new Date(event.timestamp)),
+      y: serie.events.map(event => event.max || event.sum),
+      name: serie.observation_type.getLegendString(),
+      hoverinfo: full ? "name+y" : "none",
+      hoverlabel: {
+        namelength: -1
+      }
+    };
+
+    const yaxis = indexForType(axes, serie.observation_type);
+
+    const color = getColor(colors, idx);
+
+    if (yaxis > 0) {
+      events.yaxis = "y2";
+    }
+
+    if (isRatio) {
+      // Bar plot.
+      events.type = "bar";
+      events.marker = {
+        color: color
+      };
+    } else {
+      // Line plot.
+      events.type = "scatter";
+      events.mode = "lines+points";
+      events.line = {
+        color: color
+      };
+    }
+
+    return events;
+  });
 }
 
 class TimeseriesChartComponent extends Component {
@@ -100,10 +111,10 @@ class TimeseriesChartComponent extends Component {
   componentWillMount() {
     this.updateTimeseries();
 
-    this.interval = setInterval(
-      this.updateDateTimeState.bind(this),
-      5 * 60 * 1000
-    );
+    /* this.interval = setInterval(
+     *   this.updateDateTimeState.bind(this),
+     *   5 * 60 * 1000
+     * );*/
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -115,13 +126,15 @@ class TimeseriesChartComponent extends Component {
     }
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+  /* componentWillUnmount() {
+   *   clearInterval(this.interval);
+   * }*/
 
   updateTimeseries() {
     (this.props.tile.timeseries || []).map(uuid =>
-      this.props.getTimeseriesEvents(uuid, this.state.start, this.state.end)
+      this.props.getTimeseriesEvents(uuid, this.state.start, this.state.end, {
+        minpoints: 320
+      })
     );
 
     (this.props.tile.rasterIntersections || []).map(intersection =>
@@ -134,35 +147,6 @@ class TimeseriesChartComponent extends Component {
     );
   }
 
-  getTicks() {
-    // Calculate ticks using d3_scale.scaleTime.
-    const domain = [new Date(this.state.start), new Date(this.state.end)];
-    const scale = scaleTime().domain(domain);
-
-    // One tick per 200 pixels, no more than 4.
-    const numTicks = Math.min(4, Math.floor(this.props.width / 200));
-    // Note that numTicks is only considered a hint
-    const ticks = scale.ticks(numTicks);
-
-    return ticks.map(entry => entry.getTime());
-  }
-
-  tickFormatter(tick) {
-    const period = this.state.end - this.state.start;
-    const periodHours = period / (1000 * 3600);
-
-    const date = moment(tick).format("l");
-    const time = moment(tick).format("LT");
-
-    if (periodHours < 24) {
-      return time;
-    } else if (periodHours < 24 * 7) {
-      return date + " " + time;
-    } else {
-      return date;
-    }
-  }
-
   allUuids() {
     // Return UUIDs of all timeseries plus those of all rasters
     return this.props.tile.timeseries.concat(
@@ -170,10 +154,6 @@ class TimeseriesChartComponent extends Component {
         intersection => intersection.uuid
       )
     );
-  }
-
-  axisLabel(observationType) {
-    return observationType.unit || observationType.reference_frame;
   }
 
   observationType(uuid) {
@@ -191,15 +171,6 @@ class TimeseriesChartComponent extends Component {
     }
   }
 
-  indexForType(axes, observationType) {
-    return findIndex(
-      axes,
-      ax =>
-        this.axisLabel(ax) === this.axisLabel(observationType) &&
-        ax.scale === observationType.scale
-    );
-  }
-
   getAxesData() {
     const axes = [];
 
@@ -209,7 +180,7 @@ class TimeseriesChartComponent extends Component {
         return null;
       }
 
-      const axis = this.indexForType(axes, observationType);
+      const axis = indexForType(axes, observationType);
 
       if (axis === -1) {
         if (axes.length >= 2) {
@@ -226,69 +197,6 @@ class TimeseriesChartComponent extends Component {
     });
 
     return axes;
-  }
-
-  getYAxes(axes, isFull) {
-    return axes.map((axis, idx) => {
-      return (
-        <YAxis
-          hide={!isFull}
-          key={idx}
-          yAxisId={idx}
-          orientation={["left", "right"][idx]}
-          domain={[axis.scale === "ratio" ? 0 : "auto", "auto"]}
-        >
-          <Label
-            value={this.axisLabel(axis)}
-            position="left"
-            style={{ textAnchor: "middle" }}
-            angle={270}
-          />
-        </YAxis>
-      );
-    });
-  }
-
-  getLinesAndBars(axes) {
-    return this.allUuids().map((uuid, idx) => {
-      const observationType = this.observationType(uuid);
-      if (!observationType) return null;
-
-      const axisIndex = this.indexForType(axes, observationType);
-      let color;
-
-      if (this.props.tile.colors && this.props.tile.colors.length > idx) {
-        color = this.props.tile.colors[idx];
-      } else {
-        color = ["#26A7F1", "#000058", "#99f"][idx % 3]; // Some shades of blue
-      }
-
-      if (observationType.scale === "interval") {
-        return (
-          <Line
-            key={uuid}
-            yAxisId={axisIndex}
-            connectNulls={true}
-            fillOpacity={1}
-            dot={false}
-            name={observationType.getLegendString()}
-            type="monotone"
-            dataKey={uuid}
-            stroke={color}
-          />
-        );
-      } else if (observationType.scale === "ratio") {
-        return (
-          <Bar
-            key={uuid}
-            yAxisId={axisIndex}
-            name={observationType.getLegendString()}
-            dataKey={uuid}
-          />
-        );
-      }
-      return null;
-    });
   }
 
   isRelevantTimeseriesAlarm(alarm) {
@@ -332,7 +240,10 @@ class TimeseriesChartComponent extends Component {
         this.isRelevantRasterAlarm(alarm)
     );
 
-    const referenceLines = relevantAlarms.map(alarm => {
+    const shapes = [];
+    const annotations = [];
+
+    relevantAlarms.forEach(alarm => {
       // A timeseriesAlarm can have multiple thresholds, make a reference line
       // for each.
       return alarm.thresholds.map(threshold => {
@@ -358,7 +269,7 @@ class TimeseriesChartComponent extends Component {
           label = `${alarm.name} ${threshold.warning_level}${active}`;
         }
 
-        // Figure out which Y axis the value is on so Recharts knows where to plot it
+        // Figure out which Y axis the value is on so we know where to plot it
         // The TimeseriesAlarm also have an ObservationType itself, it should be exactly
         // the same as that of the timeseries, but I think using the timeseries' observation
         // type is more robust as we used those to construct the Y axes.
@@ -366,27 +277,39 @@ class TimeseriesChartComponent extends Component {
           ? this.observationType(alarm.timeseries.uuid)
           : alarm.observation_type;
 
-        const axisIndex = this.indexForType(axes, observationType);
+        const axisIndex = indexForType(axes, observationType);
 
         if (axisIndex === 0 || axisIndex === 1) {
-          return (
-            <ReferenceLine
-              key={`alarmreference-${alarm.uuid}-${threshold.value}`}
-              y={threshold.value}
-              yAxisId={axisIndex}
-              stroke={color}
-            >
-              <Label value={label} position="insideBottomLeft" />
-            </ReferenceLine>
-          );
-        } else {
-          return null;
+          shapes.push({
+            type: "line",
+            layer: "above",
+            xref: "paper",
+            x0: 0,
+            x1: 1,
+            yref: axisIndex === 0 ? "y" : "y2",
+            y0: threshold.value,
+            y1: threshold.value,
+            line: {
+              color: color,
+              width: isFull ? 2 : 1
+            }
+          });
+
+          annotations.push({
+            text: label,
+            xref: "paper",
+            x: 0,
+            xanchor: "left",
+            yref: axisIndex === 0 ? "y" : "y2",
+            y: threshold.value,
+            yanchor: "bottom",
+            showarrow: false
+          });
         }
       });
     });
 
-    // It is an array of arrays now, return flattened version
-    return Array.prototype.concat([], referenceLines);
+    return { shapes, annotations };
   }
 
   getRasterEvents(raster, geometry) {
@@ -400,6 +323,53 @@ class TimeseriesChartComponent extends Component {
       }
     }
     return null;
+  }
+
+  getAnnotationsAndShapes(axes) {
+    const { isFull } = this.props;
+
+    let annotations = [];
+    let shapes = [];
+
+    const alarmReferenceLines = this.alarmReferenceLines(axes);
+
+    if (alarmReferenceLines) {
+      annotations = alarmReferenceLines.annotations;
+      shapes = alarmReferenceLines.shapes;
+    }
+
+    // Return lines for alarms and for "now".
+    const now = new Date().getTime();
+
+    const nowLine = {
+      type: "line",
+      layer: "above",
+      x0: now,
+      x1: now,
+      yref: "paper",
+      y0: 0,
+      y1: 1,
+      line: {
+        color: "red",
+        width: isFull ? 2 : 1
+      }
+    };
+
+    const nowAnnotation = {
+      text: "NOW",
+      bordercolor: "red",
+      x: now,
+      xanchor: "right",
+      yref: "paper",
+      y: 1,
+      yanchor: "top",
+      showarrow: false
+    };
+
+    annotations.push(nowAnnotation);
+    shapes.push(nowLine);
+
+    return { annotations, shapes };
   }
 
   render() {
@@ -438,98 +408,114 @@ class TimeseriesChartComponent extends Component {
       })
       .filter(e => e !== null); // Remove nulls
 
-    const combinedEvents = combineEventSeries(
-      timeseriesEvents.concat(rasterEvents)
-    );
     const axes = this.getAxesData();
 
-    if (!axes.length) return null;
+    const combinedEvents = combineEventSeries(
+      timeseriesEvents.concat(rasterEvents),
+      axes,
+      this.props.tile.colors,
+      this.props.isFull
+    );
 
     return this.props.isFull
-      ? this.renderFull(combinedEvents, axes)
-      : this.renderTile(combinedEvents, axes);
+      ? this.renderFull(axes, combinedEvents)
+      : this.renderTile(axes, combinedEvents);
   }
 
-  renderFull(combinedEvents, axes) {
-    const { width, height, tile } = this.props;
+  getYAxis(axes, idx) {
+    console.log("getYAxis for", axes);
 
-    const grid = <CartesianGrid strokeDasharray="3 3" />;
-    const xaxis = (
-      <XAxis
-        dataKey="timestamp"
-        type="number"
-        domain={[this.state.start, this.state.end]}
-        ticks={this.getTicks()}
-        tickFormatter={this.tickFormatter.bind(this)}
-      />
-    );
-    const legend = <Legend verticalAlign="bottom" height={36} />;
-    const yaxes = this.getYAxes(axes, true);
-    const margin = 0;
-    const lines = this.getLinesAndBars(axes);
+    if (idx >= axes.length) return null;
 
-    return (
-      <ComposedChart
-        width={width}
-        height={height}
-        data={combinedEvents}
-        margin={{
-          top: 75,
-          bottom: margin,
-          left: width < 700 ? 20 : 220,
-          right: 2 * margin
-        }}
-        key={"composedchart-" + tile.id}
-      >
-        {grid}
-        {lines}
-        {xaxis}
-        {yaxes}
-        {legend}
-        {
-          <ReferenceLine
-            x={new Date().getTime()}
-            strokeWidth={2}
-            stroke="#ccc"
-            label={<ReferenceLabel fill={"#000"} value={"Now"} />}
-          />
-        }
-        {this.alarmReferenceLines(axes)}
-        <Tooltip
-          isAnimationActive={false}
-          labelFormatter={label => {
-            return moment(label)
-              .locale("en-au")
-              .format("LLL");
-          }}
-        />
-      </ComposedChart>
-    );
+    const observationType = axes[idx];
+
+    const isRatio = observationType.scale === "ratio";
+
+    const yaxis = {
+      title: axisLabel(observationType),
+      type: "linear",
+      rangemode: isRatio ? "tozero" : "normal",
+      side: idx === 0 ? "left" : "right",
+      overlaying: idx === 1 ? "y" : undefined,
+      //      showspikes: true,
+      //      spikemode: 'toaxis+across+marker',
+      ticks: "outside",
+      showgrid: idx === 0,
+      zeroline: isRatio
+    };
+
+    console.log("Returning yaxis", yaxis, "for idx", idx);
+
+    return yaxis;
   }
 
-  renderTile(combinedEvents, axes) {
-    const { width, height, tile } = this.props;
+  getLayout(width, height, axes) {
+    console.log("Making layout for width height =", width, height);
 
-    const yaxes = this.getYAxes(axes, false);
-    const lines = this.getLinesAndBars(axes);
+    const { isFull } = this.props;
+
+    const MARGIN = isFull ? 50 : 5;
+
+    // We have a bunch of lines with labels, the labels are annotations and
+    // the lines are shapes, that's why we have one function to make them.
+    // Only full mode shows the labels.
+    const annotationsAndShapes = this.getAnnotationsAndShapes(axes);
+
+    return {
+      width: isFull ? width - 165 - MARGIN : 150,
+      height: isFull ? height - 60 : 150,
+      yaxis: {
+        ...this.getYAxis(axes, 0),
+        visible: isFull
+      },
+      yaxis2: {
+        ...this.getYAxis(axes, 1),
+        visible: isFull
+      },
+      showlegend: isFull,
+      legend: {
+        x: 0.02,
+        borderwidth: 1
+      },
+      margin: {
+        t: MARGIN,
+        l: MARGIN,
+        r: MARGIN,
+        b: MARGIN
+      },
+      xaxis: {
+        type: "date",
+        showgrid: true
+      },
+      shapes: annotationsAndShapes.shapes,
+      annotations: isFull ? annotationsAndShapes.annotations : []
+    };
+  }
+
+  renderFull(axes, combinedEvents) {
+    const { width, height, tile } = this.props;
+    const Plot = plotComponentFactory(window.Plotly);
 
     return (
-      <ResponsiveContainer>
-        <ComposedChart
-          width={width}
-          height={height}
+      <div className={styles.ChartContainer}>
+        <Plot
           data={combinedEvents}
-          margin={{
-            top: 50
-          }}
-          key={"composedchart-tile-" + tile.id}
-        >
-          {lines}
-          {yaxes}
-          {<ReferenceLine x={new Date().getTime()} stroke="black" />}
-          {this.alarmReferenceLines(axes)}
-        </ComposedChart>
-      </ResponsiveContainer>
+          layout={this.getLayout(width, height, axes, true)}
+        />
+      </div>
+    );
+  }
+
+  renderTile(axes, combinedEvents) {
+    const { width, height, tile } = this.props;
+    const Plot = plotComponentFactory(window.Plotly);
+
+    return (
+      <Plot
+        data={combinedEvents}
+        layout={this.getLayout(width, height, axes, false)}
+        config={{ displayModeBar: false }}
+      />
     );
   }
 }

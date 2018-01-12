@@ -119,14 +119,14 @@ import { DateTime } from "lizard-api-client";
 const CHART_START_TIME = new DateTime({
   type: "relative",
   to: "now",
-  offset: -20 * 24 * 3600,
+  offset: -10 * 24 * 3600,
   modulo: 300 // Round down to nearest 5 minutes
 });
 
 const CHART_END_TIME = new DateTime({
   type: "relative",
   to: "now",
-  offset: 16 * 3600,
+  offset: 24 * 3600,
   modulo: 300 // Round down to nearest 5 minutes
 });
 

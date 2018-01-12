@@ -280,7 +280,7 @@ class MapComponent extends Component {
       const link = this.getTileLinkForGeometry(point.geometry);
 
       const linkSpan = link ? (
-        <button onClick={() => this.props.history.push(link)}>
+        <button onClick={() => this.context.router.history.push(link)}>
           View Chart
         </button>
       ) : null;

@@ -284,7 +284,7 @@ export function getRasterEvents(raster, geometry, start, end) {
       dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
 
       const params = {
-        window: 3600000
+        /* window: 3600000*/
       };
 
       if (raster.observation_type.scale === "ratio") {
