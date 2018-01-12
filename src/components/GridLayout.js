@@ -28,9 +28,12 @@ class GridLayout extends Component {
       canMove: false,
       layout: layoutFromLocalStorage || null,
       width: window.innerWidth,
-      height: window.innerHeight
+      height: window.innerHeight,
+      settingsMenu: false,
+      settingsMenuId: 0
     };
     this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
   componentWillMount() {
     if (!this.state.layout && !layoutFromLocalStorage) {
@@ -69,9 +72,18 @@ class GridLayout extends Component {
   }
   componentDidMount() {
     window.addEventListener("resize", this.handleUpdateDimensions, false);
+    document.addEventListener("keydown", this.handleKeyPress, false);
   }
   componentWillUnMount() {
     window.removeEventListener("resize", this.handleUpdateDimensions, false);
+    document.removeEventListener("keydown", this.handleKeyPress, false);
+  }
+  handleKeyPress(e) {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      this.setState({
+        settingsMenu: false
+      });
+    }
   }
   handleUpdateDimensions() {
     this.setState({
@@ -80,8 +92,67 @@ class GridLayout extends Component {
     });
   }
   render() {
-    const { width, canMove } = this.state;
+    const { width, height, canMove, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
+
+    if (settingsMenu) {
+      return (
+        <DocumentTitle title="Parramatta | Dashboard | Settings">
+          <div className={styles.SettingsMenu} style={{ height: height }}>
+            <img
+              src={parramattaLogo}
+              alt="Parramatta dashboard"
+              className={styles.HeaderImage}
+            />
+            <div
+              className={styles.CloseSettings}
+              onClick={() => this.setState({ settingsMenu: false })}
+            >
+              <i className="material-icons">close</i>
+            </div>
+
+            <div className={styles.SettingsInner}>
+              <nav style={{ height: height - 100 }}>
+                <div
+                  onClick={() =>
+                    this.setState({
+                      settingsMenuId: 0
+                    })}
+                >
+                  <i className="material-icons">access_time</i>
+                  <span
+                    className={`${settingsMenuId === 0
+                      ? styles.ActiveMenu
+                      : null}`}
+                  >
+                    Date/Time settings
+                  </span>
+                </div>
+                <div
+                  onClick={() =>
+                    this.setState({
+                      settingsMenuId: 1
+                    })}
+                >
+                  <i className="material-icons">layers</i>
+                  <span
+                    className={`${settingsMenuId === 1
+                      ? styles.ActiveMenu
+                      : null}`}
+                  >
+                    Background layers
+                  </span>
+                </div>
+              </nav>
+              <main style={{ height: height - 100 }}>
+                {settingsMenuId === 0 ? <div>Time settings</div> : null}
+                {settingsMenuId === 1 ? <div>Map settings</div> : null}
+              </main>
+            </div>
+          </div>
+        </DocumentTitle>
+      );
+    }
 
     const tileComponents = tiles.map(tile => {
       const shortTitle = tile.shortTitle || tile.title;
@@ -168,6 +239,23 @@ class GridLayout extends Component {
             className={styles.SecondaryHeaderImage}
           />
           <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
+
+          <div
+            className={styles.SettingsButton}
+            onClick={() =>
+              this.setState({
+                settingsMenu: true
+              })}
+          >
+            {width > 700 ? (
+              <span>
+                <i className="material-icons">settings</i>&nbsp;&nbsp;Settings
+              </span>
+            ) : (
+              <i className="material-icons">settings</i>
+            )}
+            <Ink />
+          </div>
           <div
             className={styles.LogoutButton}
             onClick={() => this.props.session.bootstrap.doLogout()}
