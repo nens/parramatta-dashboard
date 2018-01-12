@@ -202,3 +202,11 @@
 .ActiveMenu {
   font-weight: bolder;
 }
+
+.DateTimePicker {
+  display: flex;
+  justify-content: start;
+}
+.DateTimePicker div {
+  padding: 0 20px 0 0;
+}
