@@ -145,8 +145,31 @@ class GridLayout extends Component {
                 </div>
               </nav>
               <main style={{ height: height - 100 }}>
-                {settingsMenuId === 0 ? <div>Time settings</div> : null}
-                {settingsMenuId === 1 ? <div>Map settings</div> : null}
+                {settingsMenuId === 0 ? (
+                  <div>
+                    <h4 style={{ padding: 0, margin: 0 }}>
+                      Date/time settings &nbsp;<button>Reset</button>
+                    </h4>
+                    <hr />
+                    <div className={styles.DateTimePicker}>
+                      <div>
+                        <h5>Date</h5>
+                        <input type="date" name="date" />
+                      </div>
+                      <div>
+                        <h5>Time</h5>
+                        <input type="time" name="time" />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+                {settingsMenuId === 1 ? (
+                  <div>
+                    <h4 style={{ padding: 0, margin: 0 }}>Map settings</h4>
+                    <hr />
+                    <div className={styles.MapSettings} />
+                  </div>
+                ) : null}
               </main>
             </div>
           </div>
