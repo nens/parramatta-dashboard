@@ -3,14 +3,7 @@ import styles from "./Tile.css";
 
 class Tile extends Component {
   render() {
-    const {
-      onClick,
-      title,
-      children,
-      backgroundColor,
-      width,
-      height
-    } = this.props;
+    const { onClick, title, children, backgroundColor } = this.props;
 
     return (
       <div
