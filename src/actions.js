@@ -211,6 +211,14 @@ export const resetDateTimeAction = function(dispatch) {
     });
 };
 
+export const setMapBackgroundAction = function(dispatch) {
+  return mapBackground =>
+    dispatch({
+      type: SET_MAP_BACKGROUND,
+      mapBackground: { ...mapBackground }
+    });
+};
+
 export function updateTimeseriesMetadata(uuid) {
   return dispatch => {
     // Get timeseries with uuid, update its metadata. Does not

@@ -56,16 +56,12 @@ class TimeseriesTileComponent extends Component {
       }
     }
 
-    console.log("TimeseriesTile", width, height);
-
     if (this.allAssetsPresent()) {
       const newProps = {
         ...this.props,
         width: width - this.props.marginLeft,
         height: height - this.props.marginTop
       };
-
-      console.log("NewProps:", newProps);
 
       return (
         <div

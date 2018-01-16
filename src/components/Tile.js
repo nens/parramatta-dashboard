@@ -12,8 +12,6 @@ class Tile extends Component {
       height
     } = this.props;
 
-    console.log("TILE dimensions", width, height);
-
     return (
       <div
         style={{

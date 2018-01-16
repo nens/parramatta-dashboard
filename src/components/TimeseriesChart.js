@@ -8,6 +8,7 @@ import {
   getTimeseriesEvents,
   fetchRaster
 } from "../actions";
+import { MAX_TIMESERIES_POINTS } from "../config";
 import { currentPeriod, getNow } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
@@ -117,7 +118,7 @@ class TimeseriesChartComponent extends Component {
   updateTimeseries() {
     (this.props.tile.timeseries || []).map(uuid =>
       this.props.getTimeseriesEvents(uuid, this.state.start, this.state.end, {
-        minpoints: 320
+        minpoints: MAX_TIMESERIES_POINTS
       })
     );
 

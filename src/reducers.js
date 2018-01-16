@@ -7,7 +7,6 @@ import {
   RECEIVE_TIMESERIES_EVENTS,
   FETCH_RASTER_EVENTS,
   RECEIVE_RASTER_EVENTS,
-  CLOSE_TILE,
   SET_DATE,
   SET_TIME,
   RESET_DATETIME,
@@ -16,9 +15,10 @@ import {
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
   RECEIVE_BOOTSTRAP_ERROR,
-  RECEIVE_BOOTSTRAP_SUCCESS,
-  SELECT_TILE
+  RECEIVE_BOOTSTRAP_SUCCESS
 } from "./actions";
+import { MAP_BACKGROUNDS } from "./config";
+
 import { makeReducer } from "lizard-api-client";
 
 function assets(
@@ -184,22 +184,11 @@ function rasterEvents(state = {}, action) {
   }
 }
 
-export const MAP_BACKGROUNDS = [
-  {
-    description: "Topographical map",
-    url: ""
-  },
-  {
-    description: "Satellite",
-    url: ""
-  }
-];
-
 function settings(
   state = {
     configuredDate: null,
     configuredTime: null,
-    mapBackgroundLayer: null
+    mapBackground: MAP_BACKGROUNDS[0]
   },
   action
 ) {
@@ -211,7 +200,7 @@ function settings(
     case RESET_DATETIME:
       return { ...state, configuredDate: null, configuredTime: null };
     case SET_MAP_BACKGROUND:
-      return { ...state, mapBackgroundLayer: action.layerUrl };
+      return { ...state, mapBackground: action.mapBackground };
     default:
       return state;
   }
@@ -298,7 +287,18 @@ export const getConfiguredDateTime = function(state) {
 
 export const getNow = function(state) {
   // Usually the current date/time, but sometimes a different one is configured
-  return getConfiguredDateTime(state) || new Date();
+  const configured = getConfiguredDateTime(state);
+
+  if (configured) return configured;
+
+  // Use modulo operator so the "now" time only changes every five minutes, so we
+  // don't have to fetch different data for each chart after every second.
+  const currentTimestamp = new Date().getTime();
+  return new Date(currentTimestamp - currentTimestamp % 300);
+};
+
+export const getCurrentMapBackground = function(state) {
+  return state.settings.mapBackground;
 };
 
 export const currentPeriod = function(state) {

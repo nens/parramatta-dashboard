@@ -16,7 +16,14 @@ import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
 
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
-import { setDateAction, setTimeAction, resetDateTimeAction } from "../actions";
+import {
+  setDateAction,
+  setTimeAction,
+  resetDateTimeAction,
+  setMapBackgroundAction
+} from "../actions";
+import { getCurrentMapBackground } from "../reducers";
+import { MAP_BACKGROUNDS } from "../config";
 
 const layoutFromLocalStorage = JSON.parse(
   localStorage.getItem("parramatta-layout")
@@ -92,6 +99,17 @@ class GridLayout extends Component {
       height: window.innerHeight
     });
   }
+
+  toggleMapBackground() {
+    const current = this.props.currentMapBackground;
+
+    if (current.url === MAP_BACKGROUNDS[1].url) {
+      this.props.setMapBackground(MAP_BACKGROUNDS[0]);
+    } else {
+      this.props.setMapBackground(MAP_BACKGROUNDS[1]);
+    }
+  }
+
   render() {
     const { width, height, canMove, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
@@ -181,7 +199,22 @@ class GridLayout extends Component {
                   <div>
                     <h4 style={{ padding: 0, margin: 0 }}>Map settings</h4>
                     <hr />
-                    <div className={styles.MapSettings} />
+                    <div className={styles.MapSettings}>
+                      <p>
+                        There are two available map backgrounds:
+                        {MAP_BACKGROUNDS[0].description} and{" "}
+                        {MAP_BACKGROUNDS[1].description}.
+                      </p>
+                      <p>
+                        Currently selected:
+                        <strong>
+                          {this.props.currentMapBackground.description}
+                        </strong>.
+                      </p>
+                      <button onClick={this.toggleMapBackground.bind(this)}>
+                        Switch
+                      </button>
+                    </div>
                   </div>
                 ) : null}
               </main>
@@ -333,7 +366,8 @@ const mapStateToProps = (state, ownProps) => {
     tiles: getAllTiles(state),
     alarms: state.alarms,
     date: getConfiguredDate(state),
-    time: getConfiguredTime(state)
+    time: getConfiguredTime(state),
+    currentMapBackground: getCurrentMapBackground(state)
   };
 };
 
@@ -341,7 +375,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     changeDate: setDateAction(dispatch),
     changeTime: setTimeAction(dispatch),
-    resetDateTime: resetDateTimeAction(dispatch)
+    resetDateTime: resetDateTimeAction(dispatch),
+    setMapBackground: setMapBackgroundAction(dispatch)
   };
 };
 
