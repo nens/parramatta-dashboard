@@ -8,6 +8,10 @@ import {
   FETCH_RASTER_EVENTS,
   RECEIVE_RASTER_EVENTS,
   CLOSE_TILE,
+  SET_DATE,
+  SET_TIME,
+  RESET_DATETIME,
+  SET_MAP_BACKGROUND,
   RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
@@ -180,22 +184,34 @@ function rasterEvents(state = {}, action) {
   }
 }
 
-function ui(
+export const MAP_BACKGROUNDS = [
+  {
+    description: "Topographical map",
+    url: ""
+  },
+  {
+    description: "Satellite",
+    url: ""
+  }
+];
+
+function settings(
   state = {
-    currentTile: null
+    configuredDate: null,
+    configuredTime: null,
+    mapBackgroundLayer: null
   },
   action
 ) {
-  let newState;
   switch (action.type) {
-    case SELECT_TILE:
-      newState = { ...state };
-      newState.currentTile = action.tileKey;
-      return newState;
-    case CLOSE_TILE:
-      newState = { ...state };
-      newState.currentTile = null;
-      return newState;
+    case SET_DATE:
+      return { ...state, configuredDate: action.date };
+    case SET_TIME:
+      return { ...state, configuredTime: action.time };
+    case RESET_DATETIME:
+      return { ...state, configuredDate: null, configuredTime: null };
+    case SET_MAP_BACKGROUND:
+      return { ...state, mapBackgroundLayer: action.layerUrl };
     default:
       return state;
   }
@@ -237,7 +253,7 @@ const rootReducer = combineReducers({
   timeseries,
   timeseriesEvents,
   rasterEvents,
-  ui
+  settings
 });
 
 export default rootReducer;
@@ -261,4 +277,51 @@ export const getTileById = function(state, id) {
     if (Number(tile.id) === Number(id)) return tile;
     return false;
   });
+};
+
+export const getConfiguredDate = function(state) {
+  return state.settings.configuredDate || "";
+};
+
+export const getConfiguredTime = function(state) {
+  return state.settings.configuredTime || "";
+};
+
+export const getConfiguredDateTime = function(state) {
+  if (!state.settings.configuredDate || !state.settings.configuredTime)
+    return null;
+
+  return new Date(
+    state.settings.configuredDate + " " + state.settings.configuredTime
+  );
+};
+
+export const getNow = function(state) {
+  // Usually the current date/time, but sometimes a different one is configured
+  return getConfiguredDateTime(state) || new Date();
+};
+
+export const currentPeriod = function(state) {
+  // Return start and end of the current period in charts, as UTC timestamps.
+  // Defined as a period around 'now', in hours.
+  const now = getNow(state);
+  const bootstrap = state.session.bootstrap;
+  let offsets;
+
+  if (
+    bootstrap &&
+    bootstrap.configuration &&
+    bootstrap.configuration.periodHoursRelativeToNow
+  ) {
+    offsets = bootstrap.configuration.periodHoursRelativeToNow;
+  } else {
+    offsets = [-24, 12];
+  }
+
+  const period = {
+    start: now.getTime() + offsets[0] * 3600 * 1000,
+    end: now.getTime() + offsets[1] * 3600 * 1000
+  };
+
+  return period;
 };

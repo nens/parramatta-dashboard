@@ -15,7 +15,8 @@ import oehLogo from "../graphics/office-environment-heritage.png";
 import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
 
 import styles from "./GridLayout.css";
-import { getAllTiles } from "../reducers";
+import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
+import { setDateAction, setTimeAction, resetDateTimeAction } from "../actions";
 
 const layoutFromLocalStorage = JSON.parse(
   localStorage.getItem("parramatta-layout")
@@ -148,17 +149,30 @@ class GridLayout extends Component {
                 {settingsMenuId === 0 ? (
                   <div>
                     <h4 style={{ padding: 0, margin: 0 }}>
-                      Date/time settings &nbsp;<button>Reset</button>
+                      Date/time settings &nbsp;
+                      <button onClick={this.props.resetDateTime}>Reset</button>
                     </h4>
                     <hr />
                     <div className={styles.DateTimePicker}>
                       <div>
-                        <h5>Date</h5>
-                        <input type="date" name="date" />
+                        <h5>Date (e.g. "23/12/2018")</h5>
+                        <input
+                          type="date"
+                          name="date"
+                          value={this.props.date}
+                          onChange={event =>
+                            this.props.changeDate(event.target.value)}
+                        />
                       </div>
                       <div>
-                        <h5>Time</h5>
-                        <input type="time" name="time" />
+                        <h5>Time (e.g. "09:15 AM")</h5>
+                        <input
+                          type="time"
+                          name="time"
+                          value={this.props.time}
+                          onChange={event =>
+                            this.props.changeTime(event.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
@@ -317,12 +331,18 @@ const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
     tiles: getAllTiles(state),
-    alarms: state.alarms
+    alarms: state.alarms,
+    date: getConfiguredDate(state),
+    time: getConfiguredTime(state)
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
+  return {
+    changeDate: setDateAction(dispatch),
+    changeTime: setTimeAction(dispatch),
+    resetDateTime: resetDateTimeAction(dispatch)
+  };
 };
 
 export default withRouter(

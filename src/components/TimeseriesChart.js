@@ -8,12 +8,11 @@ import {
   getTimeseriesEvents,
   fetchRaster
 } from "../actions";
-import { CHART_PERIOD } from "../constants";
+import { currentPeriod, getNow } from "../reducers";
+
 import { makeGetter } from "lizard-api-client";
-import { scaleTime } from "d3-scale";
 import findIndex from "lodash/findIndex";
 import plotComponentFactory from "react-plotly.js/factory";
-import styles from "./TimeseriesChart.css";
 
 function axisLabel(observationType) {
   return observationType.unit || observationType.reference_frame;
@@ -86,20 +85,11 @@ class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = this.getDateTimeState();
-  }
-
-  getDateTimeState() {
-    // asTimestamp() turns a DateTime object (that may be relative to now) into
-    // an absolute fixed time.
-    return {
-      start: CHART_PERIOD[0].asTimestamp(),
-      end: CHART_PERIOD[1].asTimestamp()
-    };
+    this.state = this.props.currentPeriod();
   }
 
   updateDateTimeState() {
-    this.setState(this.getDateTimeState());
+    this.setState(this.props.currentPeriod());
   }
 
   componentWillMount() {
@@ -240,7 +230,7 @@ class TimeseriesChartComponent extends Component {
     relevantAlarms.forEach(alarm => {
       // A timeseriesAlarm can have multiple thresholds, make a reference line
       // for each.
-      return alarm.thresholds.map(threshold => {
+      return alarm.thresholds.forEach(threshold => {
         let label = "";
         let active;
         let color;
@@ -333,7 +323,7 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms and for "now".
-    const now = new Date().getTime();
+    const now = this.props.getNow().getTime();
 
     const nowLine = {
       type: "line",
@@ -513,10 +503,8 @@ class TimeseriesChartComponent extends Component {
 
   renderTile(axes, combinedEvents) {
     if (!this.props.height || !this.props.width) {
-      console.log("NOT RENDERING");
       return null;
     }
-    console.log("RENDERING", this.props.height, this.props.width);
 
     const Plot = plotComponentFactory(window.Plotly);
 
@@ -546,7 +534,9 @@ function mapStateToProps(state) {
     timeseries: state.timeseries,
     rasterEvents: state.rasterEvents,
     timeseriesEvents: state.timeseriesEvents,
-    alarms: state.alarms
+    alarms: state.alarms,
+    currentPeriod: () => currentPeriod(state),
+    getNow: () => getNow(state)
   };
 }
 
