@@ -13,3 +13,16 @@ export const BOUNDS = new BoundingBox(
 // If the screen is wider than this many pixels, we still only get
 // this many data points for speed purposes.
 export const MAX_TIMESERIES_POINTS = 320;
+
+export const MAP_BACKGROUNDS = [
+  {
+    description: "Labelled Satellite Map",
+    url:
+      "https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa79205/{z}/{x}/{y}.png"
+  },
+  {
+    description: "Topographical Map",
+    url:
+      "https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+  }
+];

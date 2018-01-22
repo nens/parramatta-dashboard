@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { find } from "lodash";
 import { divIcon } from "leaflet";
 import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
-import { getAllTiles } from "../reducers";
+import { getAllTiles, getCurrentMapBackground } from "../reducers";
 
 import {
   getMeasuringStations,
@@ -280,7 +280,7 @@ class MapComponent extends Component {
       const link = this.getTileLinkForGeometry(point.geometry);
 
       const linkSpan = link ? (
-        <button onClick={() => this.props.history.push(link)}>
+        <button onClick={() => this.context.router.history.push(link)}>
           View Chart
         </button>
       ) : null;
@@ -376,7 +376,7 @@ class MapComponent extends Component {
           attribution={false}
           className={styles.MapStyleFull}
         >
-          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa79205/{z}/{x}/{y}.png" />
+          <TileLayer url={this.props.mapBackground.url} />
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
@@ -407,7 +407,7 @@ class MapComponent extends Component {
           attribution={false}
           className={styles.MapStyleTile}
         >
-          <TileLayer url="https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa79205/{z}/{x}/{y}.png" />
+          <TileLayer url={this.props.mapBackground.url} />
           {tile.rasters
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
@@ -425,7 +425,8 @@ function mapStateToProps(state) {
     getRaster: makeGetter(state.rasters),
     alarms: state.alarms,
     timeseriesMetadata: state.timeseries,
-    allTiles: getAllTiles(state)
+    allTiles: getAllTiles(state),
+    mapBackground: getCurrentMapBackground(state)
   };
 }
 

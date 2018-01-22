@@ -44,8 +44,36 @@ class TimeseriesTileComponent extends Component {
   }
 
   render() {
+    let { width, height } = this.props;
+
+    if (!width && !height) {
+      if (this.props.isFull) {
+        width = window.innerWidth;
+        height = window.innerHeight;
+      } else if (this.theDiv) {
+        width = this.theDiv.clientWidth;
+        height = this.theDiv.clientHeight;
+      }
+    }
+
     if (this.allAssetsPresent()) {
-      return <TimeseriesChart {...this.props} />;
+      const newProps = {
+        ...this.props,
+        width: width - this.props.marginLeft,
+        height: height - this.props.marginTop
+      };
+
+      return (
+        <div
+          ref={theDiv => (this.theDiv = theDiv)}
+          style={{
+            width: "100%",
+            height: "100%"
+          }}
+        >
+          <TimeseriesChart {...newProps} />
+        </div>
+      );
     } else {
       return null;
     }

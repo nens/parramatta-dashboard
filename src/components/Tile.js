@@ -4,6 +4,7 @@ import styles from "./Tile.css";
 class Tile extends Component {
   render() {
     const { onClick, title, children, backgroundColor } = this.props;
+
     return (
       <div
         style={{

@@ -22,9 +22,11 @@ export const FETCH_BOOTSTRAP = "FETCH_BOOTSTRAP";
 export const RECEIVE_BOOTSTRAP_SUCCESS = "RECEIVE_BOOTSTRAP_SUCCESS";
 export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 
-// TileActions
-export const SELECT_TILE = "SELECT_TILE";
-export const CLOSE_TILE = "CLOSE_TILE";
+// SettingsActions
+export const SET_DATE = "SET_DATE";
+export const SET_TIME = "SET_TIME";
+export const RESET_DATETIME = "RESET_DATETIME";
+export const SET_MAP_BACKGROUND = "SET_MAP_BACKGROUND";
 
 // TimeseriesActions
 export const ADD_TIMESERIES = "ADD_TIMESERIES";
@@ -137,19 +139,6 @@ export function fetchBootstrap(dispatch, sessionState) {
   );
 }
 
-export const selectTile = tileKey => {
-  return {
-    type: SELECT_TILE,
-    tileKey
-  };
-};
-
-export const closeTile = () => {
-  return {
-    type: CLOSE_TILE
-  };
-};
-
 // Timeseries
 export const addTimeseries = (uuid, timeseries) => {
   return {
@@ -197,6 +186,37 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
     end,
     events
   };
+};
+
+export const setDateAction = function(dispatch) {
+  return date =>
+    dispatch({
+      type: SET_DATE,
+      date: date
+    });
+};
+
+export const setTimeAction = function(dispatch) {
+  return time =>
+    dispatch({
+      type: SET_TIME,
+      time: time
+    });
+};
+
+export const resetDateTimeAction = function(dispatch) {
+  return () =>
+    dispatch({
+      type: RESET_DATETIME
+    });
+};
+
+export const setMapBackgroundAction = function(dispatch) {
+  return mapBackground =>
+    dispatch({
+      type: SET_MAP_BACKGROUND,
+      mapBackground: { ...mapBackground }
+    });
 };
 
 export function updateTimeseriesMetadata(uuid) {
@@ -284,7 +304,7 @@ export function getRasterEvents(raster, geometry, start, end) {
       dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
 
       const params = {
-        window: 3600000
+        /* window: 3600000*/
       };
 
       if (raster.observation_type.scale === "ratio") {

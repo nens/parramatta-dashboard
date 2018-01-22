@@ -7,14 +7,18 @@ import {
   RECEIVE_TIMESERIES_EVENTS,
   FETCH_RASTER_EVENTS,
   RECEIVE_RASTER_EVENTS,
-  CLOSE_TILE,
+  SET_DATE,
+  SET_TIME,
+  RESET_DATETIME,
+  SET_MAP_BACKGROUND,
   RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
   RECEIVE_BOOTSTRAP_ERROR,
-  RECEIVE_BOOTSTRAP_SUCCESS,
-  SELECT_TILE
+  RECEIVE_BOOTSTRAP_SUCCESS
 } from "./actions";
+import { MAP_BACKGROUNDS } from "./config";
+
 import { makeReducer } from "lizard-api-client";
 
 function assets(
@@ -180,22 +184,23 @@ function rasterEvents(state = {}, action) {
   }
 }
 
-function ui(
+function settings(
   state = {
-    currentTile: null
+    configuredDate: null,
+    configuredTime: null,
+    mapBackground: MAP_BACKGROUNDS[0]
   },
   action
 ) {
-  let newState;
   switch (action.type) {
-    case SELECT_TILE:
-      newState = { ...state };
-      newState.currentTile = action.tileKey;
-      return newState;
-    case CLOSE_TILE:
-      newState = { ...state };
-      newState.currentTile = null;
-      return newState;
+    case SET_DATE:
+      return { ...state, configuredDate: action.date };
+    case SET_TIME:
+      return { ...state, configuredTime: action.time };
+    case RESET_DATETIME:
+      return { ...state, configuredDate: null, configuredTime: null };
+    case SET_MAP_BACKGROUND:
+      return { ...state, mapBackground: action.mapBackground };
     default:
       return state;
   }
@@ -237,7 +242,7 @@ const rootReducer = combineReducers({
   timeseries,
   timeseriesEvents,
   rasterEvents,
-  ui
+  settings
 });
 
 export default rootReducer;
@@ -261,4 +266,62 @@ export const getTileById = function(state, id) {
     if (Number(tile.id) === Number(id)) return tile;
     return false;
   });
+};
+
+export const getConfiguredDate = function(state) {
+  return state.settings.configuredDate || "";
+};
+
+export const getConfiguredTime = function(state) {
+  return state.settings.configuredTime || "";
+};
+
+export const getConfiguredDateTime = function(state) {
+  if (!state.settings.configuredDate || !state.settings.configuredTime)
+    return null;
+
+  return new Date(
+    state.settings.configuredDate + " " + state.settings.configuredTime
+  );
+};
+
+export const getNow = function(state) {
+  // Usually the current date/time, but sometimes a different one is configured
+  const configured = getConfiguredDateTime(state);
+
+  if (configured) return configured;
+
+  // Use modulo operator so the "now" time only changes every five minutes, so we
+  // don't have to fetch different data for each chart after every second.
+  const currentTimestamp = new Date().getTime();
+  return new Date(currentTimestamp - currentTimestamp % 300);
+};
+
+export const getCurrentMapBackground = function(state) {
+  return state.settings.mapBackground;
+};
+
+export const currentPeriod = function(state) {
+  // Return start and end of the current period in charts, as UTC timestamps.
+  // Defined as a period around 'now', in hours.
+  const now = getNow(state);
+  const bootstrap = state.session.bootstrap;
+  let offsets;
+
+  if (
+    bootstrap &&
+    bootstrap.configuration &&
+    bootstrap.configuration.periodHoursRelativeToNow
+  ) {
+    offsets = bootstrap.configuration.periodHoursRelativeToNow;
+  } else {
+    offsets = [-24, 12];
+  }
+
+  const period = {
+    start: now.getTime() + offsets[0] * 3600 * 1000,
+    end: now.getTime() + offsets[1] * 3600 * 1000
+  };
+
+  return period;
 };

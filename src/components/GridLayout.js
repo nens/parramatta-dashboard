@@ -15,7 +15,15 @@ import oehLogo from "../graphics/office-environment-heritage.png";
 import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
 
 import styles from "./GridLayout.css";
-import { getAllTiles } from "../reducers";
+import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
+import {
+  setDateAction,
+  setTimeAction,
+  resetDateTimeAction,
+  setMapBackgroundAction
+} from "../actions";
+import { getCurrentMapBackground } from "../reducers";
+import { MAP_BACKGROUNDS } from "../config";
 
 const layoutFromLocalStorage = JSON.parse(
   localStorage.getItem("parramatta-layout")
@@ -91,6 +99,17 @@ class GridLayout extends Component {
       height: window.innerHeight
     });
   }
+
+  toggleMapBackground() {
+    const current = this.props.currentMapBackground;
+
+    if (current.url === MAP_BACKGROUNDS[1].url) {
+      this.props.setMapBackground(MAP_BACKGROUNDS[0]);
+    } else {
+      this.props.setMapBackground(MAP_BACKGROUNDS[1]);
+    }
+  }
+
   render() {
     const { width, height, canMove, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
@@ -148,17 +167,30 @@ class GridLayout extends Component {
                 {settingsMenuId === 0 ? (
                   <div>
                     <h4 style={{ padding: 0, margin: 0 }}>
-                      Date/time settings &nbsp;<button>Reset</button>
+                      Date/time settings &nbsp;
+                      <button onClick={this.props.resetDateTime}>Reset</button>
                     </h4>
                     <hr />
                     <div className={styles.DateTimePicker}>
                       <div>
-                        <h5>Date</h5>
-                        <input type="date" name="date" />
+                        <h5>Date (e.g. "23/12/2018")</h5>
+                        <input
+                          type="date"
+                          name="date"
+                          value={this.props.date}
+                          onChange={event =>
+                            this.props.changeDate(event.target.value)}
+                        />
                       </div>
                       <div>
-                        <h5>Time</h5>
-                        <input type="time" name="time" />
+                        <h5>Time (e.g. "09:15 AM")</h5>
+                        <input
+                          type="time"
+                          name="time"
+                          value={this.props.time}
+                          onChange={event =>
+                            this.props.changeTime(event.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
@@ -167,7 +199,22 @@ class GridLayout extends Component {
                   <div>
                     <h4 style={{ padding: 0, margin: 0 }}>Map settings</h4>
                     <hr />
-                    <div className={styles.MapSettings} />
+                    <div className={styles.MapSettings}>
+                      <p>
+                        There are two available map backgrounds:
+                        {MAP_BACKGROUNDS[0].description} and{" "}
+                        {MAP_BACKGROUNDS[1].description}.
+                      </p>
+                      <p>
+                        Currently selected:
+                        <strong>
+                          {this.props.currentMapBackground.description}
+                        </strong>.
+                      </p>
+                      <button onClick={this.toggleMapBackground.bind(this)}>
+                        Switch
+                      </button>
+                    </div>
                   </div>
                 ) : null}
               </main>
@@ -200,10 +247,11 @@ class GridLayout extends Component {
             >
               <TimeseriesTile
                 isFull={false}
-                width={300}
-                height={300}
                 timeseries={tile.timeseries}
                 tile={tile}
+                showAxis={true}
+                marginLeft={0}
+                marginTop={30}
               />
             </Tile>
           );
@@ -225,12 +273,7 @@ class GridLayout extends Component {
               backgroundColor={"#cccccc"}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <ExternalTile
-                isFull={false}
-                tile={tile}
-                width={300}
-                height={300}
-              />
+              <ExternalTile isFull={false} tile={tile} />
             </Tile>
           );
         default:
@@ -279,6 +322,7 @@ class GridLayout extends Component {
             )}
             <Ink />
           </div>
+
           <div
             className={styles.LogoutButton}
             onClick={() => this.props.session.bootstrap.doLogout()}
@@ -320,12 +364,20 @@ const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
     tiles: getAllTiles(state),
-    alarms: state.alarms
+    alarms: state.alarms,
+    date: getConfiguredDate(state),
+    time: getConfiguredTime(state),
+    currentMapBackground: getCurrentMapBackground(state)
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
+  return {
+    changeDate: setDateAction(dispatch),
+    changeTime: setTimeAction(dispatch),
+    resetDateTime: resetDateTimeAction(dispatch),
+    setMapBackground: setMapBackgroundAction(dispatch)
+  };
 };
 
 export default withRouter(
