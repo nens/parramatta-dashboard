@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.2.0"></a>
+# [0.2.0](https://github.com/nens/parramatta-dashboard/compare/v0.1.8...v0.2.0) (2018-01-22)
+
+
+### Features
+
+* **GridLayout:** Add datetimepicker to settings. ([#66](https://github.com/nens/parramatta-dashboard/issues/66)) ([c37600c](https://github.com/nens/parramatta-dashboard/commit/c37600c))
+
+
+
 <a name="0.1.8"></a>
 ## [0.1.8](https://github.com/nens/parramatta-dashboard/compare/v0.1.7...v0.1.8) (2017-11-03)
 
