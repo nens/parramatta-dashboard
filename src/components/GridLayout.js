@@ -306,22 +306,20 @@ class GridLayout extends Component {
           />
           <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
 
-          <div
-            className={styles.SettingsButton}
-            onClick={() =>
-              this.setState({
-                settingsMenu: true
-              })}
-          >
-            {width > 700 ? (
+          {width > 700 ? (
+            <div
+              className={styles.SettingsButton}
+              onClick={() =>
+                this.setState({
+                  settingsMenu: true
+                })}
+            >
               <span>
                 <i className="material-icons">settings</i>&nbsp;&nbsp;Settings
               </span>
-            ) : (
-              <i className="material-icons">settings</i>
-            )}
-            <Ink />
-          </div>
+              <Ink />
+            </div>
+          ) : null}
 
           <div
             className={styles.LogoutButton}
