@@ -16,8 +16,7 @@ class TermsOrLoginOrAppComponent extends Component {
   constructor() {
     super();
     this.state = {
-      termsSigned:
-        window.localStorage.getItem("termsSigned") === "true" || false
+      termsSigned: false
     };
   }
 
