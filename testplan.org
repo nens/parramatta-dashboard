@@ -116,3 +116,31 @@ These can fail for several reasons; check that the tile opens
 correctly and that the external page is visible.
 
 ** Timeseries charts
+
+Currently, a timeseries chart is expected for the period around "now".
+
+Water depths are also configured, but only for 10 and 11
+june, 1991. When the "configured Now" is changed to then, a chart
+should show.
+
+On the fullscreen tile:
+
+- Y axes should show the units of each chart
+
+- In the topleft corner, a legend should show for each chart that has data in the current period
+
+- Charts can be turned on and off by clicking in the legend
+
+- It is possible to zoom by dragging the mouse over some part of the data
+
+- It is possible to create an image of the current chart using the tools in the top right
+
+On the front page tile:
+
+- No interaction is possible
+
+- There is no legend
+
+On the PowerPoint tile:
+
+- No labels and ticks are shown either
