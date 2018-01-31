@@ -285,43 +285,20 @@ export const getConfiguredDateTime = function(state) {
   );
 };
 
-export const getNow = function(state) {
+export const getConfiguredNow = function(state) {
   // Usually the current date/time, but sometimes a different one is configured
   const configured = getConfiguredDateTime(state);
-
-  if (configured) return configured;
-
-  // Use modulo operator so the "now" time only changes every five minutes, so we
-  // don't have to fetch different data for each chart after every second.
-  const currentTimestamp = new Date().getTime();
-  return new Date(currentTimestamp - currentTimestamp % 300);
+  return configured || null;
 };
 
 export const getCurrentMapBackground = function(state) {
   return state.settings.mapBackground;
 };
 
-export const currentPeriod = function(state) {
-  // Return start and end of the current period in charts, as UTC timestamps.
-  // Defined as a period around 'now', in hours.
-  const now = getNow(state);
-  const bootstrap = state.session.bootstrap;
-  let offsets;
-
-  if (
-    bootstrap &&
-    bootstrap.configuration &&
-    bootstrap.configuration.periodHoursRelativeToNow
-  ) {
-    offsets = bootstrap.configuration.periodHoursRelativeToNow;
+export const getBootstrap = function(state) {
+  if (state.session && state.session.bootstrap) {
+    return state.session.bootstrap;
   } else {
-    offsets = [-24, 12];
+    return null;
   }
-
-  const period = {
-    start: now.getTime() + offsets[0] * 3600 * 1000,
-    end: now.getTime() + offsets[1] * 3600 * 1000
-  };
-
-  return period;
 };

@@ -303,31 +303,27 @@ export function getRasterEvents(raster, geometry, start, end) {
       // Fetch it.
       dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
 
-      const params = {
-        /* window: 3600000*/
-      };
+      raster.getDataAtPoint(geometry, start, end).then(results => {
+        let data;
 
-      if (raster.observation_type.scale === "ratio") {
-        params.fields = "sum";
-      } else {
-        params.fields = "average";
-      }
-
-      raster.getDataAtPoint(geometry, start, end, params).then(results => {
         if (results && results.data) {
           // Rewrite to a format compatible with normal timeseries.
-          const data = results.data.map(event => {
+          data = results.data.map(event => {
             return {
               timestamp: event[0],
               sum: event[1],
               max: event[1]
             };
           });
-
-          dispatch(
-            receiveRasterEventsAction(raster.uuid, geomKey, start, end, data)
-          );
+        } else {
+          // No data returned, treat as if an empty array was returned.
+          // Happens e.g. when there is no data during the selected time period.
+          data = [];
         }
+
+        dispatch(
+          receiveRasterEventsAction(raster.uuid, geomKey, start, end, data)
+        );
       });
     }
   };
