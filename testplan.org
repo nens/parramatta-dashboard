@@ -1,0 +1,118 @@
+* Test plan
+
+Before doing a production release we need to check that all
+functionality still works.  This plan contains actions to do that,
+that have to be done on Firefox, Chrome, Edge on PC and on a mobile
+phone. The Django admin configuration parts can be done on a single
+browser as Django itself is well-tested and there won't be browser
+differences with that.
+
+When a bug is found, it will be added to the issue tracker and fixed
+in a later release. At that point a test for that bug will also be
+added to this plan, to make sure that a regression doesn't occur.
+
+On the staging server not all required data is always available. There
+is no solution yet for this problem.  For now we can't do more than
+test what we can on staging, then do a production release and
+immediately run these tests there; that is clearly not ideal, but at
+the time of writing the system isn't deployed yet and this problem
+should be solveable in the future.
+
+URLS:
+
+- Production client: https://parramatta.lizard.net/clients/parramatta/
+
+- Production admin: https://parramatta.lizard.net/admin/
+
+- Staging installation: https://nxt.staging.lizard.net/clients/parramatta/
+
+- Staging admin: https://nxt.staging.lizard.net/admin/
+
+* Configuration
+
+The configuration is entered into the Django admin as JSON, in a
+"ClientConfiguration". There is currently only a single one of these
+on each server.
+
+As the JSON isn't formatted, it is recommended to copy and paste it to
+and from a JSON editor that can format it.
+
+After changing the configuration, *refresh* the client so that it uses
+the new data.
+
+*** Set the time period
+
+When no period is configured, charts should retrieve data from 24
+hours before now to 12 hours after now.
+
+This can be changed by adding or changing the property "periodHoursRelativeToNow" to
+the configuration, e.g.
+
+    {
+       "tiles": [...],
+       "periodHoursRelativeToNow": [-100, 100]
+    }
+
+Sets it to 100 hours before now to 100 hours after. Test this with a timeseries chart,
+then restore the old value of the configuration.
+
+* Terms screen
+
+The Terms and Condition screen should be shown on each new visit to the site and after
+every refresh of the client.
+
+* Application screens
+
+There is an overview page, a settings screen and a "fullscreen mode" for when a tile is selected.
+
+Check that these work on large screens as well as small ones by making
+a fullscreen browser window very small.
+
+* Settings screen
+
+Change the map background.
+
+Change the time used as "Now".
+
+* Tiles
+
+For each tile there are three versions:
+
+- On the opening screen
+
+- In "fullscreen mode" when the tile is selected
+
+- On a sufficiently large screen, to the left of the selected tile in
+  the "PowerPoint view".
+
+** Water depth map
+
+All tiles behave the same; it should show a water depth raster on the map.
+
+Open the Legend and see if its values make sense, then close it.
+
+** Assets map
+
+Should show a marker for each measuringstation on the map, as well as
+each configured point.
+
+Markers are green with a tick mark by default; markers that have an
+active alarm are red with a warning sign. This can't be tested yet as
+there are no alarms configured.
+
+Clicking on a marker of a measuring station should show a list of its timeseries
+with their latest values. Clicking on a marker of a point should only show its description.
+
+In both cases, if a timeseries chart tile exists that contains a
+timeseries or the same point on a raster, a button should be shown
+that selects that tile. Currently not configured yet.
+
+** Alarms
+
+
+** External pages
+
+These can fail for several reasons; check that the tile opens
+correctly and that the external page is visible.
+
+** Timeseries charts
