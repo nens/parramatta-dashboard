@@ -99,7 +99,7 @@ function getNow(configuredNow) {
 
   // Use modulo operator so the "now" time only changes every five minutes, so we
   // don't have to fetch different data for each chart after every second.
-  const currentTimestamp = new Date(1991, 5, 11, 4).getTime();
+  const currentTimestamp = new Date().getTime();
   return new Date(currentTimestamp - currentTimestamp % 300);
 }
 
