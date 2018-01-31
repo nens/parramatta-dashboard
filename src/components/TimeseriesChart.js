@@ -407,8 +407,6 @@ class TimeseriesChartComponent extends Component {
   render() {
     const { tile } = this.props;
 
-    console.log("CALLING RENDER WITH PROPS", this.props);
-
     const timeseriesEvents = tile.timeseries
       .filter(
         uuid =>

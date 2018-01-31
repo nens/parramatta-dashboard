@@ -18,7 +18,6 @@ class TimeseriesTileComponent extends Component {
     );
 
     (this.props.tile.rasterIntersections || []).map(intersection => {
-      console.log("INTERSECTION", intersection);
       return getOrFetch(
         this.props.getRaster,
         this.props.fetchRaster,

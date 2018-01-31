@@ -284,14 +284,6 @@ export function getTimeseriesAction(uuid, start, end, params) {
 
 export function getRasterEvents(raster, geometry, start, end) {
   return (dispatch, getState) => {
-    console.log(
-      "getRasterEvents",
-      raster,
-      geometry,
-      new Date(start),
-      new Date(end)
-    );
-
     if (!raster) return null;
     // There can be multiple points on a raster where we store raster events from.
     // Therefore we create a key based on the coordinates of the point, and store
@@ -306,7 +298,6 @@ export function getRasterEvents(raster, geometry, start, end) {
 
     if (events && events.start === start && events.end === end) {
       // Up to date.
-      console.log("Up to date");
       return;
     } else if (!events || !events.isFetching) {
       // Fetch it.
