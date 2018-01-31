@@ -9,7 +9,7 @@ import {
   fetchRaster
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
-import { currentPeriod, getNow } from "../reducers";
+import { getBootstrap, getConfiguredNow } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
 import findIndex from "lodash/findIndex";
@@ -42,12 +42,22 @@ function indexForType(axes, observationType) {
   );
 }
 
+function makeFixed(value) {
+  // Hardcoded rounding to 2 decimals. Would be nicer if it could be set in
+  // observation type or so.
+  if (value !== null && value.toFixed) {
+    return value.toFixed(2);
+  } else {
+    return value;
+  }
+}
+
 function combineEventSeries(series, axes, colors, full) {
   return series.map((serie, idx) => {
     const isRatio = serie.observation_type.scale === "ratio";
     const events = {
       x: serie.events.map(event => new Date(event.timestamp)),
-      y: serie.events.map(event => event.max || event.sum),
+      y: serie.events.map(event => event.max || event.sum).map(makeFixed),
       name: serie.observation_type.getLegendString(),
       hoverinfo: full ? "name+y" : "none",
       hoverlabel: {
@@ -82,15 +92,52 @@ function combineEventSeries(series, axes, colors, full) {
   });
 }
 
+function getNow(configuredNow) {
+  if (configuredNow !== null) {
+    return configuredNow;
+  }
+
+  // Use modulo operator so the "now" time only changes every five minutes, so we
+  // don't have to fetch different data for each chart after every second.
+  const currentTimestamp = new Date(1991, 5, 11, 4).getTime();
+  return new Date(currentTimestamp - currentTimestamp % 300);
+}
+
+function currentPeriod(configuredNow, bootstrap) {
+  // Return start and end of the current period in charts, as UTC timestamps.
+  // Defined as a period around 'now', in hours.
+  const now = getNow(configuredNow);
+  let offsets;
+
+  if (
+    bootstrap &&
+    bootstrap.configuration &&
+    bootstrap.configuration.periodHoursRelativeToNow
+  ) {
+    offsets = bootstrap.configuration.periodHoursRelativeToNow;
+  } else {
+    offsets = [-24, 12];
+  }
+
+  const period = {
+    start: now.getTime() + offsets[0] * 3600 * 1000,
+    end: now.getTime() + offsets[1] * 3600 * 1000
+  };
+
+  return period;
+}
+
 class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = this.props.currentPeriod();
+    this.state = currentPeriod(props.configuredNow, props.bootstrap);
   }
 
   updateDateTimeState() {
-    this.setState(this.props.currentPeriod());
+    this.setState(
+      currentPeriod(this.props.configuredNow, this.props.bootstrap)
+    );
   }
 
   componentWillMount() {
@@ -324,7 +371,7 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms and for "now".
-    const now = this.props.getNow().getTime();
+    const now = getNow(this.props.configuredNow).getTime();
 
     const nowLine = {
       type: "line",
@@ -536,8 +583,8 @@ function mapStateToProps(state) {
     rasterEvents: state.rasterEvents,
     timeseriesEvents: state.timeseriesEvents,
     alarms: state.alarms,
-    currentPeriod: () => currentPeriod(state),
-    getNow: () => getNow(state)
+    configuredNow: getConfiguredNow(state),
+    bootstrap: getBootstrap(state)
   };
 }
 

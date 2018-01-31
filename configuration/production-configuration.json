@@ -1,0 +1,102 @@
+{
+  "tiles": [
+    {
+      "wmsLayers": [
+        {
+          "layers": "cadaster",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "rasters": [
+        {
+          "opacity": "0.5",
+          "uuid": "45650909-aad7-4a7d-9e00-8f38e2b74d0a"
+        }
+      ],
+      "shortTitle": "Max water depth (1991)",
+      "title": "Max water depth (1991 rain event)",
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,scenario$969e390,raster$969e6e1/point@-33.7916,150.9768,14/-3Days0Hours+3Days0Hours",
+      "bbox": [
+        "150.96240520477298",
+        "-33.81217200269498",
+        "151.03141307830813",
+        "-33.78071682642826"
+      ],
+      "type": "map",
+      "id": 1
+    },
+    {
+      "wmsLayers": [
+        {
+          "layers": "gauges",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        },
+        {
+          "layers": "fwa",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1003,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "assetTypes": [
+        "measuringstation"
+      ],
+      "title": "Measuring stations",
+      "bbox": [
+        "150.96240520477298",
+        "-33.81217200269498",
+        "151.03141307830813",
+        "-33.78071682642826"
+      ],
+      "type": "map",
+      "id": 2
+    },
+    {
+      "type": "statistics",
+      "id": 3,
+      "title": "Breached thresholds"
+    },
+    {
+      "title": "Westmead and North Parramatta",
+      "viewInLizardLink": "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
+      "colors": [
+        "#26A7F1",
+        "#000058"
+      ],
+      "timeseries": [
+        "935739d4-f33a-41b6-8d5d-f77ad799034e"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.99194",
+              "-33.79943",
+              "0.0"
+            ]
+          },
+          "uuid": "a0e5a1d0-b332-4055-8a15-9d93f1c1c674"
+        }
+      ],
+      "type": "timeseries",
+      "id": 4
+    }
+  ]
+}

@@ -17,13 +17,14 @@ class TimeseriesTileComponent extends Component {
       this.props.getTimeseriesMetadataAction
     );
 
-    (this.props.tile.rasterIntersections || []).map(intersection =>
-      getOrFetch(
+    (this.props.tile.rasterIntersections || []).map(intersection => {
+      console.log("INTERSECTION", intersection);
+      return getOrFetch(
         this.props.getRaster,
         this.props.fetchRaster,
         intersection.uuid
-      )
-    );
+      );
+    });
   }
 
   timeseries() {
