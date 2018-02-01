@@ -73,8 +73,43 @@
       "title": "Breached thresholds"
     },
     {
-      "title": "Westmead and North Parramatta",
-      "viewInLizardLink": "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
+      "title": "North Parramatta (Darling Mills Ck)",
+      "colors": [
+        "#26A7F1",
+        "#000058"
+      ],
+      "timeseries": [
+        "707b11ff-5331-4ba6-821e-673f2a715292"
+      ],
+      "type": "timeseries",
+      "id": 10
+    },
+    {
+      "title": "Blacktown Ck (Int. Peace Park)",
+      "colors": [
+        "#26A7F1",
+        "#000058"
+      ],
+      "timeseries": [
+        "94630f07-7353-4d9e-89b0-0c692274af3e"
+      ],
+      "type": "timeseries",
+      "id": 11
+    },
+    {
+      "title": "Johnstons Bridge (Toongabbie Ck)",
+      "colors": [
+        "#26A7F1",
+        "#000058"
+      ],
+      "timeseries": [
+        "34b144a0-7849-4e3f-aaa8-b0fffc86abbf"
+      ],
+      "type": "timeseries",
+      "id": 12
+    },
+    {
+      "title": "Redbank Rd (Toongabbie Ck)",
       "colors": [
         "#26A7F1",
         "#000058"
@@ -82,21 +117,8 @@
       "timeseries": [
         "935739d4-f33a-41b6-8d5d-f77ad799034e"
       ],
-      "rasterIntersections": [
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              "150.99194",
-              "-33.79943",
-              "0.0"
-            ]
-          },
-          "uuid": "a0e5a1d0-b332-4055-8a15-9d93f1c1c674"
-        }
-      ],
       "type": "timeseries",
-      "id": 4
+      "id": 13
     }
   ]
 }
