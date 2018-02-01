@@ -5,6 +5,7 @@ import { find } from "lodash";
 import { divIcon } from "leaflet";
 import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import { getAllTiles, getCurrentMapBackground } from "../reducers";
+import { withRouter } from "react-router-dom";
 
 import {
   getMeasuringStations,
@@ -113,11 +114,11 @@ class MapComponent extends Component {
   }
 
   getTileLinkForTimeseries(tsUuids) {
-    for (var i = 0; i < tsUuids.length; i++) {
-      const uuid = tsUuids[i];
+    for (let i = 0; i < tsUuids.length; i++) {
+      let uuid = tsUuids[i];
 
-      for (var j = 0; j < this.props.allTiles.length; j++) {
-        const tile = this.props.allTiles[j];
+      for (let j = 0; j < this.props.allTiles.length; j++) {
+        let tile = this.props.allTiles[j];
 
         if (tile.type !== "timeseries") continue;
 
@@ -126,10 +127,10 @@ class MapComponent extends Component {
           return `/full/${tile.id}`;
         }
       }
-
-      // No tile found.
-      return null;
     }
+
+    // No tile found.
+    return null;
   }
 
   getTileLinkForGeometry(point) {
@@ -200,9 +201,7 @@ class MapComponent extends Component {
     }
 
     const linkSpan = link ? (
-      <button onClick={() => this.context.router.history.push(link)}>
-        View Chart
-      </button>
+      <button onClick={() => this.props.history.push(link)}>View Chart</button>
     ) : null;
 
     return (
@@ -280,7 +279,7 @@ class MapComponent extends Component {
       const link = this.getTileLinkForGeometry(point.geometry);
 
       const linkSpan = link ? (
-        <button onClick={() => this.context.router.history.push(link)}>
+        <button onClick={() => this.props.history.push(link)}>
           View Chart
         </button>
       ) : null;
@@ -440,4 +439,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(MapComponent)
+);
