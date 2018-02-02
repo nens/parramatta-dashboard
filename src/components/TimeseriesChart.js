@@ -45,7 +45,7 @@ function indexForType(axes, observationType) {
 function makeFixed(value) {
   // Hardcoded rounding to 2 decimals. Would be nicer if it could be set in
   // observation type or so.
-  if (value !== null && value.toFixed) {
+  if (value !== undefined && value !== null && value.toFixed) {
     return value.toFixed(2);
   } else {
     return value;
@@ -55,9 +55,12 @@ function makeFixed(value) {
 function combineEventSeries(series, axes, colors, full) {
   return series.map((serie, idx) => {
     const isRatio = serie.observation_type.scale === "ratio";
+
     const events = {
       x: serie.events.map(event => new Date(event.timestamp)),
-      y: serie.events.map(event => event.max || event.sum).map(makeFixed),
+      y: serie.events
+        .map(event => (event.hasOwnProperty("max") ? event.max : event.sum))
+        .map(makeFixed),
       name: serie.observation_type.getLegendString(),
       hoverinfo: full ? "name+y" : "none",
       hoverlabel: {
