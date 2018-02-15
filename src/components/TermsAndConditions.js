@@ -136,6 +136,9 @@ class TermsAndConditionsComponent extends Component {
 
   clickButton() {
     if (this.state.boxChecked) {
+      // Scroll up -- otherwise we're going to a tiles page that may also be scrolled down
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+
       this.props.termsSigned();
     }
   }
