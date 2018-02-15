@@ -477,6 +477,10 @@ class TimeseriesChartComponent extends Component {
       zeroline: isRatio
     };
 
+    if (isRatio) {
+      yaxis.tick0 = 0;
+    }
+
     return yaxis;
   }
 
@@ -526,7 +530,8 @@ class TimeseriesChartComponent extends Component {
       xaxis: {
         visible: showAxis,
         type: "date",
-        showgrid: true
+        showgrid: true,
+        range: [this.state.start, this.state.end]
       },
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
