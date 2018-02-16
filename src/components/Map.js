@@ -4,7 +4,11 @@ import { connect } from "react-redux";
 import { find } from "lodash";
 import { divIcon } from "leaflet";
 import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
-import { getAllTiles, getCurrentMapBackground } from "../reducers";
+import {
+  getReferenceLevels,
+  getAllTiles,
+  getCurrentMapBackground
+} from "../reducers";
 import { withRouter } from "react-router-dom";
 
 import {
@@ -204,6 +208,18 @@ class MapComponent extends Component {
       <button onClick={() => this.props.history.push(link)}>View Chart</button>
     ) : null;
 
+    const referenceLevels = this.props.referenceLevels;
+    console.log("referenceLevels:", referenceLevels);
+    console.log("assetId:", asset.id);
+    let referenceLevelText = null;
+    if (referenceLevels && referenceLevels[asset.id] !== undefined) {
+      referenceLevelText = (
+        <p>
+          <strong>Reference level: {referenceLevels[asset.id]}</strong>
+        </p>
+      );
+    }
+
     return (
       <Popup minWidth={250} keepInView={true}>
         <div className={styles.Popup}>
@@ -211,6 +227,7 @@ class MapComponent extends Component {
             <strong>{asset.name}</strong>
             &nbsp;{linkSpan}
           </p>
+          {referenceLevelText}
           {timeseriesTable}
         </div>
       </Popup>
@@ -354,6 +371,7 @@ class MapComponent extends Component {
               width={layer.width}
               height={layer.height}
               srs={layer.srs}
+              opacity={layer.opacity !== undefined ? layer.opacity : 0.5}
             />
           );
         })
@@ -425,7 +443,8 @@ function mapStateToProps(state) {
     alarms: state.alarms,
     timeseriesMetadata: state.timeseries,
     allTiles: getAllTiles(state),
-    mapBackground: getCurrentMapBackground(state)
+    mapBackground: getCurrentMapBackground(state),
+    referenceLevels: getReferenceLevels(state)
   };
 }
 
