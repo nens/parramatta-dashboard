@@ -88,20 +88,23 @@ class Legend extends Component {
         </div>
 
         {legendSteps
-          ? legendSteps.map((step, i) => {
-              return (
-                <div
-                  key={i}
-                  className={styles.LegendStep}
-                  style={{
-                    backgroundColor: step.color,
-                    color: this.getCorrectTextColor(step.color)
-                  }}
-                >
-                  {step.value.toFixed(1)} {this.props.observationType.unit}
-                </div>
-              );
-            })
+          ? legendSteps
+              .map((step, i) => {
+                return (
+                  <div
+                    key={i}
+                    className={styles.LegendStep}
+                    style={{
+                      backgroundColor: step.color,
+                      color: this.getCorrectTextColor(step.color)
+                    }}
+                  >
+                    {i === legendSteps.length - 1 ? "> " : ""}
+                    {step.value.toFixed(1)} {this.props.observationType.unit}
+                  </div>
+                );
+              })
+              .reverse()
           : null}
       </div>
     );

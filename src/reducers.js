@@ -250,14 +250,35 @@ export default rootReducer;
 // Selectors
 // See https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170
 
-export const getAllTiles = function(state) {
-  if (!state.session || !state.session.hasBootstrap) return [];
+export const getBootstrap = function(state) {
+  if (!state.session || !state.session.hasBootstrap) return null;
+  return state.session.bootstrap;
+};
 
-  const bootstrap = state.session.bootstrap;
-  if (bootstrap && bootstrap.configuration && bootstrap.configuration.tiles) {
-    return bootstrap.configuration.tiles;
+const getConfiguration = function(state) {
+  const bootstrap = getBootstrap(state);
+  if (bootstrap && bootstrap.configuration) {
+    return bootstrap.configuration;
+  } else {
+    return null;
+  }
+};
+
+export const getAllTiles = function(state) {
+  const configuration = getConfiguration(state);
+  if (configuration && configuration.tiles) {
+    return configuration.tiles;
   } else {
     return [];
+  }
+};
+
+export const getReferenceLevels = function(state) {
+  const configuration = getConfiguration(state);
+  if (configuration && configuration.referenceLevels) {
+    return configuration.referenceLevels;
+  } else {
+    return {};
   }
 };
 
@@ -293,12 +314,4 @@ export const getConfiguredNow = function(state) {
 
 export const getCurrentMapBackground = function(state) {
   return state.settings.mapBackground;
-};
-
-export const getBootstrap = function(state) {
-  if (state.session && state.session.bootstrap) {
-    return state.session.bootstrap;
-  } else {
-    return null;
-  }
 };

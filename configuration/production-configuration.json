@@ -73,19 +73,136 @@
       "title": "Breached thresholds"
     },
     {
-      "title": "North Parramatta (Darling Mills Ck)",
+      "shortTitle": "Marsden Weir / Riverside Theatre (Parramatta River CBD)",
+      "title": "Marsden Weir (-LGH XXX) / Riverside Theatre (-LGH XXX) (Parramatta River CBD)",
+      "colors": [
+        "#26A7F1",
+        "#c626f1",
+        "#000058"
+      ],
+      "timeseries": [
+        "9f355fa6-9075-4253-9c16-dd3f1b984cfa",
+        "4c0f3ce9-2b85-4e10-a3ab-92edc6bf69f1",
+        "bf34f12e-08c5-4226-a03d-fcf3a86cf1f9"
+      ],
+      "type": "timeseries",
+      "id": 4
+    },
+    {
+      "shortTitle": "Redbank Road (Parramatta River)",
+      "title": "Redbank Road (Westmead and North Parramatta Warning Area) (-LGH XXX)",
       "colors": [
         "#26A7F1",
         "#000058"
       ],
       "timeseries": [
-        "707b11ff-5331-4ba6-821e-673f2a715292"
+        "935739d4-f33a-41b6-8d5d-f77ad799034e",
+        "db99e1dd-01b2-4601-8c5f-b81873ba182b"
+      ],
+      "type": "timeseries",
+      "id": 5
+    },
+    {
+      "shortTitle": "North Parramatta (Darling Mills Creek)",
+      "title": "North Parramatta (Viaduct, Darling Mills Creek) (-LGH XXX)",
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1"
+      ],
+      "timeseries": [
+        "707b11ff-5331-4ba6-821e-673f2a715292",
+        "6d5a3a3b-76a6-47eb-b5ac-907568a20bfd",
+        "e3e48d7a-4cb9-4361-9e6a-c3e6572a64e8"
+      ],
+      "type": "timeseries",
+      "id": 6
+    },
+    {
+      "shortTitle": "Briens Road (Toongabbie Creek)",
+      "title": "Briens Road (Lower Toongabbie and Wentworthville Warning Area) (-LGH XXX)",
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1"
+      ],
+      "timeseries": [
+        "2bb1cbaa-a432-45aa-a384-a1e139b0d67c",
+        "6b0581b7-af38-498d-b2c0-04b169927733",
+        "311b888e-1b38-4c97-b4b9-07657892fc44"
+      ],
+      "type": "timeseries",
+      "id": 7
+    },
+    {
+      "shortTitle": "Lake Parramatta (Hunts Creek)",
+      "title": "Lake Parramatta (Hunts Creek) (-LGH XXX)",
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1"
+      ],
+      "timeseries": [
+        "3ef3cb28-2196-4649-9a26-730d3d3213fd",
+        "e3e48d7a-4cb9-4361-9e6a-c3e6572a64e8",
+        "814f851a-fe5f-4125-bbde-8d0fe9bde044"
+      ],
+      "type": "timeseries",
+      "id": 8
+    },
+    {
+      "shortTitle": "Loyalty Road Basin (Darling Mills Creek)",
+      "title": "Loyalty Road Basin (Darling Mills Creek Warning Area) (-LGH XXX)",
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1"
+      ],
+      "timeseries": [
+        "600972ea-0dd9-46b8-99a1-d0ee6443d6a4",
+        "4b462f9c-7f54-4d64-bec8-961114d5a536",
+        "e6b0f427-9ba3-488b-a1a5-62c4bd36cb84"
+      ],
+      "type": "timeseries",
+      "id": 9
+    },
+    {
+      "shortTitle": "Johnstons Bridge (Toongabbie Creek)",
+      "title": "Johnstons Bridge (Toongabbie Creek Warning Area) (-LGH XXX)",
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1"
+      ],
+      "timeseries": [
+        "34b144a0-7849-4e3f-aaa8-b0fffc86abbf",
+        "9b290e79-6135-4ace-bda7-06fd7594ea57",
+        "2cafd42b-acc9-42a1-8ec4-2d5505449d16"
       ],
       "type": "timeseries",
       "id": 10
     },
     {
-      "title": "Blacktown Ck (Int. Peace Park)",
+      "shortTitle": "McCoy Park (Toongabbie creek)",
+      "title": "McCoy Park (Toongsabie Creek) (-LGH XXX)",
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#f1c026"
+      ],
+      "timeseries": [
+        "0de99dff-389d-4c64-b25e-2bc061ba234e",
+        "74fefe41-eaf9-4230-a74c-5bfcb23c2613",
+        "3ddc5f9a-5a27-4002-a20c-7eba393cb807",
+        "14e002e7-efe2-43d7-8faa-7d1003d9f9fd"
+      ],
+      "type": "timeseries",
+      "id": 11
+    },
+    {
+      "shortTitle": "Blacktown Creek (international Peace Park)",
+      "title": "Blacktown Creek (International Peace Park) (-LGH XXX)",
       "colors": [
         "#26A7F1",
         "#000058"
@@ -94,31 +211,43 @@
         "94630f07-7353-4d9e-89b0-0c692274af3e"
       ],
       "type": "timeseries",
-      "id": 11
-    },
-    {
-      "title": "Johnstons Bridge (Toongabbie Ck)",
-      "colors": [
-        "#26A7F1",
-        "#000058"
-      ],
-      "timeseries": [
-        "34b144a0-7849-4e3f-aaa8-b0fffc86abbf"
-      ],
-      "type": "timeseries",
       "id": 12
     },
     {
-      "title": "Redbank Rd (Toongabbie Ck)",
+      "shortTitle": "Seven Hills Radio Station (Rain)",
+      "title": "Seven Hills Radio Station",
       "colors": [
-        "#26A7F1",
         "#000058"
       ],
       "timeseries": [
-        "935739d4-f33a-41b6-8d5d-f77ad799034e"
+        "4a9c2ca8-2a02-45ea-8a6d-ec92da93f82d"
       ],
       "type": "timeseries",
       "id": 13
+    },
+    {
+      "shortTitle": "Baulkham Hills Reservoir (Rain)",
+      "title": "Baulkham Hills Reservoir (Swimming Pool)",
+      "colors": [
+        "#000058"
+      ],
+      "timeseries": [
+        "93ba52de-b787-43c1-a94e-4c53a86c0286"
+      ],
+      "type": "timeseries",
+      "id": 14
+    },
+    {
+      "shortTitle": "Toongabbie Bowling Club (Rain)",
+      "title": "Toongabbie Bowling Club",
+      "colors": [
+        "#000058"
+      ],
+      "timeseries": [
+        "48d39158-b98e-4267-bd7e-a73fabec53c9"
+      ],
+      "type": "timeseries",
+      "id": 15
     }
   ]
 }
