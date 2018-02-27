@@ -11,7 +11,7 @@ import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import parramattaLogo from "../graphics/parramatta-header-logo.svg";
 import sydneyWater from "../graphics/sydney-water.png";
-import oehLogo from "../graphics/office-environment-heritage.png";
+import oehLogo from "../graphics/waratah-nsw-government-black-white-png-logo.png";
 import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
 
 import styles from "./GridLayout.css";

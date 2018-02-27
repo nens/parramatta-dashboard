@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BOUNDS } from "../config";
 import { connect } from "react-redux";
 import { find } from "lodash";
-import { divIcon } from "leaflet";
 import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import {
   getReferenceLevels,
@@ -22,23 +21,7 @@ import { BoundingBox, isSamePoint } from "../util/bounds";
 import { Map, Marker, Popup, TileLayer, WMSTileLayer } from "react-leaflet";
 import Legend from "./Legend";
 import styles from "./Map.css";
-
-// Icons to show on the map as markers
-const iconAlarm = divIcon({
-  className: "my-div-icon",
-  html: `<svg fill="red" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 0h24v24H0z" fill="none"/>
-      <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-  </svg>`
-});
-
-const iconNoAlarm = divIcon({
-  className: "my-div-icon",
-  html: `<svg fill="green" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 0h24v24H0z" fill="none"/>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-  </svg>`
-});
+import { IconActiveAlarm, IconInactiveAlarm, IconNoAlarm } from "./MapIcons";
 
 class MapComponent extends Component {
   componentDidMount() {
@@ -107,14 +90,22 @@ class MapComponent extends Component {
     );
   }
 
-  isAssetActive(asset) {
-    if (!this.props.alarms.timeseriesData) return false;
+  iconForAsset(asset) {
+    // Return true if there is a raster alarm at the same location and it is active.
+    if (!this.props.alarms.timeseriesData) return IconNoAlarm;
 
-    // Get all active warnings, see if one belongs to this asset
-    return !!find(
-      this.props.alarms.data.filter(alarm => alarm.activeWarning()),
-      alarm => alarm.belongsToAsset(asset)
+    // Get the first alarm for this geometry
+    const alarm = find(this.props.alarms.timeseriesData, alarm =>
+      alarm.belongsToAsset(asset)
     );
+
+    if (!alarm) return IconNoAlarm;
+
+    if (alarm.activeWarning()) {
+      return IconActiveAlarm;
+    } else {
+      return IconInactiveAlarm;
+    }
   }
 
   getTileLinkForTimeseries(tsUuids) {
@@ -256,11 +247,11 @@ class MapComponent extends Component {
       const assets = this.props.assets[assetType] || {};
       Object.values(assets).forEach(asset => {
         const { coordinates } = asset.geometry;
-        const isActive = this.isAssetActive(asset);
+        const alarmIcon = this.iconForAsset(asset);
         const marker = (
           <Marker
             key={asset.id}
-            icon={isActive ? iconAlarm : iconNoAlarm}
+            icon={alarmIcon}
             position={[coordinates[1], coordinates[0]]}
             onclick={() =>
               this.props.isFull && this.clickMarker(assetType, asset.id)}
@@ -274,15 +265,22 @@ class MapComponent extends Component {
     return markers;
   }
 
-  isGeometryActive(point) {
+  iconForGeometry(point) {
     // Return true if there is a raster alarm at the same location and it is active.
-    if (!this.props.alarms.rasterData) return false;
+    if (!this.props.alarms.rasterData) return IconNoAlarm;
 
-    // Get all active warnings, see if one belongs to this asset
-    return !!find(
-      this.props.alarms.rasterData.filter(alarm => alarm.activeWarning()),
-      alarm => alarm.sameGeometry(point)
+    // Get the first alarm for this geometry
+    const alarm = find(this.props.alarms.rasterData, alarm =>
+      alarm.sameGeometry(point)
     );
+
+    if (!alarm) return IconNoAlarm;
+
+    if (alarm.activeWarning()) {
+      return IconActiveAlarm;
+    } else {
+      return IconInactiveAlarm;
+    }
   }
 
   geometryMarkers() {
@@ -292,7 +290,7 @@ class MapComponent extends Component {
     const markers = [];
     tile.points.forEach((point, idx) => {
       const { coordinates } = point.geometry;
-      const isActive = this.isGeometryActive(point.geometry);
+      const alarmIcon = this.iconForGeometry(point.geometry);
       const link = this.getTileLinkForGeometry(point.geometry);
 
       const linkSpan = link ? (
@@ -304,7 +302,7 @@ class MapComponent extends Component {
       const marker = (
         <Marker
           key={"point-" + idx}
-          icon={isActive ? iconAlarm : iconNoAlarm}
+          icon={alarmIcon}
           position={[
             Number.parseFloat(coordinates[1]),
             Number.parseFloat(coordinates[0])
