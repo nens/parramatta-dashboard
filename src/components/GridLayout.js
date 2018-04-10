@@ -9,11 +9,8 @@ import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
-
 import parramattaLogo from "../graphics/parramatta-header-logo.svg";
-
 import joepieLogoCombo from "../graphics/joepie.png";
-
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
 import {
