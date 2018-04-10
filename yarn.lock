@@ -3033,6 +3033,10 @@ fast-deep-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.0.0.tgz#96256a3bc975595eb36d82e9929d060d893439ff"
 
+fast-isnumeric@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/fast-isnumeric/-/fast-isnumeric-1.1.1.tgz#57b81c07a3c09cb9ec3bef9c161818992d893643"
+
 fast-levenshtein@~2.0.4:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
@@ -6097,6 +6101,14 @@ react-md-spinner@^0.2.5:
     exenv "^1.2.1"
     inline-style-prefixer "^3.0.3"
     prop-types "^15.5.8"
+
+react-plotly.js@^1.0.2:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/react-plotly.js/-/react-plotly.js-1.7.0.tgz#a830abf4fdab799d3f74277c0f0a691a75360723"
+  dependencies:
+    fast-isnumeric "^1.1.1"
+    object-assign "^4.1.1"
+    prop-types "^15.5.10"
 
 react-redux@^5.0.6:
   version "5.0.6"

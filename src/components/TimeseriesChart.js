@@ -550,6 +550,7 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
+        {/*<div style={{width: '200px', height: '100px', backgroundColor: 'red'}} />*/}
         <Plot data={combinedEvents} layout={this.getLayout(axes)} />
       </div>
     );
