@@ -539,6 +539,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderFull(axes, combinedEvents) {
+    console.log("[F] renderFull");
     const Plot = plotComponentFactory(window.Plotly);
 
     return (
@@ -550,14 +551,13 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
-        {/*<div style={{width: '200px', height: '100px', backgroundColor: 'red'}} />*/}
         <Plot data={combinedEvents} layout={this.getLayout(axes)} />
       </div>
     );
   }
 
   renderTile(axes, combinedEvents) {
-    if (!this.props.height || !this.props.width) {
+    if (!this.props.height || !this.props.width || !window.Plotly) {
       return null;
     }
 
