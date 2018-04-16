@@ -100,7 +100,6 @@ function getNow(configuredNow) {
   if (configuredNow !== null) {
     return configuredNow;
   }
-
   // Use modulo operator so the "now" time only changes every five minutes, so we
   // don't have to fetch different data for each chart after every second.
   const currentTimestamp = new Date().getTime();
@@ -608,8 +607,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderFull(axes, combinedEvents) {
-    // const Plot = plotComponentFactory(window.Plotly);
-
     return (
       <div
         id={this.state.componentRef}
@@ -620,14 +617,12 @@ class TimeseriesChartComponent extends Component {
           width: this.props.width,
           height: this.props.height
         }}
-      >
-        {/*<Plot data={combinedEvents} layout={this.getLayout(axes)} />*/}
-      </div>
+      />
     );
   }
 
   renderTile(axes, combinedEvents) {
-    if (!this.props.height || !this.props.width) {
+    if (!this.props.height || !this.props.width || !window.Plotly) {
       return null;
     }
 

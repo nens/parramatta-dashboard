@@ -7,6 +7,16 @@ class FullStatistics extends Component {
   componentDidMount() {
     this.props.fetchAlarms();
   }
+  getDatetimeString(utcRep) {
+    if (utcRep === null) {
+      return null;
+    } else {
+      // Via: https://stackoverflow.com/questions/6525538/convert-utc-date-time-to-local-date-time
+      const d = new Date(utcRep);
+      const tzNonAwareRep = d.toLocaleString();
+      return new Date(tzNonAwareRep + " UTC").toLocaleString();
+    }
+  }
   getAlarmsTable() {
     const { alarms } = this.props;
     const alarmsSortedByName = alarms.data
@@ -41,6 +51,7 @@ class FullStatistics extends Component {
               : null}
           </td>
           <td>{alarm.warning_value ? alarm.warning_value : null}</td>
+          <td>{this.getDatetimeString(alarm.warning_timestamp)}</td>
         </tr>
       );
     });
@@ -52,6 +63,7 @@ class FullStatistics extends Component {
             <td>Alarm name</td>
             <td>Level</td>
             <td>Value</td>
+            <td>datetime</td>
           </tr>
         </thead>
         <tbody>{alarmRows}</tbody>

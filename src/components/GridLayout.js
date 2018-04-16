@@ -10,10 +10,7 @@ import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import parramattaLogo from "../graphics/parramatta-header-logo.svg";
-import sydneyWater from "../graphics/sydney-water.png";
-import oehLogo from "../graphics/waratah-nsw-government-black-white-png-logo.png";
-import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
-
+import joepieLogoCombo from "../graphics/joepie.png";
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
 import {
@@ -285,25 +282,11 @@ class GridLayout extends Component {
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
           <img
-            src={parramattaLogo}
-            alt="Parramatta dashboard"
-            className={styles.HeaderImage}
+            src={joepieLogoCombo}
+            alt="Logos for releavnt organisations"
+            className={styles.JoepieLogoCombo}
           />
-          <img
-            src={sydneyWater}
-            alt="Sydney Water logo"
-            className={styles.SecondaryHeaderImage}
-          />
-          <img
-            src={oehLogo}
-            alt="NSW Office of Environment &nbsp; Heritage logo"
-            className={styles.SecondaryHeaderImage}
-          />
-          <img
-            src={nswSesLogo}
-            alt="NSW State Emergency Service logo"
-            className={styles.SecondaryHeaderImage}
-          />
+
           <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
 
           {width > 700 ? (
