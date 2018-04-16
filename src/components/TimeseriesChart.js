@@ -206,8 +206,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   componentDidMount() {
-    console.log(">>> COMPONENT DID MOUNT");
-
     const Plot = plotComponentFactory(window.Plotly);
     const plot = (
       <Plot
@@ -216,11 +214,9 @@ class TimeseriesChartComponent extends Component {
         config={{ displayModeBar: false }}
       />
     );
-    // const container = ReactDOM.findDOMNode(this);
     const that = this;
     setTimeout(() => {
-      // const container = document.getElementById(that.state.componentRef);
-      const container = ReactDOM.findDOMNode(this);
+      const container = ReactDOM.findDOMNode(that);
       ReactDOM.render(plot, container);
     }, 50);
   }
