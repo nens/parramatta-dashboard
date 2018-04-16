@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/en-au";
@@ -134,7 +135,12 @@ class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = currentPeriod(props.configuredNow, props.bootstrap);
+    this.state = {
+      ...currentPeriod(props.configuredNow, props.bootstrap),
+      componentRef: "comp-" + parseInt(Math.random()),
+      wantedAxes: null,
+      combinedEvents: null
+    };
   }
 
   updateDateTimeState() {
@@ -146,10 +152,77 @@ class TimeseriesChartComponent extends Component {
   componentWillMount() {
     this.updateTimeseries();
 
+    const axes = this.getAxesData();
+
+    const timeseriesEvents = this.props.tile.timeseries
+      .filter(
+        uuid =>
+          this.props.timeseries[uuid] &&
+          this.props.timeseriesEvents[uuid] &&
+          this.props.timeseriesEvents[uuid].events
+      )
+      .map(uuid => {
+        return {
+          uuid: uuid,
+          observation_type: this.props.timeseries[uuid].observation_type,
+          events: this.props.timeseriesEvents[uuid].events
+        };
+      });
+
+    const rasterEvents = (this.props.tile.rasterIntersections || [])
+      .map(intersection => {
+        const raster = this.props.getRaster(intersection.uuid).object;
+        if (!raster) {
+          return null;
+        }
+
+        const events = this.getRasterEvents(raster, intersection.geometry);
+        if (!events) return null;
+
+        return {
+          uuid: intersection.uuid,
+          observation_type: raster.observation_type,
+          events: events
+        };
+      })
+      .filter(e => e !== null); // Remove nulls
+
+    const combinedEvents = combineEventSeries(
+      timeseriesEvents.concat(rasterEvents),
+      axes,
+      this.props.tile.colors,
+      this.props.isFull
+    );
+
+    this.setState({
+      combinedEvents,
+      wantedAxes: axes
+    });
+
     /* this.interval = setInterval(
      *   this.updateDateTimeState.bind(this),
      *   5 * 60 * 1000
      * );*/
+  }
+
+  componentDidMount() {
+    console.log(">>> COMPONENT DID MOUNT");
+
+    const Plot = plotComponentFactory(window.Plotly);
+    const plot = (
+      <Plot
+        data={this.state.combinedEvents}
+        layout={this.getLayout(this.state.wantedAxes)}
+        config={{ displayModeBar: false }}
+      />
+    );
+    // const container = ReactDOM.findDOMNode(this);
+    const that = this;
+    setTimeout(() => {
+      // const container = document.getElementById(that.state.componentRef);
+      const container = ReactDOM.findDOMNode(this);
+      ReactDOM.render(plot, container);
+    }, 50);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -539,10 +612,12 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderFull(axes, combinedEvents) {
-    const Plot = plotComponentFactory(window.Plotly);
+    // const Plot = plotComponentFactory(window.Plotly);
 
     return (
       <div
+        id={this.state.componentRef}
+        ref={this.state.componentRef}
         style={{
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
@@ -550,7 +625,7 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
-        <Plot data={combinedEvents} layout={this.getLayout(axes)} />
+        {/*<Plot data={combinedEvents} layout={this.getLayout(axes)} />*/}
       </div>
     );
   }
@@ -564,6 +639,8 @@ class TimeseriesChartComponent extends Component {
 
     return (
       <div
+        id={this.state.componentRef}
+        ref={this.state.componentRef}
         style={{
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
@@ -571,11 +648,11 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
-        <Plot
+        {/*<Plot
           data={combinedEvents}
           layout={this.getLayout(axes)}
           config={{ displayModeBar: false }}
-        />
+        />*/}
       </div>
     );
   }
