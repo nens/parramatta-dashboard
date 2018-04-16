@@ -10,8 +10,11 @@ class TermsAndConditionsComponent extends Component {
       boxChecked: false
     };
   }
-
   render() {
+    const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
+    const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
+    const chrisMail = () =>
+      unescape("cgooch%40cityofparramatta%2Ensw%2Egov%2Eau");
     return (
       <div className={styles.terms}>
         <h1 className={styles.header}>
@@ -104,6 +107,12 @@ class TermsAndConditionsComponent extends Component {
             As permitted by law, Council excludes all conditions and warranties
             relating to your use of the FISH System that are not expressly
             outlined in these conditions.
+          </li>
+          <li>
+            For software issues with the FISH Dashboard please contact Nelen &
+            Schuurmans on {nensMail()}. For any other issues, or suggestions for
+            improvements to the FISH system, please contact Chris Gooch on{" "}
+            {chrisTel()} or email {chrisMail()}
           </li>
         </ol>
 
