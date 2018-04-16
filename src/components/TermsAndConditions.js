@@ -8,9 +8,10 @@ const DEV_MODE_DOMAIN = "http://localhost:3000";
 class TermsAndConditionsComponent extends Component {
   constructor() {
     super();
+    const boxMustBeChecked = window.location.href.indexOf(DEV_MODE_DOMAIN) > -1;
     this.state = {
-      boxChecked: true,
-      devMode: window.location.href.indexOf(DEV_MODE_DOMAIN) > -1
+      boxChecked: boxMustBeChecked,
+      devMode: boxMustBeChecked
     };
   }
 
