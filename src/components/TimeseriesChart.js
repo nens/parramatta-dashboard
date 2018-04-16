@@ -142,11 +142,9 @@ class TimeseriesChartComponent extends Component {
     };
   }
 
-  updateDateTimeState() {
-    this.setState(
-      currentPeriod(this.props.configuredNow, this.props.bootstrap)
-    );
-  }
+  /////////////////////////////////////////////////////////////////////////////
+  // Component - lifecycle functions //////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   componentWillMount() {
     this.updateTimeseries();
@@ -232,6 +230,16 @@ class TimeseriesChartComponent extends Component {
   /* componentWillUnmount() {
    *   clearInterval(this.interval);
    * }*/
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Component - custom functions /////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
+  updateDateTimeState() {
+    this.setState(
+      currentPeriod(this.props.configuredNow, this.props.bootstrap)
+    );
+  }
 
   updateTimeseries() {
     (this.props.tile.timeseries || []).map(uuid =>
@@ -475,56 +483,6 @@ class TimeseriesChartComponent extends Component {
     return { annotations, shapes };
   }
 
-  render() {
-    const { tile } = this.props;
-
-    const timeseriesEvents = tile.timeseries
-      .filter(
-        uuid =>
-          this.props.timeseries[uuid] &&
-          this.props.timeseriesEvents[uuid] &&
-          this.props.timeseriesEvents[uuid].events
-      )
-      .map(uuid => {
-        return {
-          uuid: uuid,
-          observation_type: this.props.timeseries[uuid].observation_type,
-          events: this.props.timeseriesEvents[uuid].events
-        };
-      });
-
-    const rasterEvents = (tile.rasterIntersections || [])
-      .map(intersection => {
-        const raster = this.props.getRaster(intersection.uuid).object;
-        if (!raster) {
-          return null;
-        }
-
-        const events = this.getRasterEvents(raster, intersection.geometry);
-        if (!events) return null;
-
-        return {
-          uuid: intersection.uuid,
-          observation_type: raster.observation_type,
-          events: events
-        };
-      })
-      .filter(e => e !== null); // Remove nulls
-
-    const axes = this.getAxesData();
-
-    const combinedEvents = combineEventSeries(
-      timeseriesEvents.concat(rasterEvents),
-      axes,
-      tile.colors,
-      this.props.isFull
-    );
-
-    return this.props.isFull
-      ? this.renderFull(axes, combinedEvents)
-      : this.renderTile(axes, combinedEvents);
-  }
-
   getYAxis(axes, idx) {
     if (idx >= axes.length) return null;
 
@@ -604,6 +562,56 @@ class TimeseriesChartComponent extends Component {
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
+  }
+
+  render() {
+    const { tile } = this.props;
+
+    const timeseriesEvents = tile.timeseries
+      .filter(
+        uuid =>
+          this.props.timeseries[uuid] &&
+          this.props.timeseriesEvents[uuid] &&
+          this.props.timeseriesEvents[uuid].events
+      )
+      .map(uuid => {
+        return {
+          uuid: uuid,
+          observation_type: this.props.timeseries[uuid].observation_type,
+          events: this.props.timeseriesEvents[uuid].events
+        };
+      });
+
+    const rasterEvents = (tile.rasterIntersections || [])
+      .map(intersection => {
+        const raster = this.props.getRaster(intersection.uuid).object;
+        if (!raster) {
+          return null;
+        }
+
+        const events = this.getRasterEvents(raster, intersection.geometry);
+        if (!events) return null;
+
+        return {
+          uuid: intersection.uuid,
+          observation_type: raster.observation_type,
+          events: events
+        };
+      })
+      .filter(e => e !== null); // Remove nulls
+
+    const axes = this.getAxesData();
+
+    const combinedEvents = combineEventSeries(
+      timeseriesEvents.concat(rasterEvents),
+      axes,
+      tile.colors,
+      this.props.isFull
+    );
+
+    return this.props.isFull
+      ? this.renderFull(axes, combinedEvents)
+      : this.renderTile(axes, combinedEvents);
   }
 
   renderFull(axes, combinedEvents) {
