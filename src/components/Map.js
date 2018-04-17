@@ -321,6 +321,10 @@ class MapComponent extends Component {
     return markers;
   }
 
+  tileHasVectors(tile) {
+    return tile.type === "map" && tile.assetTypes && tile.assetTypes.length > 0;
+  }
+
   render() {
     return this.props.isFull ? this.renderFull() : this.renderSmall();
   }
@@ -344,12 +348,18 @@ class MapComponent extends Component {
     }
 
     if (!firstRaster) {
-      legend = <Legend drawRaster={false} drawVectorIcons={true} tile={tile} />;
-    } else {
       legend = (
         <Legend
           drawRaster={false}
-          drawVectorIcons={true}
+          drawVectorIcons={this.tileHasVectors(tile)}
+          tile={tile}
+        />
+      );
+    } else {
+      legend = (
+        <Legend
+          drawRaster={true}
+          drawVectorIcons={this.tileHasVectors(tile)}
           tile={tile}
           uuid={firstRasterUuid}
           title={firstRaster.name}
