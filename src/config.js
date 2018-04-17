@@ -1,4 +1,4 @@
-// Various constants that could be configured.
+// Various constants that could be configured. NB! This is parramatta specific!
 
 import { BoundingBox } from "./util/bounds";
 

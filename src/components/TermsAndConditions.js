@@ -134,12 +134,6 @@ class TermsAndConditionsComponent extends Component {
             relating to your use of the FISH System that are not expressly
             outlined in these conditions.
           </li>
-          <li>
-            For software issues with the FISH Dashboard please contact Nelen &
-            Schuurmans on {nensMail()}. For any other issues, or suggestions for
-            improvements to the FISH system, please contact Chris Gooch on{" "}
-            {chrisTel()} or email {chrisMail()}
-          </li>
         </ol>
 
         <p>

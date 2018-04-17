@@ -111,6 +111,11 @@ class GridLayout extends Component {
     const { width, height, canMove, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
 
+    const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
+    const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
+    const chrisMail = () =>
+      unescape("cgooch%40cityofparramatta%2Ensw%2Egov%2Eau");
+
     if (settingsMenu) {
       return (
         <DocumentTitle title="Parramatta | Dashboard | Settings">
@@ -162,6 +167,7 @@ class GridLayout extends Component {
                 </div>
 
                 <div
+                  className={styles.ContactInfoLogoParent}
                   onClick={() =>
                     this.setState({
                       settingsMenuId: 2
@@ -215,12 +221,15 @@ class GridLayout extends Component {
                     <hr />
                     <div className={styles.MapSettings}>
                       <p>
-                        There are two available map backgrounds:
+                        There are {MAP_BACKGROUNDS
+                          ? MAP_BACKGROUNDS.length
+                          : 0}{" "}
+                        available map background(s):
                         {MAP_BACKGROUNDS[0].description} and{" "}
                         {MAP_BACKGROUNDS[1].description}.
                       </p>
                       <p>
-                        Currently selected:
+                        Currently selected:&nbsp;
                         <strong>
                           {this.props.currentMapBackground.description}
                         </strong>.
@@ -229,6 +238,20 @@ class GridLayout extends Component {
                         Switch
                       </button>
                     </div>
+                  </div>
+                ) : null}
+
+                {settingsMenuId === 2 ? (
+                  <div>
+                    <h4 style={{ padding: 0, margin: 0 }}>Contact info</h4>
+                    <hr />
+                    <p>
+                      For software issues with the FISH Dashboard please contact
+                      Nelen & Schuurmans on {nensMail()}. For any other issues,
+                      or suggestions for improvements to the FISH system, please
+                      contact Chris Gooch on tel.&nbsp;
+                      {chrisTel()} or email {chrisMail()}
+                    </p>
                   </div>
                 ) : null}
               </main>

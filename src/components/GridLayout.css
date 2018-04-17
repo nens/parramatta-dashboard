@@ -222,7 +222,13 @@
   padding: 0 20px 0 0;
 }
 
+.ContactInfoLogoParent {
+  position: relative;
+  left: 3px;
+}
 .ContactInfoLogo {
+  position: relative;
+  margin-top: -6px;
   font-weight: 700;
   font-size: 24px;
   font-style: normal;
