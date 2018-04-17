@@ -37,7 +37,19 @@ export function indexForType(axes, observationType) {
   );
 }
 
-export function combineEventSeries(series, axes, colors, full) {
+export function combineEventSeries(series, axes, colors, full, legendStrings) {
+  function getNameForLegend(serie, legendStrings, idx) {
+    if (legendStrings && legendStrings.length > idx) {
+      if (serie.observation_type.unit) {
+        return legendStrings[idx] + " (" + serie.observation_type.unit + ")";
+      } else {
+        return legendStrings[idx];
+      }
+    } else {
+      return serie.observation_type.getLegendString();
+    }
+  }
+
   return series.map((serie, idx) => {
     const isRatio = serie.observation_type.scale === "ratio";
 
@@ -46,7 +58,7 @@ export function combineEventSeries(series, axes, colors, full) {
       y: serie.events
         .map(event => (event.hasOwnProperty("max") ? event.max : event.sum))
         .map(makeFixed),
-      name: serie.observation_type.getLegendString(),
+      name: getNameForLegend(serie, legendStrings, idx),
       hoverinfo: full ? "name+y" : "none",
       hoverlabel: {
         namelength: -1

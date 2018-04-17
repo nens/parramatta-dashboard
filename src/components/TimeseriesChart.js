@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom"; re-anbale for Plot hack??
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/en-au";
@@ -96,53 +96,6 @@ class TimeseriesChartComponent extends Component {
      *   this.updateDateTimeState.bind(this),
      *   5 * 60 * 1000
      * );*/
-  }
-
-  componentDidMount() {
-    if (!this.state.componentHasMountedOnce) {
-      this.setState({ componentHasMountedOnce: true });
-    }
-
-    const Plot = plotComponentFactory(window.Plotly);
-
-    const combinedEvents = this.state.combinedEvents;
-    const tileData = this.props.tile;
-
-    if (combinedEvents.length > 0) {
-      for (var i = 0; i < combinedEvents.length; i++) {
-        if (
-          tileData &&
-          tileData.legendStrings &&
-          tileData.legendStrings.length >= i
-        ) {
-          const eventNameSuffix = " " + tileData.legendStrings[i];
-          // const extendedName = combinedEvents[i].name + eventNameSuffix;
-          // combinedEvents[i].name = extendedName;
-          combinedEvents[i].name = eventNameSuffix;
-        }
-      }
-    }
-
-    const plot = (
-      <Plot
-        data={combinedEvents}
-        layout={this.getLayout(this.state.wantedAxes)}
-        config={{ displayModeBar: false }}
-      />
-    );
-    const that = this;
-    setTimeout(() => {
-      const container = ReactDOM.findDOMNode(that);
-      try {
-        ReactDOM.render(plot, container);
-      } catch (e) {
-        console.error(
-          "[E] There was an error while circumventing the " +
-            "plotly-react.js bug:",
-          e
-        );
-      }
-    }, 200);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -533,7 +486,8 @@ class TimeseriesChartComponent extends Component {
       timeseriesEvents.concat(rasterEvents),
       axes,
       tile.colors,
-      this.props.isFull
+      this.props.isFull,
+      tile.legendStrings
     );
 
     return this.props.isFull
@@ -542,6 +496,8 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderFull(axes, combinedEvents) {
+    const Plot = plotComponentFactory(window.Plotly);
+
     return (
       <div
         id={this.state.componentRef}
@@ -552,7 +508,13 @@ class TimeseriesChartComponent extends Component {
           width: this.props.width,
           height: this.props.height
         }}
-      />
+      >
+        <Plot
+          data={combinedEvents}
+          layout={this.getLayout(this.state.wantedAxes)}
+          config={{ displayModeBar: true }}
+        />
+      </div>
     );
   }
 
@@ -561,6 +523,8 @@ class TimeseriesChartComponent extends Component {
       return null;
     }
 
+    const Plot = plotComponentFactory(window.Plotly);
+
     return (
       <div
         id={this.state.componentRef}
@@ -571,7 +535,13 @@ class TimeseriesChartComponent extends Component {
           width: this.props.width,
           height: this.props.height
         }}
-      />
+      >
+        <Plot
+          data={combinedEvents}
+          layout={this.getLayout(this.state.wantedAxes)}
+          config={{ displayModeBar: false }}
+        />
+      </div>
     );
   }
 }
