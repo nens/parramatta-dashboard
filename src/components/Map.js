@@ -200,8 +200,6 @@ class MapComponent extends Component {
     ) : null;
 
     const referenceLevels = this.props.referenceLevels;
-    console.log("referenceLevels:", referenceLevels);
-    console.log("assetId:", asset.id);
     let referenceLevelText = null;
     if (referenceLevels && referenceLevels[asset.id] !== undefined) {
       referenceLevelText = (

@@ -5,8 +5,6 @@ import styles from "./TermsAndConditions.css";
 
 const DEV_MODE_DOMAIN = "http://localhost:3000";
 
-const log = console.log;
-
 class TermsAndConditionsComponent extends Component {
   constructor() {
     super();
