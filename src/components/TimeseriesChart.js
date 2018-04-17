@@ -133,7 +133,15 @@ class TimeseriesChartComponent extends Component {
     const that = this;
     setTimeout(() => {
       const container = ReactDOM.findDOMNode(that);
-      ReactDOM.render(plot, container);
+      try {
+        ReactDOM.render(plot, container);
+      } catch (e) {
+        console.error(
+          "[E] There was an error while circumventing the " +
+            "plotly-react.js bug:",
+          e
+        );
+      }
     }, 200);
   }
 
@@ -553,8 +561,6 @@ class TimeseriesChartComponent extends Component {
       return null;
     }
 
-    const Plot = plotComponentFactory(window.Plotly);
-
     return (
       <div
         id={this.state.componentRef}
@@ -565,13 +571,7 @@ class TimeseriesChartComponent extends Component {
           width: this.props.width,
           height: this.props.height
         }}
-      >
-        {/*<Plot
-          data={combinedEvents}
-          layout={this.getLayout(axes)}
-          config={{ displayModeBar: false }}
-        />*/}
-      </div>
+      />
     );
   }
 }

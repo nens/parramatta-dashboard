@@ -221,3 +221,9 @@
 .DateTimePicker div {
   padding: 0 20px 0 0;
 }
+
+.ContactInfoLogo {
+  font-weight: 700;
+  font-size: 24px;
+  font-style: normal;
+}

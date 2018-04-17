@@ -144,6 +144,7 @@ class GridLayout extends Component {
                     Date/Time settings
                   </span>
                 </div>
+
                 <div
                   onClick={() =>
                     this.setState({
@@ -157,6 +158,22 @@ class GridLayout extends Component {
                       : null}`}
                   >
                     Background layers
+                  </span>
+                </div>
+
+                <div
+                  onClick={() =>
+                    this.setState({
+                      settingsMenuId: 2
+                    })}
+                >
+                  <i className={styles.ContactInfoLogo}>&copy;</i>
+                  <span
+                    className={`${settingsMenuId === 2
+                      ? styles.ActiveMenu
+                      : null}`}
+                  >
+                    Contact
                   </span>
                 </div>
               </nav>
