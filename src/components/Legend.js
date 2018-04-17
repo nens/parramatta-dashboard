@@ -5,19 +5,56 @@ import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import styles from "./Legend.css";
 
+import IconActiveAlarm from "../graphics/IconActiveAlarm.svg";
+import IconInactiveAlarm from "../graphics/IconInactiveAlarm.svg";
+import IconNoAlarm from "../graphics/IconNoAlarm.svg";
+
+const vectorIconsLegend = [
+  <div
+    key="icon1"
+    style={{
+      backgroundColor: "white",
+      color: "black"
+    }}
+  >
+    <img src={IconActiveAlarm} alt="Red check" /> Station with triggered alarm
+  </div>,
+  <div
+    key="icon2"
+    style={{
+      backgroundColor: "white",
+      color: "black"
+    }}
+  >
+    <img src={IconInactiveAlarm} alt="Green check" /> Station with alarm
+  </div>,
+  <div
+    key="icon3"
+    style={{
+      backgroundColor: "white",
+      color: "black"
+    }}
+  >
+    <img src={IconNoAlarm} alt="Blue check" /> Station without alarm
+  </div>
+];
+
 class Legend extends Component {
   constructor(props) {
     super(props);
     this.state = {
       width: window.innerWidth,
       height: window.innerHeight,
-      isOpen: false
+      isOpen: false,
+      legends: {}
     };
     this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
   }
   componentDidMount() {
-    const { uuid, wmsInfo, styles } = this.props;
-    this.props.doGetLegend(uuid, wmsInfo, styles);
+    const { drawRaster, uuid, wmsInfo, styles } = this.props;
+    if (drawRaster) {
+      this.props.doGetLegend(uuid, wmsInfo, styles);
+    }
     window.addEventListener("resize", this.handleUpdateDimensions, false);
   }
   componentWillUnmount() {
@@ -59,19 +96,40 @@ class Legend extends Component {
     }
   }
 
+  renderExtraLegends(extraLegends) {
+    return extraLegends.map((extraLegend, idx1) => (
+      <div key={"extra-legend-" + idx1}>
+        <h3 className={styles.LegendSubHeader}>{extraLegend.title}</h3>
+        {extraLegend.steps.map((step, idx2) => (
+          <div
+            key={"extraLegend" + idx1 + "-" + idx2}
+            className={styles.LegendStep}
+            style={{
+              backgroundColor: step.color,
+              color: this.getCorrectTextColor(step.color)
+            }}
+          >
+            {step.text}
+          </div>
+        ))}
+      </div>
+    ));
+  }
+
   render() {
     const { width, isOpen } = this.state;
-    const { legends, uuid } = this.props;
+    const { drawRaster, drawVectorIcons, legends, tile, uuid } = this.props;
     const isMobile = width < 700 ? true : false;
     const legendsList = Map(legends).toJS();
     const legendSteps =
-      legendsList[uuid] && legendsList[uuid].data
+      drawRaster && legendsList[uuid] && legendsList[uuid].data
         ? legendsList[uuid].data.legend
         : [];
 
     return (
       <div
         className={isMobile ? styles.LegendMobile : styles.Legend}
+        key={"legend-" + tile.id}
         style={{
           bottom: isOpen ? 0 : -300
         }}
@@ -87,8 +145,10 @@ class Legend extends Component {
           <i className="material-icons">drag_handle</i>
         </div>
 
-        {legendSteps
-          ? legendSteps
+        {legendSteps.length ? (
+          <div>
+            <h3 className={styles.LegendSubHeader}>= Raster legend =</h3>
+            {legendSteps
               .map((step, i) => {
                 return (
                   <div
@@ -104,7 +164,28 @@ class Legend extends Component {
                   </div>
                 );
               })
-              .reverse()
+              .reverse()}
+          </div>
+        ) : null}
+
+        {drawVectorIcons ? (
+          <div>
+            <h3 className={styles.LegendSubHeader}>= Vector legend =</h3>
+            <div>{vectorIconsLegend}</div>
+          </div>
+        ) : null}
+
+        {tile.extraLegends || true
+          ? this.renderExtraLegends([
+              {
+                title: "= Some extra legend =",
+                steps: [
+                  { color: "red", text: "foo" },
+                  { color: "green", text: "bar" },
+                  { color: "blue", text: "baz" }
+                ]
+              }
+            ])
           : null}
       </div>
     );
@@ -113,8 +194,7 @@ class Legend extends Component {
 
 function mapStateToProps(state) {
   return {
-    legends: state.legends,
-    rasters: state.rasters
+    legends: state.legends
   };
 }
 
