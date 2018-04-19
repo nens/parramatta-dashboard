@@ -2,13 +2,37 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
+import { DEV_MODE_DOMAIN } from "../config.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
     super();
     this.state = {
-      boxChecked: false
+      boxChecked: true,
+      devMode: window.location.href.indexOf(DEV_MODE_DOMAIN) > -1
     };
+  }
+
+  componentDidMount() {
+    if (this.state.devMode) {
+      const checkboxDOM = document.getElementById("termsCheck");
+      checkboxDOM.checked = true;
+      this.setState({ boxChecked: true });
+      this.clickButton();
+    }
+  }
+
+  toggleBox() {
+    const checkbox = document.getElementById("termsCheck");
+    this.setState({ boxChecked: checkbox.checked });
+  }
+
+  clickButton() {
+    if (this.state.boxChecked) {
+      // Scroll up -- otherwise we're going to a tiles page that may also be scrolled down
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      this.props.termsSigned();
+    }
   }
 
   render() {
@@ -127,20 +151,6 @@ class TermsAndConditionsComponent extends Component {
         </p>
       </div>
     );
-  }
-
-  toggleBox() {
-    const checkbox = document.getElementById("termsCheck");
-    this.setState({ boxChecked: checkbox.checked });
-  }
-
-  clickButton() {
-    if (this.state.boxChecked) {
-      // Scroll up -- otherwise we're going to a tiles page that may also be scrolled down
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
-
-      this.props.termsSigned();
-    }
   }
 }
 

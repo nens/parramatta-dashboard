@@ -19,19 +19,31 @@ class StatisticsTile extends Component {
   numTriggeredAlarms() {
     return this.props.alarms.data.filter(alarm => alarm.activeWarning()).length;
   }
-
+  pluralizeAlarms(n) {
+    return n === 1 ? "alarm" : "alarms";
+  }
   render() {
     const { title } = this.props;
     const { width } = this.state;
 
     let content;
     if (this.props.alarms && this.props.alarms.data) {
+      const triggerdAlarmCount = this.numTriggeredAlarms();
+      const alarmCount = this.props.alarms.data.length;
       content = (
         <div>
-          <p>{this.numTriggeredAlarms()}</p>
-          {width > 200 ? <span>{title}</span> : null}
+          <p>{triggerdAlarmCount}</p>
           {width > 200 ? (
-            <span>of {this.props.alarms.data.length} alarms total</span>
+            <span>
+              {"triggered " + this.pluralizeAlarms(triggerdAlarmCount)}
+            </span>
+          ) : null}
+          {width > 200 ? (
+            <span>
+              of
+              {"" + alarmCount + " " + this.pluralizeAlarms(alarmCount)}
+              total
+            </span>
           ) : null}
         </div>
       );

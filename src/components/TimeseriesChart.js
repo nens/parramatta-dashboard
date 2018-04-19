@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+// import ReactDOM from "react-dom"; re-anbale for Plot hack??
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/en-au";
@@ -12,139 +13,84 @@ import { MAX_TIMESERIES_POINTS } from "../config";
 import { getBootstrap, getConfiguredNow } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
-import findIndex from "lodash/findIndex";
 import plotComponentFactory from "react-plotly.js/factory";
 
-function axisLabel(observationType) {
-  return observationType.unit || observationType.reference_frame;
-}
+import {
+  axisLabel,
+  indexForType,
+  combineEventSeries,
+  getNow,
+  currentPeriod
+} from "./TimeseriesChartUtils.js";
 
-function getColor(colors, idx) {
-  let color;
-
-  if (colors && colors.length > idx) {
-    color = colors[idx];
-  } else {
-    color = ["#26A7F1", "#000058", "#99f"][idx % 3]; // Some shades of blue
-  }
-
-  return color;
-}
-
-function indexForType(axes, observationType) {
-  return findIndex(
-    axes,
-    ax =>
-      ax &&
-      observationType &&
-      axisLabel(ax) === axisLabel(observationType) &&
-      ax.scale === observationType.scale
-  );
-}
-
-function makeFixed(value) {
-  // Hardcoded rounding to 2 decimals. Would be nicer if it could be set in
-  // observation type or so.
-  if (value !== undefined && value !== null && value.toFixed) {
-    return value.toFixed(2);
-  } else {
-    return value;
-  }
-}
-
-function combineEventSeries(series, axes, colors, full) {
-  return series.map((serie, idx) => {
-    const isRatio = serie.observation_type.scale === "ratio";
-
-    const events = {
-      x: serie.events.map(event => new Date(event.timestamp)),
-      y: serie.events
-        .map(event => (event.hasOwnProperty("max") ? event.max : event.sum))
-        .map(makeFixed),
-      name: serie.observation_type.getLegendString(),
-      hoverinfo: full ? "name+y" : "none",
-      hoverlabel: {
-        namelength: -1
-      }
-    };
-
-    const yaxis = indexForType(axes, serie.observation_type);
-
-    const color = getColor(colors, idx);
-
-    if (yaxis > 0) {
-      events.yaxis = "y2";
-    }
-
-    if (isRatio) {
-      // Bar plot.
-      events.type = "bar";
-      events.marker = {
-        color: color
-      };
-    } else {
-      // Line plot.
-      events.type = "scatter";
-      events.mode = "lines+points";
-      events.line = {
-        color: color
-      };
-    }
-
-    return events;
-  });
-}
-
-function getNow(configuredNow) {
-  if (configuredNow !== null) {
-    return configuredNow;
-  }
-
-  // Use modulo operator so the "now" time only changes every five minutes, so we
-  // don't have to fetch different data for each chart after every second.
-  const currentTimestamp = new Date().getTime();
-  return new Date(currentTimestamp - currentTimestamp % 300);
-}
-
-function currentPeriod(configuredNow, bootstrap) {
-  // Return start and end of the current period in charts, as UTC timestamps.
-  // Defined as a period around 'now', in hours.
-  const now = getNow(configuredNow);
-  let offsets;
-
-  if (
-    bootstrap &&
-    bootstrap.configuration &&
-    bootstrap.configuration.periodHoursRelativeToNow
-  ) {
-    offsets = bootstrap.configuration.periodHoursRelativeToNow;
-  } else {
-    offsets = [-24, 12];
-  }
-
-  const period = {
-    start: now.getTime() + offsets[0] * 3600 * 1000,
-    end: now.getTime() + offsets[1] * 3600 * 1000
-  };
-
-  return period;
-}
+// const log = console.log;
 
 class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = currentPeriod(props.configuredNow, props.bootstrap);
+    this.state = {
+      ...currentPeriod(props.configuredNow, props.bootstrap),
+      componentHasMountedOnce: false,
+      componentRef: "comp-" + parseInt(Math.random(), 10),
+      wantedAxes: null,
+      combinedEvents: null
+    };
   }
 
-  updateDateTimeState() {
-    this.setState(
-      currentPeriod(this.props.configuredNow, this.props.bootstrap)
-    );
-  }
+  /////////////////////////////////////////////////////////////////////////////
+  // Component - lifecycle functions //////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   componentWillMount() {
     this.updateTimeseries();
+
+    const axes = this.getAxesData();
+
+    const timeseriesEvents = this.props.tile.timeseries
+      .filter(
+        uuid =>
+          this.props.timeseries[uuid] &&
+          this.props.timeseriesEvents[uuid] &&
+          this.props.timeseriesEvents[uuid].events
+      )
+      .map(uuid => {
+        return {
+          uuid: uuid,
+          observation_type: this.props.timeseries[uuid].observation_type,
+          events: this.props.timeseriesEvents[uuid].events
+        };
+      });
+
+    const rasterEvents = (this.props.tile.rasterIntersections || [])
+      .map(intersection => {
+        const raster = this.props.getRaster(intersection.uuid).object;
+        if (!raster) {
+          return null;
+        }
+
+        const events = this.getRasterEvents(raster, intersection.geometry);
+        if (!events) return null;
+
+        return {
+          uuid: intersection.uuid,
+          observation_type: raster.observation_type,
+          events: events
+        };
+      })
+      .filter(e => e !== null); // Remove nulls
+
+    const combinedEvents = combineEventSeries(
+      timeseriesEvents.concat(rasterEvents),
+      axes,
+      this.props.tile.colors,
+      this.props.isFull
+    );
+
+    this.setState({
+      combinedEvents,
+      wantedAxes: axes
+    });
 
     /* this.interval = setInterval(
      *   this.updateDateTimeState.bind(this),
@@ -164,6 +110,16 @@ class TimeseriesChartComponent extends Component {
   /* componentWillUnmount() {
    *   clearInterval(this.interval);
    * }*/
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Component - custom functions /////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
+  updateDateTimeState() {
+    this.setState(
+      currentPeriod(this.props.configuredNow, this.props.bootstrap)
+    );
+  }
 
   updateTimeseries() {
     (this.props.tile.timeseries || []).map(uuid =>
@@ -407,56 +363,6 @@ class TimeseriesChartComponent extends Component {
     return { annotations, shapes };
   }
 
-  render() {
-    const { tile } = this.props;
-
-    const timeseriesEvents = tile.timeseries
-      .filter(
-        uuid =>
-          this.props.timeseries[uuid] &&
-          this.props.timeseriesEvents[uuid] &&
-          this.props.timeseriesEvents[uuid].events
-      )
-      .map(uuid => {
-        return {
-          uuid: uuid,
-          observation_type: this.props.timeseries[uuid].observation_type,
-          events: this.props.timeseriesEvents[uuid].events
-        };
-      });
-
-    const rasterEvents = (tile.rasterIntersections || [])
-      .map(intersection => {
-        const raster = this.props.getRaster(intersection.uuid).object;
-        if (!raster) {
-          return null;
-        }
-
-        const events = this.getRasterEvents(raster, intersection.geometry);
-        if (!events) return null;
-
-        return {
-          uuid: intersection.uuid,
-          observation_type: raster.observation_type,
-          events: events
-        };
-      })
-      .filter(e => e !== null); // Remove nulls
-
-    const axes = this.getAxesData();
-
-    const combinedEvents = combineEventSeries(
-      timeseriesEvents.concat(rasterEvents),
-      axes,
-      tile.colors,
-      this.props.isFull
-    );
-
-    return this.props.isFull
-      ? this.renderFull(axes, combinedEvents)
-      : this.renderTile(axes, combinedEvents);
-  }
-
   getYAxis(axes, idx) {
     if (idx >= axes.length) return null;
 
@@ -538,32 +444,64 @@ class TimeseriesChartComponent extends Component {
     };
   }
 
+  render() {
+    const { tile } = this.props;
+
+    const timeseriesEvents = tile.timeseries
+      .filter(
+        uuid =>
+          this.props.timeseries[uuid] &&
+          this.props.timeseriesEvents[uuid] &&
+          this.props.timeseriesEvents[uuid].events
+      )
+      .map(uuid => {
+        return {
+          uuid: uuid,
+          observation_type: this.props.timeseries[uuid].observation_type,
+          events: this.props.timeseriesEvents[uuid].events
+        };
+      });
+
+    const rasterEvents = (tile.rasterIntersections || [])
+      .map(intersection => {
+        const raster = this.props.getRaster(intersection.uuid).object;
+        if (!raster) {
+          return null;
+        }
+
+        const events = this.getRasterEvents(raster, intersection.geometry);
+        if (!events) return null;
+
+        return {
+          uuid: intersection.uuid,
+          observation_type: raster.observation_type,
+          events: events
+        };
+      })
+      .filter(e => e !== null); // Remove nulls
+
+    const axes = this.getAxesData();
+
+    const combinedEvents = combineEventSeries(
+      timeseriesEvents.concat(rasterEvents),
+      axes,
+      tile.colors,
+      this.props.isFull,
+      tile.legendStrings
+    );
+
+    return this.props.isFull
+      ? this.renderFull(axes, combinedEvents)
+      : this.renderTile(axes, combinedEvents);
+  }
+
   renderFull(axes, combinedEvents) {
     const Plot = plotComponentFactory(window.Plotly);
 
     return (
       <div
-        style={{
-          marginTop: this.props.marginTop,
-          marginLeft: this.props.marginLeft,
-          width: this.props.width,
-          height: this.props.height
-        }}
-      >
-        <Plot data={combinedEvents} layout={this.getLayout(axes)} />
-      </div>
-    );
-  }
-
-  renderTile(axes, combinedEvents) {
-    if (!this.props.height || !this.props.width) {
-      return null;
-    }
-
-    const Plot = plotComponentFactory(window.Plotly);
-
-    return (
-      <div
+        id={this.state.componentRef}
+        ref={this.state.componentRef}
         style={{
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
@@ -573,7 +511,34 @@ class TimeseriesChartComponent extends Component {
       >
         <Plot
           data={combinedEvents}
-          layout={this.getLayout(axes)}
+          layout={this.getLayout(this.state.wantedAxes)}
+          config={{ displayModeBar: true }}
+        />
+      </div>
+    );
+  }
+
+  renderTile(axes, combinedEvents) {
+    if (!this.props.height || !this.props.width || !window.Plotly) {
+      return null;
+    }
+
+    const Plot = plotComponentFactory(window.Plotly);
+
+    return (
+      <div
+        id={this.state.componentRef}
+        ref={this.state.componentRef}
+        style={{
+          marginTop: this.props.marginTop,
+          marginLeft: this.props.marginLeft,
+          width: this.props.width,
+          height: this.props.height
+        }}
+      >
+        <Plot
+          data={combinedEvents}
+          layout={this.getLayout(this.state.wantedAxes)}
           config={{ displayModeBar: false }}
         />
       </div>

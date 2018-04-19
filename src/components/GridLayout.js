@@ -10,10 +10,7 @@ import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import parramattaLogo from "../graphics/parramatta-header-logo.svg";
-import sydneyWater from "../graphics/sydney-water.png";
-import oehLogo from "../graphics/waratah-nsw-government-black-white-png-logo.png";
-import nswSesLogo from "../graphics/nsw-state-emergency-service.png";
-
+import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
 import {
@@ -114,6 +111,11 @@ class GridLayout extends Component {
     const { width, height, canMove, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
 
+    const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
+    const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
+    const chrisMail = () =>
+      unescape("cgooch%40cityofparramatta%2Ensw%2Egov%2Eau");
+
     if (settingsMenu) {
       return (
         <DocumentTitle title="Parramatta | Dashboard | Settings">
@@ -147,6 +149,7 @@ class GridLayout extends Component {
                     Date/Time settings
                   </span>
                 </div>
+
                 <div
                   onClick={() =>
                     this.setState({
@@ -160,6 +163,23 @@ class GridLayout extends Component {
                       : null}`}
                   >
                     Background layers
+                  </span>
+                </div>
+
+                <div
+                  className={styles.ContactInfoLogoParent}
+                  onClick={() =>
+                    this.setState({
+                      settingsMenuId: 2
+                    })}
+                >
+                  <i className={styles.ContactInfoLogo}>&copy;</i>
+                  <span
+                    className={`${settingsMenuId === 2
+                      ? styles.ActiveMenu
+                      : null}`}
+                  >
+                    Contact
                   </span>
                 </div>
               </nav>
@@ -201,12 +221,15 @@ class GridLayout extends Component {
                     <hr />
                     <div className={styles.MapSettings}>
                       <p>
-                        There are two available map backgrounds:
+                        There are {MAP_BACKGROUNDS
+                          ? MAP_BACKGROUNDS.length
+                          : 0}{" "}
+                        available map background(s):
                         {MAP_BACKGROUNDS[0].description} and{" "}
                         {MAP_BACKGROUNDS[1].description}.
                       </p>
                       <p>
-                        Currently selected:
+                        Currently selected:&nbsp;
                         <strong>
                           {this.props.currentMapBackground.description}
                         </strong>.
@@ -215,6 +238,20 @@ class GridLayout extends Component {
                         Switch
                       </button>
                     </div>
+                  </div>
+                ) : null}
+
+                {settingsMenuId === 2 ? (
+                  <div>
+                    <h4 style={{ padding: 0, margin: 0 }}>Contact info</h4>
+                    <hr />
+                    <p>
+                      For software issues with the FISH Dashboard please contact
+                      Nelen & Schuurmans on {nensMail()}. For any other issues,
+                      or suggestions for improvements to the FISH system, please
+                      contact Chris Gooch on tel.&nbsp;
+                      {chrisTel()} or email {chrisMail()}
+                    </p>
                   </div>
                 ) : null}
               </main>
@@ -262,7 +299,10 @@ class GridLayout extends Component {
               title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <StatisticsTile alarms={this.props.alarms} title={tile.title} />
+              <StatisticsTile
+                alarms={this.props.alarms}
+                title="Triggered alarms"
+              />
             </Tile>
           );
         case "external":
@@ -285,25 +325,11 @@ class GridLayout extends Component {
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
           <img
-            src={parramattaLogo}
-            alt="Parramatta dashboard"
-            className={styles.HeaderImage}
+            src={logoCombo}
+            alt="Logos for relevant organisations"
+            className={styles.LogoCombo}
           />
-          <img
-            src={sydneyWater}
-            alt="Sydney Water logo"
-            className={styles.SecondaryHeaderImage}
-          />
-          <img
-            src={oehLogo}
-            alt="NSW Office of Environment &nbsp; Heritage logo"
-            className={styles.SecondaryHeaderImage}
-          />
-          <img
-            src={nswSesLogo}
-            alt="NSW State Emergency Service logo"
-            className={styles.SecondaryHeaderImage}
-          />
+
           <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
 
           {width > 700 ? (

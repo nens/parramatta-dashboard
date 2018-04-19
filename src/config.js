@@ -1,6 +1,8 @@
-// Various constants that could be configured.
+// Various constants that could be configured. NB! This is parramatta specific!
 
 import { BoundingBox } from "./util/bounds";
+
+export const DEV_MODE_DOMAIN = "http://localhost:3000";
 
 // A parramatta bbox.
 export const BOUNDS = new BoundingBox(

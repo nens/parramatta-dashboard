@@ -53,3 +53,17 @@
 .LegendStepLabel {
   filter: invert(100%);
 }
+.LegendSubHeader {
+  text-align: center;
+  background-color: #eee;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.LegendVectorStep > div {
+  color: #fff;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  width: 100%;
+  height: 20px;
+}

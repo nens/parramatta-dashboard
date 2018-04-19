@@ -19,8 +19,13 @@
           "uuid": "9ff9faa"
         }
       ],
-      "title": "Water depth with a very long title that can be whatever",
       "shortTitle": "Water depth",
+      "title": "Water depth with a very long title that can be whatever",
+      "datetime": {
+        "to": "end",
+        "type": "relative",
+        "offset": -7200
+      },
       "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,scenario$969e390,raster$969e6e1/point@-33.7916,150.9768,14/-3Days0Hours+3Days0Hours",
       "bbox": [
         "150.96240520477298",
@@ -64,7 +69,7 @@
             "type": "Point",
             "coordinates": [
               151,
-              -33.8,
+              "-33.8",
               0
             ]
           },
@@ -81,58 +86,44 @@
       "id": 2
     },
     {
+      "type": "statistics",
       "id": 3,
-      "title": "Breached thresholds",
-      "type": "statistics"
+      "title": "Breached thresholds"
     },
     {
-      "id": 11,
       "title": "Rain",
-      "type": "external",
-      "imageUrl": "https://nationaleregenradar.nl/images/radar.gif",
       "url": "https://reg.bom.gov.au/nsw/flood/sydney.shtml",
-      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$dcf2f11,scenario$969e390,raster$969e6e1/point@-33.7973,150.9801,14/-0Days18Hours+2Days22Hours"
+      "imageUrl": "https://nxt.staging.lizard.net/media/generated/parramatta.gif",
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$dcf2f11,scenario$969e390,raster$969e6e1/point@-33.7973,150.9801,14/-0Days18Hours+2Days22Hours",
+      "type": "external",
+      "id": 11
     },
     {
-      "id": 4,
       "title": "Westmead and North Parramatta",
-      "type": "timeseries",
+      "viewInLizardLink": "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
       "timeseries": [
-        "dba206c2-2c7f-49ef-83e8-767499bd1598"
+        {
+          "uuid": "dba206c2-2c7f-49ef-83e8-767499bd1598",
+          "color": "#26A7F1",
+          "legendString": "FloepsFloeps"
+        }
       ],
-      "colors": ["#26A7F1", "#000058"],
-      "viewInLizardLink":
-      "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
       "rasterIntersections": [
         {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "5.9223175048828125",
+              "52.15118665954508"
+            ]
+          },
           "uuid": "3e5f56a",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              5.9223175048828125,
-              52.15118665954508
-            ]
-          }
-        },
-        {
-          "uuid": "9ff9faa",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              151,
-              -33.8,
-              0
-            ]
-          }
-        },
-        {
-          "uuid": "9ff9faa",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [150.99194, -33.79943, 0.0]
-          }
+          "color": "#000058",
+          "legendString": "BliepBliep"
         }
-      ]
+      ],
+      "type": "timeseries",
+      "id": 4
     }
   ]
 }

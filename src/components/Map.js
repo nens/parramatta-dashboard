@@ -200,8 +200,6 @@ class MapComponent extends Component {
     ) : null;
 
     const referenceLevels = this.props.referenceLevels;
-    console.log("referenceLevels:", referenceLevels);
-    console.log("assetId:", asset.id);
     let referenceLevelText = null;
     if (referenceLevels && referenceLevels[asset.id] !== undefined) {
       referenceLevelText = (
@@ -323,6 +321,10 @@ class MapComponent extends Component {
     return markers;
   }
 
+  tileHasVectors(tile) {
+    return tile.type === "map" && tile.assetTypes && tile.assetTypes.length > 0;
+  }
+
   render() {
     return this.props.isFull ? this.renderFull() : this.renderSmall();
   }
@@ -332,29 +334,40 @@ class MapComponent extends Component {
 
     let legend = null;
 
+    let firstRasterUuid = null;
+    let firstRaster = null;
+
     if (tile.rasters && tile.rasters.length > 0) {
       // Only show a legend for the first raster.
-      const rasterUuid = tile.rasters[0].uuid;
-      const raster = getOrFetch(
+      firstRasterUuid = tile.rasters[0].uuid;
+      firstRaster = getOrFetch(
         this.props.getRaster,
         this.props.fetchRaster,
-        rasterUuid
+        firstRasterUuid
       );
+    }
 
-      if (!raster) {
-        legend = null;
-      } else {
-        legend = (
-          <Legend
-            tile={tile}
-            uuid={rasterUuid}
-            title={raster.name}
-            wmsInfo={raster.wms_info}
-            observationType={raster.observation_type}
-            styles={raster.options.styles}
-          />
-        );
-      }
+    if (!firstRaster) {
+      legend = (
+        <Legend
+          drawRaster={false}
+          drawVectorIcons={this.tileHasVectors(tile)}
+          tile={tile}
+        />
+      );
+    } else {
+      legend = (
+        <Legend
+          drawRaster={true}
+          drawVectorIcons={this.tileHasVectors(tile)}
+          tile={tile}
+          uuid={firstRasterUuid}
+          title={firstRaster.name}
+          wmsInfo={firstRaster.wms_info}
+          observationType={firstRaster.observation_type}
+          styles={firstRaster.options.styles}
+        />
+      );
     }
 
     const wmsLayers = tile.wmsLayers
@@ -376,7 +389,11 @@ class MapComponent extends Component {
       : null;
 
     return (
-      <div className={styles.MapTileFull} style={{ width, height }}>
+      <div
+        className={styles.MapTileFull}
+        key={"map-" + tile.id}
+        style={{ width, height }}
+      >
         <Map
           bounds={this.getBbox().toLeafletBounds()}
           attributionControl={false}
