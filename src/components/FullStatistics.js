@@ -34,7 +34,7 @@ class FullStatistics extends Component {
       return (
         <tr key={i}>
           <td>
-            {alarm.active ? (
+            {alarm.warning_threshold !== null ? (
               <i className="material-icons" style={{ color: "red" }}>
                 warning
               </i>
@@ -46,7 +46,7 @@ class FullStatistics extends Component {
           </td>
           <td>{alarm.name}</td>
           <td>
-            {alarm.warning_threshold
+            {alarm.warning_threshold !== null
               ? alarm.warning_threshold.warning_level
               : null}
           </td>
@@ -87,7 +87,7 @@ class FullStatistics extends Component {
           }}
         >
           <div className={styles.Title}>
-            {tile.title} ({numberOfAlarms})
+            All configured alarms ({numberOfAlarms})
           </div>
           {this.getAlarmsTable()}
         </div>
