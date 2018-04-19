@@ -84,12 +84,6 @@
         "#000058",
         "#3179c6"
       ],
-      "legendStrings": [
-        "Roses are #ff0000",
-        "Violets are #0000ff",
-        "All my base",
-        "Are belong to you"
-      ],
       "timeseries": [
         "62617bb2-30f5-4df7-8dca-31a055e29c53",
         "ce26f2e1-34c8-4fbb-abfa-204a06282f43",
@@ -106,6 +100,12 @@
           },
           "uuid": "6ccb42c"
         }
+      ],
+      "legendStrings": [
+        "Roses are #ff0000",
+        "Violets are #0000ff",
+        "All my base",
+        "Are belong to you"
       ],
       "type": "timeseries",
       "id": 4
@@ -414,6 +414,7 @@
       "type": "timeseries",
       "id": 15
     }
+<<<<<<< HEAD
   ],
   "meta": {
     "termsAndConditions": true,
@@ -428,3 +429,7 @@
     }
   }
 }
+=======
+  ]
+}
+>>>>>>> a8300e0e3506bd8b7d921abb299e96b142f42cdf
