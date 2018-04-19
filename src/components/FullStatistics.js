@@ -11,10 +11,8 @@ class FullStatistics extends Component {
     if (utcRep === null) {
       return null;
     } else {
-      // Via: https://stackoverflow.com/questions/6525538/convert-utc-date-time-to-local-date-time
       const d = new Date(utcRep);
-      const tzNonAwareRep = d.toLocaleString();
-      return new Date(tzNonAwareRep + " UTC").toLocaleString();
+      return d.toLocaleString();
     }
   }
   getAlarmsTable() {
@@ -63,7 +61,7 @@ class FullStatistics extends Component {
             <td>Alarm name</td>
             <td>Level</td>
             <td>Value</td>
-            <td>datetime</td>
+            <td>Triggered at</td>
           </tr>
         </thead>
         <tbody>{alarmRows}</tbody>

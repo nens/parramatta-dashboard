@@ -37,10 +37,6 @@ class TermsAndConditionsComponent extends Component {
   }
 
   render() {
-    const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
-    const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
-    const chrisMail = () =>
-      unescape("cgooch%40cityofparramatta%2Ensw%2Egov%2Eau");
     return (
       <div className={styles.terms}>
         <h1 className={styles.header}>

@@ -10,7 +10,7 @@ import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import parramattaLogo from "../graphics/parramatta-header-logo.svg";
-import joepieLogoCombo from "../graphics/joepie.png";
+import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
 import {
@@ -322,9 +322,9 @@ class GridLayout extends Component {
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
           <img
-            src={joepieLogoCombo}
+            src={logoCombo}
             alt="Logos for releavnt organisations"
-            className={styles.JoepieLogoCombo}
+            className={styles.LogoCombo}
           />
 
           <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
