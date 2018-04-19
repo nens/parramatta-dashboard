@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
-
-const DEV_MODE_DOMAIN = "http://localhost:3000";
+import { DEV_MODE_DOMAIN } from "../config.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {

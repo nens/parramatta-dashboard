@@ -168,25 +168,14 @@ class Legend extends Component {
           </div>
         ) : null}
 
-        {drawVectorIcons ? (
+        {drawVectorIcons && tile.assetTypes && tile.assetTypes.length ? (
           <div>
-            <h3 className={styles.LegendSubHeader}>= Vector legend =</h3>
+            <h3 className={styles.LegendSubHeader}>= Icons =</h3>
             <div>{vectorIconsLegend}</div>
           </div>
         ) : null}
 
-        {tile.extraLegends || true
-          ? this.renderExtraLegends([
-              {
-                title: "= Some extra legend =",
-                steps: [
-                  { color: "red", text: "foo" },
-                  { color: "green", text: "bar" },
-                  { color: "blue", text: "baz" }
-                ]
-              }
-            ])
-          : null}
+        {tile.extraLegends ? this.renderExtraLegends(tile.extraLegends) : null}
       </div>
     );
   }

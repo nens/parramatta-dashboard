@@ -299,7 +299,10 @@ class GridLayout extends Component {
               title={shortTitle}
               onClick={() => history.push(`/full/${tile.id}`)}
             >
-              <StatisticsTile alarms={this.props.alarms} title={tile.title} />
+              <StatisticsTile
+                alarms={this.props.alarms}
+                title="Triggered alarms"
+              />
             </Tile>
           );
         case "external":
@@ -323,7 +326,7 @@ class GridLayout extends Component {
         <div className={styles.GridLayout}>
           <img
             src={logoCombo}
-            alt="Logos for releavnt organisations"
+            alt="Logos for relevant organisations"
             className={styles.LogoCombo}
           />
 

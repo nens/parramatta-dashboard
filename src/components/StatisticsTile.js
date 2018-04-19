@@ -19,11 +19,8 @@ class StatisticsTile extends Component {
   numTriggeredAlarms() {
     return this.props.alarms.data.filter(alarm => alarm.activeWarning()).length;
   }
-  bracketifyPluralization(title) {
-    const len = title.length;
-    const prefix = title.substr(0, len - 1);
-    const lastChar = title.substr(len - 1);
-    return prefix + "(" + lastChar + ")";
+  pluralizeAlarms(n) {
+    return n === 1 ? "alarm" : "alarms";
   }
   render() {
     const { title } = this.props;
@@ -31,14 +28,22 @@ class StatisticsTile extends Component {
 
     let content;
     if (this.props.alarms && this.props.alarms.data) {
+      const triggerdAlarmCount = this.numTriggeredAlarms();
+      const alarmCount = this.props.alarms.data.length;
       content = (
         <div>
-          <p>{this.numTriggeredAlarms()}</p>
+          <p>{triggerdAlarmCount}</p>
           {width > 200 ? (
-            <span>{this.bracketifyPluralization(title)}</span>
+            <span>
+              {"triggered " + this.pluralizeAlarms(triggerdAlarmCount)}
+            </span>
           ) : null}
           {width > 200 ? (
-            <span>of {this.props.alarms.data.length} alarm(s) total</span>
+            <span>
+              of
+              {"" + alarmCount + " " + this.pluralizeAlarms(alarmCount)}
+              total
+            </span>
           ) : null}
         </div>
       );

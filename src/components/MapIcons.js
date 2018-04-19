@@ -1,9 +1,5 @@
 import { divIcon } from "leaflet";
 
-// import { IconActiveAlarmSVG } from "../graphics/IconActiveAlarm.svg";
-
-// export { IconActiveAlarmJSX };
-
 // Active alarm: red check
 export const IconActiveAlarm = divIcon({
   className: "my-div-icon",

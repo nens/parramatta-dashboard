@@ -2,6 +2,8 @@
 
 import { BoundingBox } from "./util/bounds";
 
+export const DEV_MODE_DOMAIN = "http://localhost:3000";
+
 // A parramatta bbox.
 export const BOUNDS = new BoundingBox(
   150.9476776123047, // westmost
