@@ -85,22 +85,11 @@
         "4c0f3ce9-2b85-4e10-a3ab-92edc6bf69f1",
         "bf34f12e-08c5-4226-a03d-fcf3a86cf1f9"
       ],
-      "timeseries_objects": [
-        {
-          "uuid": "9f355fa6-9075-4253-9c16-dd3f1b984cfa",
-          "color": "#26A7F1",
-          "legendString": "FooFoo"
-        },
-        {
-          "uuid": "4c0f3ce9-2b85-4e10-a3ab-92edc6bf69f1",
-          "color": "#c626f1",
-          "legendString": "BarBar"
-        },
-        {
-          "uuid": "bf34f12e-08c5-4226-a03d-fcf3a86cf1f9",
-          "color": "#000058",
-          "legendString": "BazBaz"
-        }
+      "legendStrings": [
+        "Roses are #ff0000",
+        "Violets are #0000ff",
+        "All my base",
+        "Are belong to you"
       ],
       "type": "timeseries",
       "id": 4
