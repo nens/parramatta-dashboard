@@ -110,6 +110,26 @@ Keys:
     "transparent": true
   }
 
+- extraLegends: array of optional extra legends to show (for WMS layers,
+  for instance. ExtraLegends is of the form:
+
+  [
+    {
+      "title": "Zones",
+      "steps": [
+        {
+          "color": "red",
+          "text": "Danger zone"
+        },
+        {
+          "color": "blue",
+          "text": "Water zone"
+        }
+      ]
+    },
+    ...more extra legends...
+  ]
+
 ** "timeseries" tile
 
 These are charts of timeseries, they can have two sources:
@@ -120,7 +140,14 @@ Keys:
 
 - "timeseries": array of timeseries UUIDs
 
-- "colors": array of color codes for each timeseries
+- "colors": array of color codes for each timeseries. First values are
+  for timeseries, then rasterIntersections.
+
+- "legendStrings": Strings to use in the chart legend to describe
+  the series. The unit from the observation type will be added, if present.
+  If no legendString is set, the observation type parameter and unit
+  are used (often leads to several series having the same legend,
+  so in that case these strings must be set).
 
 - "rasterIntersections": array of objects with the following keys:
 
