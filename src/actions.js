@@ -50,20 +50,17 @@ export function fetchAlarms(dispatch) {
     },
     error => {
       // If there is an error, we simply have no alarms to show.
-      console.error(error);
+      console.error("[E] There was a timeseriesAlarm API error: ", error);
       dispatch(receiveAlarmsAction([], true));
     }
   );
 
   getRasterAlarms().then(
     alarms => {
-      // console.log("[+] getRasterAlarms: alarms =", alarms);
       dispatch(receiveAlarmsAction(alarms, false));
     },
     error => {
-      // console.log("[-] getRasterAlarms: error =", error);
-      // If there is an error, we simply have no alarms to show.
-      console.error("[E] There was an error: ", error);
+      console.error("[E] There was a rasterAlarm API error: ", error);
       dispatch(receiveAlarmsAction([], false));
     }
   );
