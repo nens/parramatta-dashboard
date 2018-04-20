@@ -57,6 +57,7 @@ class MapComponent extends Component {
     }
     return BOUNDS;
   }
+
   tileLayerForRaster(raster) {
     let rasterObject = getOrFetch(
       this.props.getRaster,

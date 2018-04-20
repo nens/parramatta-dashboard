@@ -69,7 +69,7 @@ class FullStatistics extends Component {
     );
   }
   render() {
-    const { tile, height, isMobile, alarms } = this.props;
+    const { height, isMobile, alarms } = this.props;
     const numberOfAlarms = alarms.data ? alarms.data.length : 0;
     return (
       <div

@@ -23,7 +23,6 @@ class StatisticsTile extends Component {
     return n === 1 ? "alarm" : "alarms";
   }
   render() {
-    const { title } = this.props;
     const { width } = this.state;
 
     let content;
