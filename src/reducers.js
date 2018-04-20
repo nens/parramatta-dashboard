@@ -222,10 +222,6 @@ function alarms(
       if (action.isTimeseries) {
         newState.timeseriesData = action.alarms;
       } else {
-        console.log("[dbg] RECEIVE_ALARMS");
-        console.log("*** state =", state);
-        console.log("*** action =", JSON.parse(JSON.stringify(action)));
-
         newState.rasterData = action.alarms;
       }
 
