@@ -23,7 +23,6 @@ class StatisticsTile extends Component {
     return n === 1 ? "alarm" : "alarms";
   }
   render() {
-    const { title } = this.props;
     const { width } = this.state;
 
     let content;
@@ -41,7 +40,7 @@ class StatisticsTile extends Component {
           {width > 200 ? (
             <span>
               of
-              {"" + alarmCount + " " + this.pluralizeAlarms(alarmCount)}
+              {" " + alarmCount + " " + this.pluralizeAlarms(alarmCount)}
               total
             </span>
           ) : null}
