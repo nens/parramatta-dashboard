@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/nens/parramatta-dashboard/issues"
   },
-  "homepage": "https://parramatta.lizard.net/clients/parramatta/",
+  "homepage": "https://parramatta.lizard.net/fish/",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.2",

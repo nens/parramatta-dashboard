@@ -20,11 +20,11 @@ should be solveable in the future.
 
 URLS:
 
-- Production client: https://parramatta.lizard.net/clients/parramatta/
+- Production client: https://parramatta.lizard.net/fish/
 
 - Production admin: https://parramatta.lizard.net/admin/
 
-- Staging installation: https://nxt.staging.lizard.net/clients/parramatta/
+- Staging installation: https://nxt.staging.lizard.net/fish/
 
 - Staging admin: https://nxt.staging.lizard.net/admin/
 
