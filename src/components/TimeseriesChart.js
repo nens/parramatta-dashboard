@@ -23,12 +23,11 @@ import {
   currentPeriod
 } from "./TimeseriesChartUtils.js";
 
-// const log = console.log;
-
 class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
+    const curPer = currentPeriod(props.configuredNow, props.bootstrap);
     this.state = {
       ...currentPeriod(props.configuredNow, props.bootstrap),
       componentHasMountedOnce: false,
@@ -106,10 +105,6 @@ class TimeseriesChartComponent extends Component {
       this.updateTimeseries();
     }
   }
-
-  /* componentWillUnmount() {
-   *   clearInterval(this.interval);
-   * }*/
 
   /////////////////////////////////////////////////////////////////////////////
   // Component - custom functions /////////////////////////////////////////////
@@ -510,6 +505,7 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         <Plot
+          className="fullPlot"
           data={combinedEvents}
           layout={this.getLayout(this.state.wantedAxes)}
           config={{ displayModeBar: true }}
@@ -537,6 +533,7 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         <Plot
+          className="gridPlot"
           data={combinedEvents}
           layout={this.getLayout(this.state.wantedAxes)}
           config={{ displayModeBar: false }}

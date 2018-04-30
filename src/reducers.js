@@ -297,13 +297,33 @@ export const getConfiguredTime = function(state) {
   return state.settings.configuredTime || "";
 };
 
-export const getConfiguredDateTime = function(state) {
-  if (!state.settings.configuredDate || !state.settings.configuredTime)
-    return null;
+const _getCurrentDate = function() {
+  return new Date().toISOString().split("T")[0];
+};
 
-  return new Date(
-    state.settings.configuredDate + " " + state.settings.configuredTime
-  );
+const _getCurrentTime = function() {
+  const isoTimeStr = new Date().toISOString().split("T")[1];
+  return isoTimeStr.slice(0, isoTimeStr.length - 1);
+};
+
+export const getConfiguredDateTime = function(state) {
+  let dateResult, timeResult;
+
+  if (!state.settings.configuredDate && !state.settings.configuredTime) {
+    return null;
+  } else if (!state.settings.configuredDate && state.settings.configuredTime) {
+    dateResult = _getCurrentDate();
+    timeResult = state.settings.configuredTime;
+  } else if (state.settings.configuredDate && !state.settings.configuredTime) {
+    dateResult = state.settings.configuredDate;
+    timeResult = _getCurrentTime();
+  } else {
+    dateResult = state.settings.configuredDate;
+    timeResult = state.settings.configuredTime;
+  }
+
+  const resultISOString = dateResult + "T" + timeResult + "Z";
+  return new Date(resultISOString);
 };
 
 export const getConfiguredNow = function(state) {
