@@ -23,7 +23,7 @@ import {
   currentPeriod
 } from "./TimeseriesChartUtils.js";
 
-// const log = console.log;
+import styles from "./TimeseriesChart.css";
 
 class TimeseriesChartComponent extends Component {
   constructor(props) {
@@ -106,10 +106,6 @@ class TimeseriesChartComponent extends Component {
       this.updateTimeseries();
     }
   }
-
-  /* componentWillUnmount() {
-   *   clearInterval(this.interval);
-   * }*/
 
   /////////////////////////////////////////////////////////////////////////////
   // Component - custom functions /////////////////////////////////////////////
@@ -502,6 +498,7 @@ class TimeseriesChartComponent extends Component {
       <div
         id={this.state.componentRef}
         ref={this.state.componentRef}
+        className={styles.PlotParent}
         style={{
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
@@ -510,6 +507,7 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         <Plot
+          className="fullPlot"
           data={combinedEvents}
           layout={this.getLayout(this.state.wantedAxes)}
           config={{ displayModeBar: true }}
@@ -537,6 +535,7 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         <Plot
+          className="gridPlot"
           data={combinedEvents}
           layout={this.getLayout(this.state.wantedAxes)}
           config={{ displayModeBar: false }}
