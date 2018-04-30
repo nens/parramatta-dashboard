@@ -496,7 +496,6 @@ class TimeseriesChartComponent extends Component {
       <div
         id={this.state.componentRef}
         ref={this.state.componentRef}
-        className={styles.PlotParent}
         style={{
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
