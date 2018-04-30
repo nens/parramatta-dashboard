@@ -23,8 +23,6 @@ import {
   currentPeriod
 } from "./TimeseriesChartUtils.js";
 
-import styles from "./TimeseriesChart.css";
-
 class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
