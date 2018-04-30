@@ -192,16 +192,12 @@ function settings(
   },
   action
 ) {
-  // console.log("[R] SETTINGS: action.type =", action.type);
   switch (action.type) {
     case SET_DATE:
-      // console.log("[A] SET_DATE; action.date =", action.date);
       return { ...state, configuredDate: action.date };
     case SET_TIME:
-      // console.log("[A] SET_TIME; action.time =", action.time);
       return { ...state, configuredTime: action.time };
     case RESET_DATETIME:
-      console.log("[A] RESET_DATETIME");
       return { ...state, configuredDate: null, configuredTime: null };
     case SET_MAP_BACKGROUND:
       return { ...state, mapBackground: action.mapBackground };
@@ -294,10 +290,6 @@ export const getTileById = function(state, id) {
 };
 
 export const getConfiguredDate = function(state) {
-  console.log(
-    "[F] getConfiguredDate; state.settings.configuredDate =",
-    state.settings.configuredDate
-  );
   return state.settings.configuredDate || "";
 };
 
@@ -315,16 +307,6 @@ const _getCurrentTime = function() {
 };
 
 export const getConfiguredDateTime = function(state) {
-  console.log("[F] getConfiguredDateTime");
-  console.log(
-    "*** state.settings.configuredDate =",
-    state.settings.configuredDate
-  );
-  console.log(
-    "*** state.settings.configuredTime =",
-    state.settings.configuredTime
-  );
-
   let dateResult, timeResult;
 
   if (!state.settings.configuredDate && !state.settings.configuredTime) {
