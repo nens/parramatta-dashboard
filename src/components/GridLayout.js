@@ -370,7 +370,7 @@ class GridLayout extends Component {
             width={width}
             draggableHandle=".drag-handle"
             onLayoutChange={layout => {
-              // localStorage.setItem("parramatta-layout", JSON.stringify(layout));
+              localStorage.setItem("parramatta-layout", JSON.stringify(layout));
             }}
           >
             {tileComponents.map((component, i) => {

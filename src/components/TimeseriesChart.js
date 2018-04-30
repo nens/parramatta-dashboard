@@ -27,6 +27,10 @@ class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
+    const curPer = currentPeriod(props.configuredNow, props.bootstrap);
+
+    console.log("[dbg] curPer =", curPer);
+
     this.state = {
       ...currentPeriod(props.configuredNow, props.bootstrap),
       componentHasMountedOnce: false,

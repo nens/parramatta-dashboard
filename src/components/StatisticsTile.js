@@ -1,5 +1,6 @@
 import MDSpinner from "react-md-spinner";
 import React, { Component } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
 import styles from "./StatisticsTile.css";
 
 class StatisticsTile extends Component {
@@ -40,7 +41,7 @@ class StatisticsTile extends Component {
           {width > 200 ? (
             <span>
               of
-              {" " + alarmCount + " " + this.pluralizeAlarms(alarmCount)}
+              {" " + alarmCount + " " + this.pluralizeAlarms(alarmCount) + " "}
               total
             </span>
           ) : null}
@@ -50,14 +51,16 @@ class StatisticsTile extends Component {
       content = <MDSpinner size={24} />;
     }
     return (
-      <div
-        ref={input => {
-          this.myInput = input;
-        }}
-        className={styles.StatisticsTile}
-      >
-        {content}
-      </div>
+      <Scrollbars height={this.state.height}>
+        <div
+          ref={input => {
+            this.myInput = input;
+          }}
+          className={styles.StatisticsTile}
+        >
+          {content}
+        </div>
+      </Scrollbars>
     );
   }
 }

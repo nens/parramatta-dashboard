@@ -192,12 +192,16 @@ function settings(
   },
   action
 ) {
+  // console.log("[R] SETTINGS: action.type =", action.type);
   switch (action.type) {
     case SET_DATE:
+      // console.log("[A] SET_DATE; action.date =", action.date);
       return { ...state, configuredDate: action.date };
     case SET_TIME:
+      // console.log("[A] SET_TIME; action.time =", action.time);
       return { ...state, configuredTime: action.time };
     case RESET_DATETIME:
+      console.log("[A] RESET_DATETIME");
       return { ...state, configuredDate: null, configuredTime: null };
     case SET_MAP_BACKGROUND:
       return { ...state, mapBackground: action.mapBackground };
@@ -290,6 +294,10 @@ export const getTileById = function(state, id) {
 };
 
 export const getConfiguredDate = function(state) {
+  console.log(
+    "[F] getConfiguredDate; state.settings.configuredDate =",
+    state.settings.configuredDate
+  );
   return state.settings.configuredDate || "";
 };
 
@@ -297,13 +305,43 @@ export const getConfiguredTime = function(state) {
   return state.settings.configuredTime || "";
 };
 
-export const getConfiguredDateTime = function(state) {
-  if (!state.settings.configuredDate || !state.settings.configuredTime)
-    return null;
+const _getCurrentDate = function() {
+  return new Date().toISOString().split("T")[0];
+};
 
-  return new Date(
-    state.settings.configuredDate + " " + state.settings.configuredTime
+const _getCurrentTime = function() {
+  const isoTimeStr = new Date().toISOString().split("T")[1];
+  return isoTimeStr.slice(0, isoTimeStr.length - 1);
+};
+
+export const getConfiguredDateTime = function(state) {
+  console.log("[F] getConfiguredDateTime");
+  console.log(
+    "*** state.settings.configuredDate =",
+    state.settings.configuredDate
   );
+  console.log(
+    "*** state.settings.configuredTime =",
+    state.settings.configuredTime
+  );
+
+  let dateResult, timeResult;
+
+  if (!state.settings.configuredDate && !state.settings.configuredTime) {
+    return null;
+  } else if (!state.settings.configuredDate && state.settings.configuredTime) {
+    dateResult = _getCurrentDate();
+    timeResult = state.settings.configuredTime;
+  } else if (state.settings.configuredDate && !state.settings.configuredTime) {
+    dateResult = state.settings.configuredDate;
+    timeResult = _getCurrentTime();
+  } else {
+    dateResult = state.settings.configuredDate;
+    timeResult = state.settings.configuredTime;
+  }
+
+  const resultISOString = dateResult + "T" + timeResult + "Z";
+  return new Date(resultISOString);
 };
 
 export const getConfiguredNow = function(state) {
