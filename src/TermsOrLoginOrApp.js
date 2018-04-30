@@ -47,7 +47,7 @@ class TermsOrLoginOrAppComponent extends Component {
       return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
     } else {
       return (
-        <Router basename="/clients/parramatta">
+        <Router basename="/fish">
           <App />
         </Router>
       );

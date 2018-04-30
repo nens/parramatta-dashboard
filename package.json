@@ -1,6 +1,6 @@
 {
   "name": "parramatta-dashboard",
-  "version": "0.2.14",
+  "version": "0.2.16",
   "repository": {
     "type": "git",
     "name": "nens/parramatta-dashboard",
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/nens/parramatta-dashboard/issues"
   },
-  "homepage": "https://parramatta.lizard.net/clients/parramatta/",
+  "homepage": "https://parramatta.lizard.net/fish/",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.2",
