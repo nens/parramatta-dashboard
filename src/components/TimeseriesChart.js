@@ -29,7 +29,7 @@ class TimeseriesChartComponent extends Component {
 
     const curPer = currentPeriod(props.configuredNow, props.bootstrap);
     this.state = {
-      ...currentPeriod(props.configuredNow, props.bootstrap),
+      ...curPer,
       componentHasMountedOnce: false,
       componentRef: "comp-" + parseInt(Math.random(), 10),
       wantedAxes: null,
@@ -252,7 +252,7 @@ class TimeseriesChartComponent extends Component {
         }
 
         if (isFull) {
-          label = `${alarm.name} ${threshold.warning_level}${active}`;
+          label = `${threshold.warning_level}${active}`;
         }
 
         // Figure out which Y axis the value is on so we know where to plot it
