@@ -6,16 +6,19 @@ import { DEV_MODE_DOMAIN } from "../config.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
+    const APP_RUNS_IN_DEV_MODE =
+      window.location.href.indexOf(DEV_MODE_DOMAIN) > -1;
     super();
     this.state = {
-      boxChecked: true,
-      devMode: window.location.href.indexOf(DEV_MODE_DOMAIN) > -1
+      boxChecked: APP_RUNS_IN_DEV_MODE,
+      devMode: APP_RUNS_IN_DEV_MODE
     };
   }
 
   componentDidMount() {
     if (this.state.devMode) {
-      const checkboxDOM = document.getElementById("termsCheck");
+      console.log("[*] dev Environment: no need to check them checkb0xes...");
+      const checkboxDOM = document.getElementById("termsCheckbox");
       checkboxDOM.checked = true;
       this.setState({ boxChecked: true });
       this.clickButton();
@@ -23,7 +26,7 @@ class TermsAndConditionsComponent extends Component {
   }
 
   toggleBox() {
-    const checkbox = document.getElementById("termsCheck");
+    const checkbox = document.getElementById("termsCheckbox");
     this.setState({ boxChecked: checkbox.checked });
   }
 
@@ -134,7 +137,7 @@ class TermsAndConditionsComponent extends Component {
         <p>
           <input
             type="checkbox"
-            id="termsCheck"
+            id="termsCheckbox"
             value={this.state.boxChecked}
             onClick={this.toggleBox.bind(this)}
           />
