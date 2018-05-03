@@ -22,16 +22,12 @@ import {
 import { getCurrentMapBackground } from "../reducers";
 import { MAP_BACKGROUNDS } from "../config";
 
-const layoutFromLocalStorage = JSON.parse(
-  localStorage.getItem("parramatta-layout")
-);
-
 class GridLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
       canMove: false,
-      layout: layoutFromLocalStorage || null,
+      layout: null,
       width: window.innerWidth,
       height: window.innerHeight,
       settingsMenu: false,
@@ -41,7 +37,7 @@ class GridLayout extends Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
   componentWillMount() {
-    if (!this.state.layout && !layoutFromLocalStorage) {
+    if (!this.state.layout) {
       this.setState({
         mobileLayout: this.props.tiles.map((tile, i) => {
           const y = 8;
@@ -68,10 +64,6 @@ class GridLayout extends Component {
             maxW: 4
           };
         })
-      });
-    } else {
-      this.setState({
-        layout: layoutFromLocalStorage
       });
     }
   }
@@ -370,9 +362,6 @@ class GridLayout extends Component {
             rowHeight={30}
             width={width}
             draggableHandle=".drag-handle"
-            onLayoutChange={layout => {
-              localStorage.setItem("parramatta-layout", JSON.stringify(layout));
-            }}
           >
             {tileComponents.map((component, i) => {
               return <div key={i}>{component}</div>;
