@@ -97,15 +97,6 @@ class TimeseriesChartComponent extends Component {
      * );*/
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (
-      nextState.start !== this.state.start ||
-      nextState.end !== this.state.end
-    ) {
-      this.updateTimeseries();
-    }
-  }
-
   /////////////////////////////////////////////////////////////////////////////
   // Component - custom functions /////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
