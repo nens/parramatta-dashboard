@@ -326,6 +326,7 @@ class GridLayout extends Component {
         <div className={styles.GridLayout}>
           <img
             src={logoCombo}
+            style={{ height: 54 }}
             alt="Logos for relevant organisations"
             className={styles.LogoCombo}
           />
