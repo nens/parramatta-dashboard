@@ -4,7 +4,7 @@ import { getLegend } from "../actions";
 import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import styles from "./Legend.css";
-
+import { Scrollbars } from "react-custom-scrollbars";
 import IconActiveAlarm from "../graphics/IconActiveAlarm.svg";
 import IconInactiveAlarm from "../graphics/IconInactiveAlarm.svg";
 import IconNoAlarm from "../graphics/IconNoAlarm.svg";
@@ -106,7 +106,8 @@ class Legend extends Component {
             className={styles.LegendStep}
             style={{
               backgroundColor: step.color,
-              color: this.getCorrectTextColor(step.color)
+              color: this.getCorrectTextColor(step.color),
+              minWidth: 0
             }}
           >
             {step.text}
@@ -145,37 +146,41 @@ class Legend extends Component {
           <i className="material-icons">drag_handle</i>
         </div>
 
-        {legendSteps.length ? (
-          <div>
-            <h3 className={styles.LegendSubHeader}>= Raster legend =</h3>
-            {legendSteps
-              .map((step, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={styles.LegendStep}
-                    style={{
-                      backgroundColor: step.color,
-                      color: this.getCorrectTextColor(step.color)
-                    }}
-                  >
-                    {i === legendSteps.length - 1 ? "> " : ""}
-                    {step.value.toFixed(1)} {this.props.observationType.unit}
-                  </div>
-                );
-              })
-              .reverse()}
-          </div>
-        ) : null}
+        <Scrollbars autoHeight={true} autoHeightMin={300}>
+          {legendSteps.length ? (
+            <div>
+              <h3 className={styles.LegendSubHeader}>= Raster legend =</h3>
+              {legendSteps
+                .map((step, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className={styles.LegendStep}
+                      style={{
+                        backgroundColor: step.color,
+                        color: this.getCorrectTextColor(step.color)
+                      }}
+                    >
+                      {i === legendSteps.length - 1 ? "> " : ""}
+                      {step.value.toFixed(1)} {this.props.observationType.unit}
+                    </div>
+                  );
+                })
+                .reverse()}
+            </div>
+          ) : null}
 
-        {drawVectorIcons && tile.assetTypes && tile.assetTypes.length ? (
-          <div>
-            <h3 className={styles.LegendSubHeader}>= Icons =</h3>
-            <div>{vectorIconsLegend}</div>
-          </div>
-        ) : null}
+          {drawVectorIcons && tile.assetTypes && tile.assetTypes.length ? (
+            <div>
+              <h3 className={styles.LegendSubHeader}>= Icons =</h3>
+              <div>{vectorIconsLegend}</div>
+            </div>
+          ) : null}
 
-        {tile.extraLegends ? this.renderExtraLegends(tile.extraLegends) : null}
+          {tile.extraLegends
+            ? this.renderExtraLegends(tile.extraLegends)
+            : null}
+        </Scrollbars>
       </div>
     );
   }
