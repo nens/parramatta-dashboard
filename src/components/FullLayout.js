@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import mapIcon from "../graphics/icon-map.svg";
-import timeIcon from "../graphics/icon-chart.svg";
-import radarIcon from "../graphics/icon-radar.svg";
+// import mapIcon from "../graphics/icon-map.svg";
+// import timeIcon from "../graphics/icon-chart.svg";
+// import radarIcon from "../graphics/icon-radar.svg";
 import DocumentTitle from "react-document-title";
 import StatisticsTile from "./StatisticsTile";
 import Map from "./Map";
@@ -112,20 +112,19 @@ class FullLayout extends Component {
                   switch (tile.type) {
                     case "map":
                       previewTile = (
-                        <div
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <img style={{ width: 75 }} src={mapIcon} alt="Map" />
-                        </div>
+                        <Map isFull={false} bbox={tile.bbox} tile={tile} />
                       );
                       break;
                     case "timeseries":
                       previewTile = (
-                        <div
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <img style={{ width: 75 }} src={timeIcon} alt="Map" />
-                        </div>
+                        <TimeseriesTile
+                          isFull={false}
+                          timeseries={tile.timeseries}
+                          tile={tile}
+                          showAxis={false}
+                          marginLeft={0}
+                          marginTop={0}
+                        />
                       );
                       break;
                     case "statistics":
@@ -138,11 +137,12 @@ class FullLayout extends Component {
                       break;
                     case "external":
                       previewTile = (
-                        <div
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <img style={{ width: 75 }} src={radarIcon} alt="Map" />
-                        </div>
+                        <ExternalTile
+                          isFull={false}
+                          tile={tile}
+                          width={300}
+                          height={300}
+                        />
                       );
                       break;
                     default:
