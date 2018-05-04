@@ -327,6 +327,7 @@ class TimeseriesChartComponent extends Component {
       y0: 0,
       y1: 1,
       line: {
+        dash: "dot",
         color: "red",
         width: isFull ? 2 : 1
       }
