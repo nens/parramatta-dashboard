@@ -10,11 +10,7 @@ import {
   fetchRaster
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
-import {
-  getBootstrap,
-  getConfiguredNow,
-  getGetConfiguredTimeseriesThresholds
-} from "../reducers";
+import { getBootstrap, getConfiguredNow } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
 import plotComponentFactory from "react-plotly.js/factory";
@@ -385,13 +381,10 @@ class TimeseriesChartComponent extends Component {
     if (thresholds) {
       thresholdLines.forEach(thLine => {
         shapes.push(thLine);
-        // annotations.push(thLine);
       });
     }
 
-    console.log("[shapes] shapes =", shapes);
     shapes.push(nowLine);
-
     return { annotations, shapes };
   }
 
@@ -424,9 +417,6 @@ class TimeseriesChartComponent extends Component {
 
   getLayout(axes, thresholds = null) {
     const { width, height, isFull, showAxis } = this.props;
-
-    // if (thresholds)
-    //   console.log("[DBG] thresholds in getLayout()", thresholds);
 
     // We have a bunch of lines with labels, the labels are annotations and
     // the lines are shapes, that's why we have one function to make them.
@@ -482,13 +472,6 @@ class TimeseriesChartComponent extends Component {
   render() {
     const { tile } = this.props;
 
-    // if (tile.timeseries && tile.thresholds) {
-    //   console.log("[+] OK, correct tile:", tile);
-
-    // } else {
-    //   // console.log("[-] Incorrect tile:", tile);
-    // }
-
     const timeseriesEvents = tile.timeseries
       .filter(
         uuid =>
@@ -539,26 +522,7 @@ class TimeseriesChartComponent extends Component {
 
   renderFull(axes, combinedEvents, thresholds) {
     const Plot = plotComponentFactory(window.Plotly);
-
-    // shapes.push({
-    //   type: "line",
-    //   layer: "above",
-    //   xref: "paper",
-    //   x0: 0,
-    //   x1: 1,
-    //   yref: axisIndex === 0 ? "y" : "y2",
-    //   y0: threshold.value,
-    //   y1: threshold.value,
-    //   line: {
-    //     color: color,
-    //     width: isFull ? 2 : 1,
-    //     dash: "dot"
-    //   }
-    // });
-
     const layout = this.getLayout(this.state.wantedAxes, thresholds);
-
-    console.log("[DBG] layout", layout);
 
     return (
       <div

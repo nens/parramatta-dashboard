@@ -21,8 +21,6 @@ import { MAP_BACKGROUNDS } from "./config";
 
 import { makeReducer } from "lizard-api-client";
 
-import find from "lodash/find";
-
 function assets(
   state = {
     measuringstation: {}
@@ -337,30 +335,3 @@ export const getConfiguredNow = function(state) {
 export const getCurrentMapBackground = function(state) {
   return state.settings.mapBackground;
 };
-
-// export const getGetConfiguredTimeseriesThresholds = function (state) {
-
-//   // if (configuration && configuration.referenceLevels) {
-
-//   let config = getConfiguration(state);
-
-//   return (tileId) => {
-//     config = config || getConfiguration(state);
-
-//     if (config && config.tiles) {
-//       const theTile = find(config.tiles, (tile) => {
-//         return tileId === tile.id;
-//       });
-//       if (!theTile) {
-//         console.error("[E] Cannot find tile with id:", tileId);
-//       } else {
-//         const thresholds = theTile.thresholds;
-//         if (thresholds) {
-//           return thresholds;
-//         } else {
-//           console.warning("[W] Tile doesn't have any thresholds configured!");
-//         }
-//       }
-//     }
-//   }
-// };
