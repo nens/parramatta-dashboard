@@ -314,7 +314,8 @@ class TimeseriesChartComponent extends Component {
       y0: threshold.value,
       y1: threshold.value,
       line: {
-        width: 1
+        width: 1,
+        color: threshold.color
       }
     };
   }

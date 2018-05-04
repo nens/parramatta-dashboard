@@ -93,11 +93,11 @@ class MapComponent extends Component {
 
   iconForAsset(asset) {
     // Return true if there is a raster alarm at the same location and it is active.
-    if (!this.props.alarms.timeseriesData) return IconNoAlarm;
+    if (!this.props.alarms.rasterData) return IconNoAlarm;
 
     // Get the first alarm for this geometry
-    const alarm = find(this.props.alarms.timeseriesData, alarm =>
-      alarm.belongsToAsset(asset)
+    const alarm = find(this.props.alarms.rasterData, alarm =>
+      alarm.sameGeometry(asset.geometry)
     );
 
     if (!alarm) return IconNoAlarm;
