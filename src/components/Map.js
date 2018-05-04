@@ -395,6 +395,7 @@ class MapComponent extends Component {
         key={"map-" + tile.id}
         style={{ width, height }}
       >
+        {legend}
         <Map
           bounds={this.getBbox().toLeafletBounds()}
           attributionControl={false}
@@ -414,7 +415,6 @@ class MapComponent extends Component {
             ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
             : null}
           {this.markers()}
-          {legend}
           {wmsLayers}
         </Map>
       </div>
