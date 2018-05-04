@@ -239,7 +239,7 @@ class TimeseriesChartComponent extends Component {
           color = "red";
         } else {
           active = "";
-          color = "black";
+          color = "#888";
         }
 
         if (isFull) {
@@ -268,7 +268,8 @@ class TimeseriesChartComponent extends Component {
             y1: threshold.value,
             line: {
               color: color,
-              width: isFull ? 2 : 1
+              width: isFull ? 2 : 1,
+              dash: "dot"
             }
           });
 
@@ -302,22 +303,52 @@ class TimeseriesChartComponent extends Component {
     return null;
   }
 
-  getAnnotationsAndShapes(axes) {
+  getThresholdLine(threshold, yref) {
+    return {
+      type: "line",
+      layer: "above",
+      x0: 0,
+      x1: 1,
+      xref: "paper",
+      yref: yref,
+      y0: threshold.value,
+      y1: threshold.value,
+      line: {
+        width: 1
+      }
+    };
+  }
+
+  getAnnotationsAndShapes(axes, thresholds) {
     const { isFull } = this.props;
 
     let annotations = [];
     let shapes = [];
+    let thresholdLines;
 
+    const now = getNow(this.props.configuredNow).getTime();
     const alarmReferenceLines = this.alarmReferenceLines(axes);
+
+    if (thresholds) {
+      thresholdLines = thresholds.map(th => {
+        // Welke y as?
+        let yref;
+        if (axes.length === 2 && axes[1].unit === th.unitReference) {
+          yref = "y2";
+        } else {
+          yref = "y";
+        }
+
+        return this.getThresholdLine(th, yref);
+      });
+    }
 
     if (alarmReferenceLines) {
       annotations = alarmReferenceLines.annotations;
       shapes = alarmReferenceLines.shapes;
     }
 
-    // Return lines for alarms and for "now".
-    const now = getNow(this.props.configuredNow).getTime();
-
+    // Return lines for alarms, ts thresholds and for "now".
     const nowLine = {
       type: "line",
       layer: "above",
@@ -345,8 +376,14 @@ class TimeseriesChartComponent extends Component {
     };
 
     annotations.push(nowAnnotation);
-    shapes.push(nowLine);
 
+    if (thresholds) {
+      thresholdLines.forEach(thLine => {
+        shapes.push(thLine);
+      });
+    }
+
+    shapes.push(nowLine);
     return { annotations, shapes };
   }
 
@@ -377,13 +414,13 @@ class TimeseriesChartComponent extends Component {
     return yaxis;
   }
 
-  getLayout(axes) {
+  getLayout(axes, thresholds = null) {
     const { width, height, isFull, showAxis } = this.props;
 
     // We have a bunch of lines with labels, the labels are annotations and
     // the lines are shapes, that's why we have one function to make them.
     // Only full mode shows the labels.
-    const annotationsAndShapes = this.getAnnotationsAndShapes(axes);
+    const annotationsAndShapes = this.getAnnotationsAndShapes(axes, thresholds);
 
     let margin = {};
 
@@ -478,12 +515,13 @@ class TimeseriesChartComponent extends Component {
     );
 
     return this.props.isFull
-      ? this.renderFull(axes, combinedEvents)
+      ? this.renderFull(axes, combinedEvents, tile.thresholds)
       : this.renderTile(axes, combinedEvents);
   }
 
-  renderFull(axes, combinedEvents) {
+  renderFull(axes, combinedEvents, thresholds) {
     const Plot = plotComponentFactory(window.Plotly);
+    const layout = this.getLayout(this.state.wantedAxes, thresholds);
 
     return (
       <div
@@ -499,7 +537,7 @@ class TimeseriesChartComponent extends Component {
         <Plot
           className="fullPlot"
           data={combinedEvents}
-          layout={this.getLayout(this.state.wantedAxes)}
+          layout={layout}
           config={{ displayModeBar: true }}
         />
       </div>
