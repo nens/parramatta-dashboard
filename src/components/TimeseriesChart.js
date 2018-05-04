@@ -343,7 +343,6 @@ class TimeseriesChartComponent extends Component {
       });
     }
 
-    // const thresholdsReferenceLines = (thresholds) ? : ;
     if (alarmReferenceLines) {
       annotations = alarmReferenceLines.annotations;
       shapes = alarmReferenceLines.shapes;
@@ -584,8 +583,6 @@ function mapStateToProps(state) {
     alarms: state.alarms,
     configuredNow: getConfiguredNow(state),
     bootstrap: getBootstrap(state)
-    // getConfiguredTimeseriesThresholds:
-    //   getGetConfiguredTimeseriesThresholds(state)
   };
 }
 
