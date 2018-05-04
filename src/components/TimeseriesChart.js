@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import ReactDOM from "react-dom"; re-anbale for Plot hack??
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/en-au";
@@ -41,7 +40,7 @@ class TimeseriesChartComponent extends Component {
   // Component - lifecycle functions //////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  componentWillMount() {
+  componentDidMount() {
     this.updateTimeseries();
 
     const axes = this.getAxesData();
@@ -431,57 +430,6 @@ class TimeseriesChartComponent extends Component {
     };
   }
 
-  render() {
-    const { tile } = this.props;
-
-    const timeseriesEvents = tile.timeseries
-      .filter(
-        uuid =>
-          this.props.timeseries[uuid] &&
-          this.props.timeseriesEvents[uuid] &&
-          this.props.timeseriesEvents[uuid].events
-      )
-      .map(uuid => {
-        return {
-          uuid: uuid,
-          observation_type: this.props.timeseries[uuid].observation_type,
-          events: this.props.timeseriesEvents[uuid].events
-        };
-      });
-
-    const rasterEvents = (tile.rasterIntersections || [])
-      .map(intersection => {
-        const raster = this.props.getRaster(intersection.uuid).object;
-        if (!raster) {
-          return null;
-        }
-
-        const events = this.getRasterEvents(raster, intersection.geometry);
-        if (!events) return null;
-
-        return {
-          uuid: intersection.uuid,
-          observation_type: raster.observation_type,
-          events: events
-        };
-      })
-      .filter(e => e !== null); // Remove nulls
-
-    const axes = this.getAxesData();
-
-    const combinedEvents = combineEventSeries(
-      timeseriesEvents.concat(rasterEvents),
-      axes,
-      tile.colors,
-      this.props.isFull,
-      tile.legendStrings
-    );
-
-    return this.props.isFull
-      ? this.renderFull(axes, combinedEvents)
-      : this.renderTile(axes, combinedEvents);
-  }
-
   renderFull(axes, combinedEvents) {
     const Plot = plotComponentFactory(window.Plotly);
 
@@ -533,6 +481,57 @@ class TimeseriesChartComponent extends Component {
       </div>
     );
   }
+
+  render() {
+    const { tile } = this.props;
+
+    const timeseriesEvents = tile.timeseries
+      .filter(
+        uuid =>
+          this.props.timeseries[uuid] &&
+          this.props.timeseriesEvents[uuid] &&
+          this.props.timeseriesEvents[uuid].events
+      )
+      .map(uuid => {
+        return {
+          uuid: uuid,
+          observation_type: this.props.timeseries[uuid].observation_type,
+          events: this.props.timeseriesEvents[uuid].events
+        };
+      });
+
+    const rasterEvents = (tile.rasterIntersections || [])
+      .map(intersection => {
+        const raster = this.props.getRaster(intersection.uuid).object;
+        if (!raster) {
+          return null;
+        }
+
+        const events = this.getRasterEvents(raster, intersection.geometry);
+        if (!events) return null;
+
+        return {
+          uuid: intersection.uuid,
+          observation_type: raster.observation_type,
+          events: events
+        };
+      })
+      .filter(e => e !== null); // Remove nulls
+
+    const axes = this.getAxesData();
+
+    const combinedEvents = combineEventSeries(
+      timeseriesEvents.concat(rasterEvents),
+      axes,
+      tile.colors,
+      this.props.isFull,
+      tile.legendStrings
+    );
+
+    return this.props.isFull
+      ? this.renderFull(axes, combinedEvents)
+      : this.renderTile(axes, combinedEvents);
+  }  
 }
 
 function mapStateToProps(state) {
