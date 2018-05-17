@@ -323,7 +323,9 @@ class GridLayout extends Component {
             className={styles.LogoCombo}
           />
 
-          <span className={styles.HeaderTitle}>FISH&nbsp;DASHBOARD</span>
+          <span className={styles.HeaderTitle}>
+            FloodSmart Parramatta Dashboard
+          </span>
 
           {width > 700 ? (
             <div

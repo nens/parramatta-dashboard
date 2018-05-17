@@ -16,13 +16,15 @@
   overflow: hidden;
   cursor: grab;
   z-index: 999999;
+
+  background-color: #16a085;
 }
 .TileTitle:active {
   cursor: grabbing;
 }
 .TileTitle div {
   position: absolute;
-  color: #747474;
+  color: white;
   top: 12px;
   left: 10px;
   white-space: nowrap;
@@ -35,5 +37,5 @@
   position: absolute;
   right: 5px;
   top: 7px;
-  color: #d8d8d8;
+  color: white;
 }

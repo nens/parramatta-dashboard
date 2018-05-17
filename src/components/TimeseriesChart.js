@@ -90,11 +90,6 @@ class TimeseriesChartComponent extends Component {
       combinedEvents,
       wantedAxes: axes
     });
-
-    /* this.interval = setInterval(
-     *   this.updateDateTimeState.bind(this),
-     *   5 * 60 * 1000
-     * );*/
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -218,13 +213,11 @@ class TimeseriesChartComponent extends Component {
     );
 
     const shapes = [];
-    const annotations = [];
 
     relevantAlarms.forEach(alarm => {
       // A timeseriesAlarm can have multiple thresholds, make a reference line
       // for each.
       return alarm.thresholds.forEach(threshold => {
-        let label = "";
         let active;
         let color;
 
@@ -240,10 +233,6 @@ class TimeseriesChartComponent extends Component {
         } else {
           active = "";
           color = "#888";
-        }
-
-        if (isFull) {
-          label = `${threshold.warning_level}${active}`;
         }
 
         // Figure out which Y axis the value is on so we know where to plot it
@@ -268,26 +257,14 @@ class TimeseriesChartComponent extends Component {
             y1: threshold.value,
             line: {
               color: color,
-              width: isFull ? 2 : 1,
-              dash: "dot"
+              width: isFull ? 2 : 1
             }
-          });
-
-          annotations.push({
-            text: label,
-            xref: "paper",
-            x: 0,
-            xanchor: "left",
-            yref: axisIndex === 0 ? "y" : "y2",
-            y: threshold.value,
-            yanchor: "bottom",
-            showarrow: false
           });
         }
       });
     });
 
-    return { shapes, annotations };
+    return { shapes };
   }
 
   getRasterEvents(raster, geometry) {
@@ -315,7 +292,8 @@ class TimeseriesChartComponent extends Component {
       y1: threshold.value,
       line: {
         width: 1,
-        color: threshold.color
+        color: threshold.color,
+        dash: "dot"
       }
     };
   }
@@ -323,7 +301,6 @@ class TimeseriesChartComponent extends Component {
   getAnnotationsAndShapes(axes, thresholds) {
     const { isFull } = this.props;
 
-    let annotations = [];
     let shapes = [];
     let thresholdLines;
 
@@ -345,7 +322,6 @@ class TimeseriesChartComponent extends Component {
     }
 
     if (alarmReferenceLines) {
-      annotations = alarmReferenceLines.annotations;
       shapes = alarmReferenceLines.shapes;
     }
 
@@ -376,8 +352,6 @@ class TimeseriesChartComponent extends Component {
       showarrow: false
     };
 
-    annotations.push(nowAnnotation);
-
     if (thresholds) {
       thresholdLines.forEach(thLine => {
         shapes.push(thLine);
@@ -385,7 +359,7 @@ class TimeseriesChartComponent extends Component {
     }
 
     shapes.push(nowLine);
-    return { annotations, shapes };
+    return { annotations: [nowAnnotation], shapes };
   }
 
   getYAxis(axes, idx) {

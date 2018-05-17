@@ -8,9 +8,9 @@
   height: 50px;
   width: 100%;
   box-shadow: 2px 0px 4px 2px rgba(0, 0, 0, 0.29);
-  background: #ffffff;
+  background: #16a085;
   font-size: 18px;
-  color: #747474;
+  color: white;
   z-index: 999991;
 }
 .BackButton {
@@ -22,6 +22,7 @@
 }
 .BackButton i {
   font-size: 22px;
+  color: white;
 }
 .Title {
   position: absolute;
@@ -36,6 +37,8 @@
   position: absolute;
   right: 10px;
   top: 13px;
+  color: white;
+  font-style: italic;
 }
 @media only screen and (max-width: 700px) {
   .ViewInLizardButton {
@@ -48,7 +51,7 @@
   font-size: 13px;
   padding: 8px;
   cursor: pointer;
-  color: #2196f3;
+  color: white;
   text-decoration: none;
 }
 .SidebarWrapper {
