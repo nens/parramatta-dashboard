@@ -5,37 +5,25 @@ import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import styles from "./Legend.css";
 import { Scrollbars } from "react-custom-scrollbars";
-import IconActiveAlarm from "../graphics/IconActiveAlarm.svg";
-import IconInactiveAlarm from "../graphics/IconInactiveAlarm.svg";
-import IconNoAlarm from "../graphics/IconNoAlarm.svg";
+
+import {
+  IconNoAlarmSVG,
+  IconInactiveAlarmSVG,
+  IconActiveAlarmSVG
+} from "./Icons.js";
 
 const vectorIconsLegend = [
-  <div
-    key="icon1"
-    style={{
-      backgroundColor: "white",
-      color: "black"
-    }}
-  >
-    <img src={IconActiveAlarm} alt="Red check" /> Station with triggered alarm
+  <div className={styles.IconLineContainer} key="icon1">
+    {IconActiveAlarmSVG}
+    <div className={styles.IconSVGContainer}>station with triggered alarm</div>
   </div>,
-  <div
-    key="icon2"
-    style={{
-      backgroundColor: "white",
-      color: "black"
-    }}
-  >
-    <img src={IconInactiveAlarm} alt="Green check" /> Station with alarm
+  <div className={styles.IconLineContainer} key="icon2">
+    {IconInactiveAlarmSVG}
+    <div className={styles.IconSVGContainer}>station with alarm</div>
   </div>,
-  <div
-    key="icon3"
-    style={{
-      backgroundColor: "white",
-      color: "black"
-    }}
-  >
-    <img src={IconNoAlarm} alt="Blue check" /> Station without alarm
+  <div className={styles.IconLineContainer} key="icon3">
+    {IconNoAlarmSVG}
+    <div className={styles.IconSVGContainer}>station without alarm</div>
   </div>
 ];
 
