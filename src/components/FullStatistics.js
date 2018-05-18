@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchAlarms } from "../actions";
-import { IconActiveAlarmSVG, IconNoAlarmSVG } from "./Icons";
+import { IconActiveAlarmSVG, IconInactiveAlarmSVG } from "./Icons";
 
 import styles from "./FullStatistics.css";
 
@@ -36,7 +36,7 @@ class FullStatistics extends Component {
           <td>
             {alarm.warning_threshold !== null
               ? IconActiveAlarmSVG
-              : IconNoAlarmSVG}
+              : IconInactiveAlarmSVG}
           </td>
           <td>{alarm.name}</td>
           <td>
