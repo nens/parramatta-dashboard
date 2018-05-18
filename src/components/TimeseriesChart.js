@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 // import ReactDOM from "react-dom"; re-anbale for Plot hack??
 import { connect } from "react-redux";
-import moment from "moment";
 import "moment/locale/en-au";
 import {
   addAsset,
@@ -218,20 +217,14 @@ class TimeseriesChartComponent extends Component {
       // A timeseriesAlarm can have multiple thresholds, make a reference line
       // for each.
       return alarm.thresholds.forEach(threshold => {
-        let active;
         let color;
 
         if (
           alarm.warning_threshold &&
           alarm.warning_threshold.value === threshold.value
         ) {
-          const time = moment(alarm.warning_timestamp)
-            .locale("en-au")
-            .format("LLL");
-          active = `, active since ${time}`;
           color = "red";
         } else {
-          active = "";
           color = "#888";
         }
 
