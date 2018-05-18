@@ -68,3 +68,14 @@
   width: 100%;
   height: 20px;
 }
+.IconLineContainer {
+  background-color: "white";
+  color: "black";
+  margin-bottom: -20px;
+}
+.IconSVGContainer {
+  position: relative;
+  left: 32px;
+  top: -27px;
+  font-size: 14px;
+}
