@@ -11,7 +11,7 @@ const IconInactiveAlarmDiv = document.createElement("div");
 const IconNoAlarmDiv = document.createElement("div");
 
 ReactDOM.render(IconActiveAlarmSVG, IconActiveAlarmDiv);
-ReactDOM.render(IconInactiveAlarmSVG, IconActiveAlarmDiv);
+ReactDOM.render(IconInactiveAlarmSVG, IconInactiveAlarmDiv);
 ReactDOM.render(IconNoAlarmSVG, IconNoAlarmDiv);
 
 // Active alarm: red check
