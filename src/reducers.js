@@ -214,15 +214,21 @@ function alarms(
   },
   action
 ) {
+  const isActive = alarm => alarm.active;
+
   switch (action.type) {
     case RECEIVE_ALARMS:
       // We received either raster or timeseries alarms; combine them both into one
       // 'data' array.
       const newState = { ...state };
       if (action.isTimeseries) {
-        newState.timeseriesData = action.alarms;
+        newState.timeseriesData = action.alarms
+          ? action.alarms.filter(isActive)
+          : [];
       } else {
-        newState.rasterData = action.alarms;
+        newState.rasterData = action.alarms
+          ? action.alarms.filter(isActive)
+          : [];
       }
 
       newState.data = newState.timeseriesData.concat(newState.rasterData);
