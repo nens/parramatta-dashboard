@@ -47,7 +47,7 @@ class TermsOrLoginOrAppComponent extends Component {
       return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
     } else {
       return (
-        <Router basename="/flash">
+        <Router basename="/floodsmart">
           <App />
         </Router>
       );
