@@ -231,10 +231,6 @@ function alarms(
           : [];
       }
 
-      console.log(
-        "SETTING RASTERDATA",
-        JSON.parse(JSON.stringify(newState.rasterData))
-      );
       newState.data = newState.timeseriesData.concat(newState.rasterData);
       return newState;
 
