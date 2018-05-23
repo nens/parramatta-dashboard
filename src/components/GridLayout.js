@@ -313,8 +313,6 @@ class GridLayout extends Component {
       }
     });
 
-    console.log("tileComponents:", tileComponents);
-
     return (
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
