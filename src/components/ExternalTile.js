@@ -6,31 +6,21 @@ class ExternalTileComponent extends Component {
     const { isFull, tile, width, height } = this.props;
 
     if (isFull) {
-      return this.renderIframe(tile.title, tile.url, width, height);
+      return this.renderImageFull(tile.title, tile.imageUrl, width, height);
     } else {
-      return this.renderImage(tile.title, tile.imageUrl);
+      return this.renderImageTiled(tile.title, tile.imageUrl);
     }
   }
 
-  renderIframe(title, url, width, height) {
-    const { showingBar } = this.props;
-
+  renderImageFull(title, imageUrl, width, height) {
     return (
-      <iframe
-        title="externalTile"
-        referrerPolicy="no-referrer"
-        src={url}
-        className={styles.externalIframe}
-        width={width}
-        height={height}
-        style={{
-          left: showingBar ? 205 : 0
-        }}
-      />
+      <div style={{ width, height, display: "flex" }}>
+        <img src={imageUrl} alt={title} className={styles.externalImageFull} />
+      </div>
     );
   }
 
-  renderImage(title, imageUrl) {
+  renderImageTiled(title, imageUrl) {
     return (
       <div className={styles.externalWrapper}>
         <img src={imageUrl} alt={title} className={styles.externalImage} />

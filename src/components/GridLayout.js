@@ -113,7 +113,7 @@ class GridLayout extends Component {
         <DocumentTitle title="Parramatta | Dashboard | Settings">
           <div className={styles.SettingsMenu} style={{ height: height }}>
             <img
-              src={parramattaLogo}
+              src={logoCombo}
               alt="Parramatta dashboard"
               className={styles.HeaderImage}
             />
@@ -312,6 +312,8 @@ class GridLayout extends Component {
           return null;
       }
     });
+
+    console.log("tileComponents:", tileComponents);
 
     return (
       <DocumentTitle title="Parramatta | Dashboard">

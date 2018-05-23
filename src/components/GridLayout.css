@@ -1,8 +1,10 @@
 .HeaderImage,
 .SecondaryHeaderImage {
+  padding: 10px 0 10px 10px;
+}
+.SecondaryHeaderImage {
   max-width: 300px;
   max-height: 43px;
-  padding: 10px 0 10px 10px;
 }
 .HeaderTitle {
   font-weight: bold;
