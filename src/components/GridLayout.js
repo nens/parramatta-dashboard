@@ -240,7 +240,7 @@ class GridLayout extends Component {
                     <p>
                       For software issues with the FloodSmart Parramatta System
                       please contact Nelen & Schuurmans on {nensMail()}. For any
-                      other issues, or suggestions for improvements to the FISH
+                      other issues, or suggestions for improvements to the Parramatta Floodsmart System
                       system, please contact Chris Gooch on tel.&nbsp;
                       {chrisTel()} or email {chrisMail()}
                     </p>
