@@ -44,10 +44,10 @@ class TermsAndConditionsComponent extends Component {
         <h1 className={styles.header}>
           FloodSmart Parramatta System Terms and Conditions
         </h1>
-        <h1 className={styles.header}>(FISH)</h1>
+        <h1 className={styles.header}>(FloodSmart Parramatta System)</h1>
         <h1 className={styles.header}>Terms and Conditions</h1>
         <p>
-          Use of the FloodSmart Parramatta system is subject to the terms and
+          Use of the FloodSmart Parramatta System is subject to the terms and
           conditions set out below. If you proceed to use the FloodSmart
           Parramatta System, your use will be taken as acceptance of these terms
           and conditions.

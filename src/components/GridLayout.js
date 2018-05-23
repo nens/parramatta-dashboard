@@ -238,10 +238,10 @@ class GridLayout extends Component {
                     <h4 style={{ padding: 0, margin: 0 }}>Contact info</h4>
                     <hr />
                     <p>
-                      For software issues with the FISH Dashboard please contact
-                      Nelen & Schuurmans on {nensMail()}. For any other issues,
-                      or suggestions for improvements to the FISH system, please
-                      contact Chris Gooch on tel.&nbsp;
+                      For software issues with the FloodSmart Parramatta System
+                      please contact Nelen & Schuurmans on {nensMail()}. For any
+                      other issues, or suggestions for improvements to the FISH
+                      system, please contact Chris Gooch on tel.&nbsp;
                       {chrisTel()} or email {chrisMail()}
                     </p>
                   </div>
