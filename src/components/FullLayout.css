@@ -76,6 +76,8 @@
   margin: 0 10px 40px 23px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 .Active {
   box-sizing: border-box;
