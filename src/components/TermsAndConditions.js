@@ -42,63 +42,65 @@ class TermsAndConditionsComponent extends Component {
     return (
       <div className={styles.terms}>
         <h1 className={styles.header}>
-          Parramatta River Flood Information System Hub
+          FloodSmart Parramatta System Terms and Conditions
         </h1>
         <h1 className={styles.header}>(FISH)</h1>
         <h1 className={styles.header}>Terms and Conditions</h1>
         <p>
-          Use of the Parramatta River Flood Information System Hub (FISH System)
-          is subject to the terms and conditions set out below. If you proceed
-          to use the FISH System, your use will be taken as acceptance of these
-          terms and conditions.
+          Use of the FloodSmart Parramatta system is subject to the terms and
+          conditions set out below. If you proceed to use the FloodSmart
+          Parramatta System, your use will be taken as acceptance of these terms
+          and conditions.
         </p>
         <ol>
           <li>
-            The FISH System is provided by City of Parramatta Council (Council),
-            as part of a collaborative project between Council, Sydney Water
-            Corporation, State Emergency Services, Office for Environment and
-            Heritage, Bureau of Meteorology and Greater Sydney Local Land
-            Services (together the Project Group).
+            The FloodSmart Parramatta System is provided by City of Parramatta
+            Council (Council), as part of a collaborative project between
+            Council, Sydney Water Corporation, NSW State Emergency Services and
+            Office for Environment and Heritage (together the Project Group).
           </li>
           <li>
-            The FISH System intends to provide catchment, river and rain gauge,
-            modelling and forecast data for information during a flood event.
-            The FISH System will also provide automated alerts to warn of
-            potential flood risk.{" "}
+            The FloodSmart Parramatta System intends to provide catchment, river
+            and rain gauge, modelling and forecast data for information during a
+            flood event. The FloodSmart Parramatta System will also provide
+            automated alerts to warn of potential flood risk.
           </li>
           <li>
             While Council will use reasonable endeavours to ensure that the data
             is provided at the earliest opportunity and is fit for purpose, the
-            FISH System relies on third party data and predicts future events
-            therefore reliability cannot be guaranteed. Use of the data
-            contained in the FISH System for incident response is at the user’s
-            own risk.
+            FloodSmart Parramatta System relies on third party data and predicts
+            future events therefore reliability cannot be guaranteed. Use of the
+            data contained in the FloodSmart Parramatta System for incident
+            response is at the user’s own risk.
           </li>
           <li>
-            As the FISH System is subject to naturally occurring events, the
-            Project Group does not warrant the accuracy and completeness of the
-            information. The FISH System should not be solely relied upon. You
-            are responsible for verifying the information provided by the FISH
+            As the FloodSmart Parramatta System is subject to naturally
+            occurring events, the Project Group does not warrant the accuracy
+            and completeness of the information. The FloodSmart Parramatta
+            System should not be solely relied upon. You are responsible for
+            verifying the information provided by the FloodSmart Parramatta
             System and making your own independent assessment of the risks.
           </li>
           <li>
-            While Council will use reasonable endeavours to ensure that any FISH
-            System alerts are provided to you at the earliest opportunity, the
-            FISH System relies on telecommunication networks to send alerts and
-            the delivery of the alerts cannot be guaranteed.
+            While Council will use reasonable endeavours to ensure that any
+            FloodSmart Parramatta System alerts are provided to you at the
+            earliest opportunity, the FloodSmart Parramatta System relies on
+            telecommunication networks to send alerts and the delivery of the
+            alerts cannot be guaranteed.
           </li>
           <li>
-            You acknowledge that you are using the FISH System and the data
-            included within at your own risk. In consideration of you using the
-            FISH System, you acknowledge and agree that the Project Group
-            (including the respective directors, officers, employees and agents
-            of each party in the Project Group) are not responsible (either
-            jointly or severally) for any loss or damage suffered, incurred or
-            sustained by you, in whatever nature and howsoever arising, in
-            connection with the FISH System and to the extent permitted by law,
-            you release each party in the Project Group in this respect
-            (Release). This Release includes, but is not limited to, any loss or
-            damage suffered, incurred or sustained by you arising from:
+            You acknowledge that you are using the FloodSmart Parramatta System
+            and the data included within at your own risk. In consideration of
+            you using the FloodSmart Parramatta System, you acknowledge and
+            agree that the Project Group (including the respective directors,
+            officers, employees and agents of each party in the Project Group)
+            are not responsible (either jointly or severally) for any loss or
+            damage suffered, incurred or sustained by you, in whatever nature
+            and howsoever arising, in connection with the FloodSmart Parramatta
+            System and to the extent permitted by law, you release each party in
+            the Project Group in this respect (Release). This Release includes,
+            but is not limited to, any loss or damage suffered, incurred or
+            sustained by you arising from:
             <ol type="a">
               <li>inaccuracies, lack of, or delay in data provision;</li>
               <li>the delay and failure in warning you of an event;</li>
@@ -116,7 +118,7 @@ class TermsAndConditionsComponent extends Component {
                 any indirect, incidental, special and/or consequential losses or
                 damages (including loss of profits, production, revenue,
                 goodwill, data or opportunity) of whatever nature howsoever
-                arising in connection with FISH System.
+                arising in connection with FloodSmart Parramatta System.
               </li>
             </ol>
           </li>
@@ -129,8 +131,8 @@ class TermsAndConditionsComponent extends Component {
           </li>
           <li>
             As permitted by law, Council excludes all conditions and warranties
-            relating to your use of the FISH System that are not expressly
-            outlined in these conditions.
+            relating to your use of the FloodSmart Parramatta System that are
+            not expressly outlined in these conditions.
           </li>
         </ol>
 
