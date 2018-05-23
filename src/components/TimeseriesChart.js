@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 // import ReactDOM from "react-dom"; re-anbale for Plot hack??
 import { connect } from "react-redux";
+import moment from "moment";
 import "moment/locale/en-au";
 import {
   addAsset,
@@ -182,7 +183,9 @@ class TimeseriesChartComponent extends Component {
   isRelevantRasterAlarm(alarm) {
     const { tile } = this.props;
 
-    if (!tile.rasterIntersections) return false;
+    if (!tile.rasterIntersections) {
+      return false;
+    }
 
     return (
       !alarm.isTimeseriesAlarm() &&
@@ -212,20 +215,29 @@ class TimeseriesChartComponent extends Component {
     );
 
     const shapes = [];
+    const annotations = [];
 
     relevantAlarms.forEach(alarm => {
       // A timeseriesAlarm can have multiple thresholds, make a reference line
       // for each.
       return alarm.thresholds.forEach(threshold => {
-        let color;
+        let color = "#888";
+        let active = "";
+        let label = "";
 
         if (
           alarm.warning_threshold &&
           alarm.warning_threshold.value === threshold.value
         ) {
-          color = "red";
-        } else {
-          color = "#888";
+          const time = moment(alarm.warning_timestamp)
+            .locale("en-au")
+            .format("LLL");
+          active = `, active since ${time}`;
+          color = "#F00";
+        }
+
+        if (isFull) {
+          label = `${threshold.warning_level}${active}`;
         }
 
         // Figure out which Y axis the value is on so we know where to plot it
@@ -249,15 +261,27 @@ class TimeseriesChartComponent extends Component {
             y0: threshold.value,
             y1: threshold.value,
             line: {
+              dash: "dot",
               color: color,
               width: isFull ? 2 : 1
             }
+          });
+
+          annotations.push({
+            text: label,
+            xref: "paper",
+            x: 0,
+            xanchor: "left",
+            yref: axisIndex === 0 ? "y" : "y2",
+            y: threshold.value,
+            yanchor: "bottom",
+            showarrow: false
           });
         }
       });
     });
 
-    return { shapes };
+    return { shapes, annotations };
   }
 
   getRasterEvents(raster, geometry) {
@@ -285,9 +309,22 @@ class TimeseriesChartComponent extends Component {
       y1: threshold.value,
       line: {
         width: 1,
-        color: threshold.color,
-        dash: "dot"
+        color: threshold.color
       }
+    };
+  }
+
+  getThresholdAnnotation(threshold, yref) {
+    return {
+      text: " " + threshold.label + " ",
+      bordercolor: threshold.color,
+      xref: "paper",
+      x0: 0,
+      x1: 1,
+      yanchor: "bottom",
+      yref: yref,
+      y: parseFloat(threshold.value),
+      showarrow: false
     };
   }
 
@@ -295,7 +332,8 @@ class TimeseriesChartComponent extends Component {
     const { isFull } = this.props;
 
     let shapes = [];
-    let thresholdLines;
+    let annotations = [];
+    let thresholdLines, thresholdAnnotations;
 
     const now = getNow(this.props.configuredNow).getTime();
     const alarmReferenceLines = this.alarmReferenceLines(axes);
@@ -303,19 +341,25 @@ class TimeseriesChartComponent extends Component {
     if (thresholds) {
       thresholdLines = thresholds.map(th => {
         // Welke y as?
-        let yref;
+        let yref = "y";
         if (axes.length === 2 && axes[1].unit === th.unitReference) {
           yref = "y2";
-        } else {
-          yref = "y";
         }
-
         return this.getThresholdLine(th, yref);
+      });
+      thresholdAnnotations = thresholds.map(th => {
+        // Welke y as?
+        let yref = "y";
+        if (axes.length === 2 && axes[1].unit === th.unitReference) {
+          yref = "y2";
+        }
+        return this.getThresholdAnnotation(th, yref);
       });
     }
 
     if (alarmReferenceLines) {
       shapes = alarmReferenceLines.shapes;
+      annotations = alarmReferenceLines.annotations;
     }
 
     // Return lines for alarms, ts thresholds and for "now".
@@ -345,14 +389,19 @@ class TimeseriesChartComponent extends Component {
       showarrow: false
     };
 
+    annotations.push(nowAnnotation);
+
     if (thresholds) {
       thresholdLines.forEach(thLine => {
         shapes.push(thLine);
       });
+      thresholdAnnotations.forEach(thAnnot => {
+        annotations.push(thAnnot);
+      });
     }
 
     shapes.push(nowLine);
-    return { annotations: [nowAnnotation], shapes };
+    return { annotations, shapes };
   }
 
   getYAxis(axes, idx) {

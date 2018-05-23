@@ -113,7 +113,7 @@ class GridLayout extends Component {
         <DocumentTitle title="Parramatta | Dashboard | Settings">
           <div className={styles.SettingsMenu} style={{ height: height }}>
             <img
-              src={parramattaLogo}
+              src={logoCombo}
               alt="Parramatta dashboard"
               className={styles.HeaderImage}
             />
@@ -371,7 +371,7 @@ class GridLayout extends Component {
             layout={width < 700 ? this.state.mobileLayout : this.state.layout}
             cols={12}
             rowHeight={30}
-            width={width}
+            width={width - 20 /* This eleminates the horizontal scrollbar */}
             draggableHandle=".drag-handle"
           >
             {tileComponents.map((component, i) => {

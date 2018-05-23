@@ -5,6 +5,10 @@
   max-height: 100%;
 }
 
+.externalImageFull {
+  margin: auto 50%;
+}
+
 .externalIframe {
   position: relative;
   top: 50px;
