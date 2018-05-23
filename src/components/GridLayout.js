@@ -316,16 +316,25 @@ class GridLayout extends Component {
     return (
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
+          <div
+            style={{
+              position: "absolute",
+              width: "100%",
+              textAlign: "center",
+              height: 60,
+              padding: "20px 0 0 0"
+            }}
+          >
+            <span className={styles.HeaderTitle}>
+              FloodSmart Parramatta Dashboard
+            </span>
+          </div>
           <img
             src={logoCombo}
             style={{ height: 54 }}
             alt="Logos for relevant organisations"
             className={styles.LogoCombo}
           />
-
-          <span className={styles.HeaderTitle}>
-            FloodSmart Parramatta Dashboard
-          </span>
 
           {width > 700 ? (
             <div
