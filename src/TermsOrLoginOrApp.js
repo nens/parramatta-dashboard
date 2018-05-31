@@ -10,7 +10,11 @@ import { connect } from "react-redux";
 import App from "./App";
 import styles from "./App.css";
 import { TermsAndConditions } from "./components/TermsAndConditions";
-import { fetchBootstrap } from "./actions";
+import { fetchBootstrap, setIframeMode } from "./actions";
+import getParameterByName from "./util/getQueryParams.js";
+
+// import FullLayout from "./components/FullLayout";
+// import { Route } from "react-router-dom";
 
 class TermsOrLoginOrAppComponent extends Component {
   constructor() {
@@ -22,6 +26,7 @@ class TermsOrLoginOrAppComponent extends Component {
 
   componentDidMount() {
     this.props.fetchBootstrap(this.props.sessionState);
+    this.props.setIframeMode(getParameterByName("iframe") === "true");
   }
 
   termsSigned() {
@@ -35,7 +40,7 @@ class TermsOrLoginOrAppComponent extends Component {
   }
 
   render() {
-    if (!this.hasBootstrap()) {
+    if (!this.hasBootstrap() || this.props.iframeModeActive === null) {
       return (
         <div className={styles.LoadingIndicator}>
           <MDSpinner size={24} />
@@ -57,13 +62,15 @@ class TermsOrLoginOrAppComponent extends Component {
 
 function mapStateToProps(state) {
   return {
-    sessionState: state.session
+    sessionState: state.session,
+    iframeModeActive: state.iframeMode.active
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchBootstrap: sessionState => fetchBootstrap(dispatch, sessionState)
+    fetchBootstrap: sessionState => fetchBootstrap(dispatch, sessionState),
+    setIframeMode: bool => setIframeMode(dispatch, bool)
   };
 }
 
