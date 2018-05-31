@@ -602,26 +602,23 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
-        {/*this.areAllEventsLoaded(tile)
-          ? (<Plot
-              className="fullPlot"
-              data={combinedEvents}
-              layout={layout}
-              config={{ displayModeBar: true }}
-            />)
-          : (<div style={{
-              position: 'relative',
-              margin: verticalOffset + 'px calc(50% - 80px)'
-            }}>
-              <MDSpinner size={SPINNER_SIZE} />
-            </div>)
-        */}
-        <Plot
-          className="fullPlot"
-          data={combinedEvents}
-          layout={layout}
-          config={{ displayModeBar: true }}
-        />
+        {this.areAllEventsLoaded(tile) ? (
+          <Plot
+            className="fullPlot"
+            data={combinedEvents}
+            layout={layout}
+            config={{ displayModeBar: true }}
+          />
+        ) : (
+          <div
+            style={{
+              position: "relative",
+              margin: verticalOffset + "px calc(50% - 80px)"
+            }}
+          >
+            <MDSpinner size={SPINNER_SIZE} />
+          </div>
+        )}
       </div>
     );
   }
