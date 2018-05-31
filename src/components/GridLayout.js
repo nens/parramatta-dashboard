@@ -253,9 +253,6 @@ class GridLayout extends Component {
       );
     }
 
-    // DEBUG-ONLY!!!
-    // const firstTiles = tiles.slice(0,6);
-
     const tileComponents = tiles.map(tile => {
       const shortTitle = tile.shortTitle || tile.title;
 

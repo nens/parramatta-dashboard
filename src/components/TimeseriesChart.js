@@ -589,8 +589,6 @@ class TimeseriesChartComponent extends Component {
     const verticalOffset =
       Math.round(this.props.height / 2) - Math.round(SPINNER_SIZE / 2);
 
-    console.log("[!] verticalOffset =", verticalOffset);
-
     return (
       <div
         id={this.state.componentRef}
