@@ -155,7 +155,7 @@ class TimeseriesChartComponent extends Component {
       const axis = indexForType(axes, observationType);
 
       if (axis === -1) {
-        if (axes.length >= 2) {
+        if (axes.length >= 3) {
           console.error(
             "Can't have a third Y axis for timeseries: ",
             uuid,
