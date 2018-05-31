@@ -9,7 +9,6 @@ import TimeseriesTile from "./TimeseriesTile";
 import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
-import parramattaLogo from "../graphics/parramatta-header-logo.svg";
 import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
@@ -240,8 +239,9 @@ class GridLayout extends Component {
                     <p>
                       For software issues with the FloodSmart Parramatta System
                       please contact Nelen & Schuurmans on {nensMail()}. For any
-                      other issues, or suggestions for improvements to the Parramatta Floodsmart System
-                      system, please contact Chris Gooch on tel.&nbsp;
+                      other issues, or suggestions for improvements to the
+                      Parramatta Floodsmart System system, please contact Chris
+                      Gooch on tel.&nbsp;
                       {chrisTel()} or email {chrisMail()}
                     </p>
                   </div>
@@ -252,6 +252,9 @@ class GridLayout extends Component {
         </DocumentTitle>
       );
     }
+
+    // DEBUG-ONLY!!!
+    // const firstTiles = tiles.slice(0,6);
 
     const tileComponents = tiles.map(tile => {
       const shortTitle = tile.shortTitle || tile.title;

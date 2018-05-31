@@ -3,6 +3,7 @@ import styles from "./Tile.css";
 
 class Tile extends Component {
   render() {
+    // console.log("[F] Tile.render; this.props =", this.props);
     const { onClick, title, children, backgroundColor } = this.props;
 
     return (
