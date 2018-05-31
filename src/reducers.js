@@ -15,7 +15,8 @@ import {
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
   RECEIVE_BOOTSTRAP_ERROR,
-  RECEIVE_BOOTSTRAP_SUCCESS
+  RECEIVE_BOOTSTRAP_SUCCESS,
+  SET_IFRAME_MODE
 } from "./actions";
 import { MAP_BACKGROUNDS } from "./config";
 
@@ -71,6 +72,19 @@ function legends(state = {}, action) {
       }
       newState[action.uuid] = newLegend;
       return newState;
+    default:
+      return state;
+  }
+}
+
+function iframeMode(state = { active: null }, action) {
+  switch (action.type) {
+    case SET_IFRAME_MODE:
+      console.log(
+        "[!] reducers.iframeMode; setting state.iframeMode.active to",
+        action.bool
+      );
+      return { active: state.active || action.bool };
     default:
       return state;
   }
@@ -248,7 +262,8 @@ const rootReducer = combineReducers({
   timeseries,
   timeseriesEvents,
   rasterEvents,
-  settings
+  settings,
+  iframeMode
 });
 
 export default rootReducer;
