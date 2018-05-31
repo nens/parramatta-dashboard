@@ -40,16 +40,26 @@ class TermsOrLoginOrAppComponent extends Component {
   }
 
   render() {
-    if (!this.hasBootstrap() || this.props.iframeModeActive === null) {
+    const { iframeModeActive } = this.props;
+
+    if (!this.hasBootstrap() || iframeModeActive === null) {
       return (
         <div className={styles.LoadingIndicator}>
           <MDSpinner size={24} />
         </div>
       );
-    } else if (!this.props.sessionState.bootstrap.authenticated) {
-      this.props.sessionState.bootstrap.doLogin();
-    } else if (!this.state.termsSigned) {
-      return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
+    } else if (iframeModeActive === false) {
+      if (!this.props.sessionState.bootstrap.authenticated) {
+        this.props.sessionState.bootstrap.doLogin();
+      } else if (!this.state.termsSigned) {
+        return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
+      } else {
+        return (
+          <Router basename="/floodsmart">
+            <App />
+          </Router>
+        );
+      }
     } else {
       return (
         <Router basename="/floodsmart">
