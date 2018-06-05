@@ -236,10 +236,6 @@ class TimeseriesChartComponent extends Component {
     const allEventsAreFinishedLoading =
       this._areAllRasterEventsLoaded(tile) &&
       this._areAllTimeseriesEventsLoaded(tile);
-    console.log(
-      "[!!!] allEventsAreFinishedLoading =",
-      allEventsAreFinishedLoading
-    );
     return allEventsAreFinishedLoading;
   }
 
