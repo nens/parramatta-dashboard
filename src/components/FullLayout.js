@@ -37,7 +37,7 @@ class FullLayout extends Component {
   }
   render() {
     const { id } = this.props.match.params;
-    const { getTileById, allTiles } = this.props;
+    const { getTileById, allTiles, iframeModeActive } = this.props;
     const { height, width } = this.state;
     const tilesById = getTileById(id);
     const selectedTile = tilesById[0];
@@ -101,7 +101,7 @@ class FullLayout extends Component {
     return (
       <DocumentTitle title={`Parramatta | ${selectedTile.title}`}>
         <div className={styles.FullLayout}>
-          {!isMobile ? (
+          {!isMobile && !iframeModeActive ? (
             <div
               className={styles.SidebarWrapper}
               style={{ height: height - 70 }}
@@ -184,23 +184,26 @@ class FullLayout extends Component {
               </Scrollbars>
             </div>
           ) : null}
-          <div className={styles.TitleBar}>
-            <NavLink to="/">
-              <div className={styles.BackButton}>
-                <i className="material-icons">arrow_back</i>
-              </div>
-            </NavLink>
-            <div className={styles.Title}>{selectedTile.title}</div>
-            {selectedTile.viewInLizardLink ? (
-              <div className={styles.ViewInLizardButton}>
-                <a href={selectedTile.viewInLizardLink} target="_blank">
-                  View in Lizard
-                </a>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
+
+          {!iframeModeActive || selectedTile.type === "timeseries" ? (
+            <div className={styles.TitleBar}>
+              <NavLink to={iframeModeActive ? "/full/5" : "/"}>
+                <div className={styles.BackButton}>
+                  <i className="material-icons">arrow_back</i>
+                </div>
+              </NavLink>
+              <div className={styles.Title}>{selectedTile.title}</div>
+              {selectedTile.viewInLizardLink && !iframeModeActive ? (
+                <div className={styles.ViewInLizardButton}>
+                  <a href={selectedTile.viewInLizardLink} target="_blank">
+                    View in Lizard
+                  </a>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : null}
           {element}
         </div>
       </DocumentTitle>
@@ -212,7 +215,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     allTiles: getAllTiles(state),
     getTileById: id => getTileById(state, id),
-    alarms: state.alarms
+    alarms: state.alarms,
+    iframeModeActive: state.iframeMode.active
   };
 };
 

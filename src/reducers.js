@@ -80,11 +80,12 @@ function legends(state = {}, action) {
 function iframeMode(state = { active: null }, action) {
   switch (action.type) {
     case SET_IFRAME_MODE:
+      const iframeModeActive = state.active || action.bool;
       console.log(
         "[!] reducers.iframeMode; setting state.iframeMode.active to",
-        action.bool
+        iframeModeActive
       );
-      return { active: state.active || action.bool };
+      return { active: iframeModeActive };
     default:
       return state;
   }

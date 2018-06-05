@@ -607,7 +607,11 @@ class TimeseriesChartComponent extends Component {
           <div
             style={{
               position: "relative",
-              margin: verticalOffset + "px calc(50% - 80px)"
+              margin:
+                verticalOffset +
+                "px calc(50% - " +
+                Math.round(SPINNER_SIZE / 2) +
+                "px)"
             }}
           >
             <MDSpinner size={SPINNER_SIZE} />
