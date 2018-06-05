@@ -268,8 +268,10 @@ export function getTimeseriesEvents(uuid, start, end, params) {
     const events = timeseriesEvents[uuid];
 
     if (events && events.start === start && events.end === end) {
+      console.log("[+] Not fetching new TS events (uuid =", uuid + ")");
       return; // Up to date.
     } else if (!events || !events.isFetching) {
+      console.log("[!] Fetching new TS events (uuid =", uuid + ")");
       // Fetch it
       dispatch(fetchTimeseriesEventsAction(uuid, start, end));
 
@@ -310,9 +312,14 @@ export function getRasterEvents(raster, geometry, start, end) {
     }
 
     if (events && events.start === start && events.end === end) {
+      console.log(
+        "[+] Not fetching new RASTER events (geomKey =",
+        geomKey + ")"
+      );
       // Up to date.
       return;
     } else if (!events || !events.isFetching) {
+      console.log("[!] Fetching new RASTER events (geomKey =", geomKey + ")");
       // Fetch it.
       dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
 

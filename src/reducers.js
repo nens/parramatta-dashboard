@@ -240,7 +240,6 @@ function alarms(
     case RECEIVE_ALARMS:
       // We received either raster or timeseries alarms; combine them both into one
       // 'data' array.
-      console.log("[!] RECEIVE_ALARMS => action.alarms =", action.alarms);
       const newState = { ...state };
       if (action.isTimeseries) {
         newState.timeseriesData = action.alarms
@@ -295,9 +294,12 @@ const getConfiguration = function(state) {
 export const getAllTiles = function(state) {
   const configuration = getConfiguration(state);
   if (configuration)
-    if (state.iframeMode.active)
-      if (configuration.publicTiles) return configuration.publicTiles;
-      else if (configuration.tiles) return configuration.tiles;
+    if (state.iframeMode.active) {
+      if (configuration.publicTiles)
+        return configuration.publicTiles.slice(0, 6); // slicing = DBG-ONLY!!!!!
+    } else {
+      if (configuration.tiles) return configuration.tiles.slice(0, 6); // slicing = DBG-ONLY!!!!!;
+    }
   return [];
 };
 

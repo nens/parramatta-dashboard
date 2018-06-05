@@ -92,13 +92,19 @@ export function combineEventSeries(series, axes, colors, full, legendStrings) {
 }
 
 export function getNow(configuredNow) {
+  // console.log("[F] getNow")
   if (configuredNow !== null) {
     return configuredNow;
   }
+  // console.log("### configuredNow =", configuredNow);
+
   // Use modulo operator so the "now" time only changes every five minutes, so we
   // don't have to fetch different data for each chart after every second.
   const currentTimestamp = new Date().getTime();
-  return new Date(currentTimestamp - currentTimestamp % 300);
+  // console.log("### currentTimestamp =", currentTimestamp);
+  const FIVE_MIN_IN_MS = 5 * 60 * 1000;
+  const newNow = new Date(currentTimestamp - currentTimestamp % FIVE_MIN_IN_MS);
+  return newNow;
 }
 
 export function currentPeriod(configuredNow, bootstrap) {
@@ -117,9 +123,10 @@ export function currentPeriod(configuredNow, bootstrap) {
     offsets = [-24, 12];
   }
 
+  const HOUR_IN_MS = 60 * 60 * 1000;
   const period = {
-    start: now.getTime() + offsets[0] * 3600 * 1000,
-    end: now.getTime() + offsets[1] * 3600 * 1000
+    start: now.getTime() + offsets[0] * HOUR_IN_MS,
+    end: now.getTime() + offsets[1] * HOUR_IN_MS
   };
 
   return period;
