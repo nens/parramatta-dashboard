@@ -253,10 +253,7 @@ class GridLayout extends Component {
       );
     }
 
-    // DBG-ONLY!!!!! //////////////////////////////////////////////////////////
-    const firstTiles = tiles.slice(0, 6); /////////////////////////////////////
-
-    const tileComponents = firstTiles.map(tile => {
+    const tileComponents = tiles.map(tile => {
       const shortTitle = tile.shortTitle || tile.title;
 
       switch (tile.type) {

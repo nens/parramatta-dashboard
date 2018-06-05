@@ -9,7 +9,9 @@ import styles from "./App.css";
 
 class App extends Component {
   componentDidMount() {
-    this.props.fetchAlarms();
+    if (!this.props.iframeModeActive) {
+      this.props.fetchAlarms();
+    }
   }
 
   render() {

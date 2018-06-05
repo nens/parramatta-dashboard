@@ -77,15 +77,20 @@ function legends(state = {}, action) {
   }
 }
 
-function iframeMode(state = { active: null }, action) {
+function iframeMode(state = { active: null, baseTileId: null }, action) {
   switch (action.type) {
     case SET_IFRAME_MODE:
       const iframeModeActive = state.active || action.bool;
       console.log(
-        "[!] reducers.iframeMode; setting state.iframeMode.active to",
+        "[!] reducers.iframeMode -- SET_IFRAME_MODE =>",
         iframeModeActive
       );
-      return { active: iframeModeActive };
+      return { ...state, active: iframeModeActive };
+    case RECEIVE_BOOTSTRAP_SUCCESS:
+      return {
+        ...state,
+        baseTileId: action.bootstrap.configuration.iframeBaseTileId
+      };
     default:
       return state;
   }
@@ -235,6 +240,7 @@ function alarms(
     case RECEIVE_ALARMS:
       // We received either raster or timeseries alarms; combine them both into one
       // 'data' array.
+      console.log("[!] RECEIVE_ALARMS => action.alarms =", action.alarms);
       const newState = { ...state };
       if (action.isTimeseries) {
         newState.timeseriesData = action.alarms
@@ -288,11 +294,11 @@ const getConfiguration = function(state) {
 
 export const getAllTiles = function(state) {
   const configuration = getConfiguration(state);
-  if (configuration && configuration.tiles) {
-    return configuration.tiles;
-  } else {
-    return [];
-  }
+  if (configuration)
+    if (state.iframeMode.active)
+      if (configuration.publicTiles) return configuration.publicTiles;
+      else if (configuration.tiles) return configuration.tiles;
+  return [];
 };
 
 export const getReferenceLevels = function(state) {

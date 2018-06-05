@@ -7,7 +7,9 @@ import styles from "./FullStatistics.css";
 
 class FullStatistics extends Component {
   componentDidMount() {
-    this.props.fetchAlarms();
+    if (!this.props.iframeModeActive) {
+      this.props.fetchAlarms();
+    }
   }
   getDatetimeString(utcRep) {
     if (utcRep === null) {
@@ -92,7 +94,8 @@ class FullStatistics extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    alarms: state.alarms
+    alarms: state.alarms,
+    iframeModeActive: state.iframeMode.active
   };
 };
 

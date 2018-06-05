@@ -614,7 +614,7 @@ class TimeseriesChartComponent extends Component {
                 "px)"
             }}
           >
-            <MDSpinner size={SPINNER_SIZE} />
+            <MDSpinner size={SPINNER_SIZE} singleColor={"#16a085"} />
           </div>
         )}
       </div>
@@ -653,7 +653,7 @@ class TimeseriesChartComponent extends Component {
               margin: "150px calc(50% - 30px)"
             }}
           >
-            <MDSpinner size={48} />
+            <MDSpinner size={48} singleColor={"#16a085"} />
           </div>
         )}
       </div>

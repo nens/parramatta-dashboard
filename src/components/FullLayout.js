@@ -37,7 +37,12 @@ class FullLayout extends Component {
   }
   render() {
     const { id } = this.props.match.params;
-    const { getTileById, allTiles, iframeModeActive } = this.props;
+    const {
+      getTileById,
+      allTiles,
+      iframeModeActive,
+      iframeModeBaseTileId
+    } = this.props;
     const { height, width } = this.state;
     const tilesById = getTileById(id);
     const selectedTile = tilesById[0];
@@ -187,7 +192,9 @@ class FullLayout extends Component {
 
           {!iframeModeActive || selectedTile.type === "timeseries" ? (
             <div className={styles.TitleBar}>
-              <NavLink to={iframeModeActive ? "/full/5" : "/"}>
+              <NavLink
+                to={iframeModeActive ? "/full/" + iframeModeBaseTileId : "/"}
+              >
                 <div className={styles.BackButton}>
                   <i className="material-icons">arrow_back</i>
                 </div>
@@ -216,7 +223,8 @@ const mapStateToProps = (state, ownProps) => {
     allTiles: getAllTiles(state),
     getTileById: id => getTileById(state, id),
     alarms: state.alarms,
-    iframeModeActive: state.iframeMode.active
+    iframeModeActive: state.iframeMode.active,
+    iframeModeBaseTileId: state.iframeMode.baseTileId
   };
 };
 
