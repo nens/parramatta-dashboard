@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import ReactDOM from "react-dom"; re-anbale for Plot hack??
+import MDSpinner from "react-md-spinner";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/en-au";
@@ -33,8 +34,15 @@ class TimeseriesChartComponent extends Component {
       componentHasMountedOnce: false,
       componentRef: "comp-" + parseInt(Math.random(), 10),
       wantedAxes: null,
-      combinedEvents: null
+      combinedEvents: null,
+      isFinishedFetchingRasterEvents: false,
+      isFinishedFetchingTimeseriesEvents: false
     };
+
+    this._areAllRasterEventsLoaded = this._areAllRasterEventsLoaded.bind(this);
+    this._areAlltimeseriesEventsLoaded = this._areAllTimeseriesEventsLoaded.bind(
+      this
+    );
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -69,7 +77,9 @@ class TimeseriesChartComponent extends Component {
         }
 
         const events = this.getRasterEvents(raster, intersection.geometry);
-        if (!events) return null;
+        if (!events) {
+          return null;
+        }
 
         return {
           uuid: intersection.uuid,
@@ -197,6 +207,40 @@ class TimeseriesChartComponent extends Component {
         );
       })
     );
+  }
+
+  _areAllRasterEventsLoaded(tile) {
+    let result = true;
+    if (tile.rasterIntersections) {
+      const SHORT_UUIDS = tile.rasterIntersections.map(is => is.uuid);
+      SHORT_UUIDS.forEach(
+        shortUuid =>
+          (result = result && this.props.areRasterEventsLoaded(shortUuid))
+      );
+    }
+    return result;
+  }
+
+  _areAllTimeseriesEventsLoaded(tile) {
+    let result = true;
+    if (tile.timeseries) {
+      tile.timeseries.forEach(
+        longUuid =>
+          (result = result && this.props.areTimeseriesEventsLoaded(longUuid))
+      );
+    }
+    return result;
+  }
+
+  areAllEventsLoaded(tile) {
+    const allEventsAreFinishedLoading =
+      this._areAllRasterEventsLoaded(tile) &&
+      this._areAllTimeseriesEventsLoaded(tile);
+    console.log(
+      "[!!!] allEventsAreFinishedLoading =",
+      allEventsAreFinishedLoading
+    );
+    return allEventsAreFinishedLoading;
   }
 
   alarmReferenceLines(axes) {
@@ -532,13 +576,18 @@ class TimeseriesChartComponent extends Component {
     );
 
     return this.props.isFull
-      ? this.renderFull(axes, combinedEvents, tile.thresholds)
-      : this.renderTile(axes, combinedEvents);
+      ? this.renderFull(axes, combinedEvents, tile)
+      : this.renderTile(axes, combinedEvents, tile);
   }
 
-  renderFull(axes, combinedEvents, thresholds) {
+  renderFull(axes, combinedEvents, tile) {
+    const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
     const layout = this.getLayout(this.state.wantedAxes, thresholds);
+
+    const SPINNER_SIZE = 48;
+    const verticalOffset =
+      Math.round(this.props.height / 2) - Math.round(SPINNER_SIZE / 2);
 
     return (
       <div
@@ -551,17 +600,28 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
-        <Plot
-          className="fullPlot"
-          data={combinedEvents}
-          layout={layout}
-          config={{ displayModeBar: true }}
-        />
+        {this.areAllEventsLoaded(tile) ? (
+          <Plot
+            className="fullPlot"
+            data={combinedEvents}
+            layout={layout}
+            config={{ displayModeBar: true }}
+          />
+        ) : (
+          <div
+            style={{
+              position: "relative",
+              margin: verticalOffset + "px calc(50% - 80px)"
+            }}
+          >
+            <MDSpinner size={SPINNER_SIZE} />
+          </div>
+        )}
       </div>
     );
   }
 
-  renderTile(axes, combinedEvents) {
+  renderTile(axes, combinedEvents, tile) {
     if (!this.props.height || !this.props.width || !window.Plotly) {
       return null;
     }
@@ -579,12 +639,23 @@ class TimeseriesChartComponent extends Component {
           height: this.props.height
         }}
       >
-        <Plot
-          className="gridPlot"
-          data={combinedEvents}
-          layout={this.getLayout(this.state.wantedAxes)}
-          config={{ displayModeBar: false }}
-        />
+        {this.areAllEventsLoaded(tile) ? (
+          <Plot
+            className="gridPlot"
+            data={combinedEvents}
+            layout={this.getLayout(this.state.wantedAxes)}
+            config={{ displayModeBar: false }}
+          />
+        ) : (
+          <div
+            style={{
+              position: "relative",
+              margin: "150px calc(50% - 30px)"
+            }}
+          >
+            <MDSpinner size={48} />
+          </div>
+        )}
       </div>
     );
   }
@@ -596,7 +667,44 @@ function mapStateToProps(state) {
     getRaster: makeGetter(state.rasters),
     timeseries: state.timeseries,
     rasterEvents: state.rasterEvents,
+    areRasterEventsLoaded: intersectionUuid => {
+      let shortIntersectionUuid, theRasterEventsObject;
+      if (!state.rasterEvents) {
+        console.log(
+          "[W] Cannot check for isFetching since state.rasterEvents =",
+          state.rasterEvents
+        );
+        return null;
+      } else {
+        for (let longUuid in state.rasterEvents) {
+          shortIntersectionUuid = longUuid.slice(0, 7);
+          if (shortIntersectionUuid === intersectionUuid) {
+            theRasterEventsObject = Object.values(
+              state.rasterEvents[longUuid]
+            )[0];
+            return theRasterEventsObject.isFetching === false;
+          }
+        }
+      }
+    },
     timeseriesEvents: state.timeseriesEvents,
+    areTimeseriesEventsLoaded: tsUuid => {
+      if (!state.timeseriesEvents) {
+        console.log(
+          "[W] Cannot check for isFetching since state.timeseriesEvents =",
+          state.timeseriesEvents
+        );
+        return null;
+      } else {
+        let theTimeseriesEventsObject;
+        for (let longUuid in state.timeseriesEvents) {
+          if (longUuid === tsUuid) {
+            theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
+            return theTimeseriesEventsObject.isFetching === false;
+          }
+        }
+      }
+    },
     alarms: state.alarms,
     configuredNow: getConfiguredNow(state),
     bootstrap: getBootstrap(state)
