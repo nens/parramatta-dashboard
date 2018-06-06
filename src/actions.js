@@ -35,6 +35,20 @@ export const RECEIVE_TIMESERIES_EVENTS = "RECEIVE_TIMESERIES_EVENTS";
 export const FETCH_RASTER_EVENTS = "FETCH_RASTER_EVENTS";
 export const RECEIVE_RASTER_EVENTS = "RECEIVE_RASTER_EVENTS";
 
+// iframe mode
+export const SET_IFRAME_MODE = "SET_IFRAME_MODE";
+
+const setIframeModeAction = bool => {
+  return {
+    type: SET_IFRAME_MODE,
+    bool
+  };
+};
+
+export function setIframeMode(dispatch, mustSetIframeMode) {
+  dispatch(setIframeModeAction(mustSetIframeMode));
+}
+
 export const receiveAlarmsAction = (alarms, isTimeseries) => {
   return {
     type: RECEIVE_ALARMS,

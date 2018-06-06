@@ -15,7 +15,8 @@ import {
   FETCH_BOOTSTRAP,
   FETCH_LEGEND,
   RECEIVE_BOOTSTRAP_ERROR,
-  RECEIVE_BOOTSTRAP_SUCCESS
+  RECEIVE_BOOTSTRAP_SUCCESS,
+  SET_IFRAME_MODE
 } from "./actions";
 import { MAP_BACKGROUNDS } from "./config";
 
@@ -71,6 +72,29 @@ function legends(state = {}, action) {
       }
       newState[action.uuid] = newLegend;
       return newState;
+    default:
+      return state;
+  }
+}
+
+function iframeMode(state = { active: null, baseTileId: null }, action) {
+  switch (action.type) {
+    case SET_IFRAME_MODE:
+      if (state.active === null) {
+        console.log("[!] Initializing iframeMode.active: null =>", action.bool);
+        return { ...state, active: action.bool };
+      }
+      return state;
+    case RECEIVE_BOOTSTRAP_SUCCESS:
+      if (state.baseTileId === null) {
+        const baseTileId = action.bootstrap.configuration.iframeBaseTileId;
+        console.log(
+          "[!] Initializing iframeMode.baseTileId: null =>",
+          baseTileId
+        );
+        return { ...state, baseTileId };
+      }
+      return state;
     default:
       return state;
   }
@@ -248,7 +272,8 @@ const rootReducer = combineReducers({
   timeseries,
   timeseriesEvents,
   rasterEvents,
-  settings
+  settings,
+  iframeMode
 });
 
 export default rootReducer;
@@ -272,11 +297,13 @@ const getConfiguration = function(state) {
 
 export const getAllTiles = function(state) {
   const configuration = getConfiguration(state);
-  if (configuration && configuration.tiles) {
-    return configuration.tiles;
-  } else {
-    return [];
-  }
+  if (configuration)
+    if (state.iframeMode.active) {
+      if (configuration.publicTiles) return configuration.publicTiles;
+    } else {
+      if (configuration.tiles) return configuration.tiles;
+    }
+  return [];
 };
 
 export const getReferenceLevels = function(state) {

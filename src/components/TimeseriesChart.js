@@ -236,10 +236,6 @@ class TimeseriesChartComponent extends Component {
     const allEventsAreFinishedLoading =
       this._areAllRasterEventsLoaded(tile) &&
       this._areAllTimeseriesEventsLoaded(tile);
-    console.log(
-      "[!!!] allEventsAreFinishedLoading =",
-      allEventsAreFinishedLoading
-    );
     return allEventsAreFinishedLoading;
   }
 
@@ -594,6 +590,7 @@ class TimeseriesChartComponent extends Component {
         id={this.state.componentRef}
         ref={this.state.componentRef}
         style={{
+          overflowY: "hidden",
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
           width: this.props.width,
@@ -611,10 +608,14 @@ class TimeseriesChartComponent extends Component {
           <div
             style={{
               position: "relative",
-              margin: verticalOffset + "px calc(50% - 80px)"
+              margin:
+                verticalOffset +
+                "px calc(50% - " +
+                Math.round(SPINNER_SIZE / 2) +
+                "px)"
             }}
           >
-            <MDSpinner size={SPINNER_SIZE} />
+            <MDSpinner size={SPINNER_SIZE} singleColor={"#16a085"} />
           </div>
         )}
       </div>
@@ -653,7 +654,7 @@ class TimeseriesChartComponent extends Component {
               margin: "150px calc(50% - 30px)"
             }}
           >
-            <MDSpinner size={48} />
+            <MDSpinner size={48} singleColor={"#16a085"} />
           </div>
         )}
       </div>

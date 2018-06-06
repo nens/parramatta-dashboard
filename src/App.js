@@ -9,7 +9,9 @@ import styles from "./App.css";
 
 class App extends Component {
   componentDidMount() {
-    this.props.fetchAlarms();
+    if (!this.props.iframeModeActive) {
+      this.props.fetchAlarms();
+    }
   }
 
   render() {
@@ -22,10 +24,16 @@ class App extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    iframeModeActive: state.iframeMode.active
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     fetchAlarms: () => fetchAlarms(dispatch)
   };
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

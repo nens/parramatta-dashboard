@@ -44,7 +44,7 @@ class TimeseriesTileComponent extends Component {
   }
 
   render() {
-    let { width, height } = this.props;
+    let { width, height, iframeModeActive } = this.props;
 
     if (!width && !height) {
       if (this.props.isFull) {
@@ -56,11 +56,15 @@ class TimeseriesTileComponent extends Component {
       }
     }
 
+    const marginLeft = iframeModeActive ? 0 : this.props.marginLeft;
+
     const newProps = {
       ...this.props,
-      width: width - this.props.marginLeft,
+      width: width - marginLeft,
       height: height - this.props.marginTop
     };
+
+    newProps.marginLeft = marginLeft;
 
     return (
       <div
@@ -80,7 +84,8 @@ function mapStateToProps(state) {
   return {
     rasters: state.rasters,
     getTimeseriesMetadata: uuid => state.timeseries[uuid],
-    getRaster: makeGetter(state.rasters)
+    getRaster: makeGetter(state.rasters),
+    iframeModeActive: state.iframeMode.active
   };
 }
 

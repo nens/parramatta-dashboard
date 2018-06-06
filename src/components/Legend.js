@@ -107,8 +107,15 @@ class Legend extends Component {
 
   render() {
     const { width, isOpen } = this.state;
-    const { drawRaster, drawVectorIcons, legends, tile, uuid } = this.props;
-    const isMobile = width < 700 ? true : false;
+    const {
+      drawRaster,
+      drawVectorIcons,
+      legends,
+      tile,
+      uuid,
+      iframeModeActive
+    } = this.props;
+    const isMobile = !iframeModeActive && width < 700 ? true : false;
     const legendsList = Map(legends).toJS();
     const legendSteps =
       drawRaster && legendsList[uuid] && legendsList[uuid].data
@@ -176,7 +183,8 @@ class Legend extends Component {
 
 function mapStateToProps(state) {
   return {
-    legends: state.legends
+    legends: state.legends,
+    iframeModeActive: state.iframeMode.active
   };
 }
 
