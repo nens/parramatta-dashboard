@@ -299,10 +299,9 @@ export const getAllTiles = function(state) {
   const configuration = getConfiguration(state);
   if (configuration)
     if (state.iframeMode.active) {
-      if (configuration.publicTiles)
-        return configuration.publicTiles.slice(0, 6); // slicing = DBG-ONLY!!!!!
+      if (configuration.publicTiles) return configuration.publicTiles;
     } else {
-      if (configuration.tiles) return configuration.tiles.slice(0, 6); // slicing = DBG-ONLY!!!!!;
+      if (configuration.tiles) return configuration.tiles;
     }
   return [];
 };
