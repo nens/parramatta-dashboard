@@ -222,7 +222,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     allTiles: getAllTiles(state),
     getTileById: id => getTileById(state, id),
-    alarms: state.alarms,
+    alarms: state.iframeMode.active ? [] : state.alarms,
     iframeModeActive: state.iframeMode.active,
     iframeModeBaseTileId: state.iframeMode.baseTileId
   };

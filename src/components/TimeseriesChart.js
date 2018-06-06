@@ -590,6 +590,7 @@ class TimeseriesChartComponent extends Component {
         id={this.state.componentRef}
         ref={this.state.componentRef}
         style={{
+          overflowY: "hidden",
           marginTop: this.props.marginTop,
           marginLeft: this.props.marginLeft,
           width: this.props.width,

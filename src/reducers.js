@@ -80,17 +80,21 @@ function legends(state = {}, action) {
 function iframeMode(state = { active: null, baseTileId: null }, action) {
   switch (action.type) {
     case SET_IFRAME_MODE:
-      const iframeModeActive = state.active || action.bool;
-      console.log(
-        "[!] reducers.iframeMode -- SET_IFRAME_MODE =>",
-        iframeModeActive
-      );
-      return { ...state, active: iframeModeActive };
+      if (state.active === null) {
+        console.log("[!] Initializing iframeMode.active: null =>", action.bool);
+        return { ...state, active: action.bool };
+      }
+      return state;
     case RECEIVE_BOOTSTRAP_SUCCESS:
-      return {
-        ...state,
-        baseTileId: action.bootstrap.configuration.iframeBaseTileId
-      };
+      if (state.baseTileId === null) {
+        const baseTileId = action.bootstrap.configuration.iframeBaseTileId;
+        console.log(
+          "[!] Initializing iframeMode.baseTileId: null =>",
+          baseTileId
+        );
+        return { ...state, baseTileId };
+      }
+      return state;
     default:
       return state;
   }
