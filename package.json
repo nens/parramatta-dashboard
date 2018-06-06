@@ -1,6 +1,6 @@
 {
   "name": "parramatta-dashboard",
-  "version": "0.2.29",
+  "version": "0.2.30",
   "repository": {
     "type": "git",
     "name": "nens/parramatta-dashboard",
@@ -64,9 +64,7 @@
     "react-intl": "^2.4.0",
     "react-leaflet": "^1.7.0",
     "react-md-spinner": "^0.2.5",
-
     "react-plotly.js": "",
-
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-tap-event-plugin": "^3.0.2",
