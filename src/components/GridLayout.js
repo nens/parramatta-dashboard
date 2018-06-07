@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import DocumentTitle from "react-document-title";
 import { connect } from "react-redux";
-import ReactGridLayout from "react-grid-layout";
 import Tile from "./Tile";
 import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
@@ -25,8 +24,6 @@ class GridLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      canMove: false,
-      layout: null,
       width: window.innerWidth,
       height: window.innerHeight,
       settingsMenu: false,
@@ -34,37 +31,6 @@ class GridLayout extends Component {
     };
     this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
-  }
-  componentWillMount() {
-    if (!this.state.layout) {
-      this.setState({
-        mobileLayout: this.props.tiles.map((tile, i) => {
-          const y = 8;
-          return {
-            i: `${i}`,
-            x: 0,
-            y: i * 8,
-            w: 12,
-            h: y,
-            minW: 2,
-            maxW: 12
-          };
-        }),
-        layout: this.props.tiles.map((tile, i) => {
-          const w = 4;
-          const y = 8;
-          return {
-            i: `${i}`,
-            x: (i * 4) % 12,
-            y: Math.floor(i / 6) * y,
-            w: w,
-            h: y,
-            minW: 2,
-            maxW: 4
-          };
-        })
-      });
-    }
   }
   componentDidMount() {
     window.addEventListener("resize", this.handleUpdateDimensions, false);
@@ -99,7 +65,7 @@ class GridLayout extends Component {
   }
 
   render() {
-    const { width, height, canMove, settingsMenu, settingsMenuId } = this.state;
+    const { width, height, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
 
     const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
@@ -364,20 +330,22 @@ class GridLayout extends Component {
             )}
             <Ink />
           </div>
-          <ReactGridLayout
-            isDraggable={canMove}
-            isResizable={canMove}
-            className="layout"
-            layout={width < 700 ? this.state.mobileLayout : this.state.layout}
-            cols={12}
-            rowHeight={30}
-            width={width - 20 /* This eleminates the horizontal scrollbar */}
-            draggableHandle=".drag-handle"
+          <div
+            style={{
+              display: "grid",
+              width: "calc(100% - 10px)",
+              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+              gridGap: 10
+            }}
           >
             {tileComponents.map((component, i) => {
-              return <div key={i}>{component}</div>;
+              return (
+                // <Waypoint key={i} onEnter={(e) => console.log("entering", e)}>
+                <div key={i}>{component}</div>
+                // </Waypoint>
+              );
             })}
-          </ReactGridLayout>
+          </div>
           <footer className={styles.Footer}>Nelen &amp; Schuurmans</footer>
         </div>
       </DocumentTitle>
