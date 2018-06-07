@@ -340,9 +340,7 @@ class GridLayout extends Component {
           >
             {tileComponents.map((component, i) => {
               return (
-                // <Waypoint key={i} onEnter={(e) => console.log("entering", e)}>
                 <div key={i}>{component}</div>
-                // </Waypoint>
               );
             })}
           </div>
