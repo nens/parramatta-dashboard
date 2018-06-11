@@ -20,6 +20,8 @@ import {
 import { getCurrentMapBackground } from "../reducers";
 import { MAP_BACKGROUNDS } from "../config";
 
+import debounce from "lodash/debounce";
+
 class GridLayout extends Component {
   constructor(props) {
     super(props);
@@ -33,8 +35,12 @@ class GridLayout extends Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
   componentDidMount() {
-    window.addEventListener("resize", this.handleUpdateDimensions, false);
-    document.addEventListener("keydown", this.handleKeyPress, false);
+    window.addEventListener(
+      "resize",
+      debounce(this.handleUpdateDimensions),
+      false
+    );
+    document.addEventListener("keydown", debounce(this.handleKeyPress), false);
   }
   componentWillUnMount() {
     window.removeEventListener("resize", this.handleUpdateDimensions, false);
@@ -339,9 +345,7 @@ class GridLayout extends Component {
             }}
           >
             {tileComponents.map((component, i) => {
-              return (
-                <div key={i}>{component}</div>
-              );
+              return <div key={i}>{component}</div>;
             })}
           </div>
           <footer className={styles.Footer}>Nelen &amp; Schuurmans</footer>
