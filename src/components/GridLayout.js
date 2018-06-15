@@ -289,6 +289,8 @@ class GridLayout extends Component {
       }
     });
 
+    const TILE_WIDTH = window.innerWidth / 3 - 20;
+
     return (
       <DocumentTitle title="Parramatta | Dashboard">
         <div className={styles.GridLayout}>
@@ -340,17 +342,37 @@ class GridLayout extends Component {
             )}
             <Ink />
           </div>
-          <div
-            style={{
-              display: "grid",
-              width: "calc(100% - 10px)",
-              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-              gridGap: 10
-            }}
-          >
-            {tileComponents.map((component, i) => {
-              return <div key={i}>{component}</div>;
-            })}
+          <div>
+            {width > 700
+              ? tileComponents.map((tc, i) => {
+                  return (
+                    <div
+                      style={{
+                        width: TILE_WIDTH,
+                        height: 300,
+                        margin: 5,
+                        float: "left"
+                      }}
+                      key={i}
+                    >
+                      {tc}
+                    </div>
+                  );
+                })
+              : tileComponents.map((tc, i) => {
+                  return (
+                    <div
+                      style={{
+                        width: "calc(100% - 15px)",
+                        height: 300,
+                        margin: 5
+                      }}
+                      key={i}
+                    >
+                      {tc}
+                    </div>
+                  );
+                })}
           </div>
           <footer className={styles.Footer}>Nelen &amp; Schuurmans</footer>
         </div>
