@@ -212,7 +212,7 @@ function settings(
   state = {
     configuredDate: null,
     configuredTime: null,
-    mapBackground: MAP_BACKGROUNDS[0]
+    mapBackground: MAP_BACKGROUNDS[1]
   },
   action
 ) {
