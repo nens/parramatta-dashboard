@@ -17,8 +17,12 @@
 }
 @media only screen and (max-width: 700px) {
   .HeaderImage {
-    transform-origin: left;
-    transform: scale(0.85);
+    -webkit-transform-origin: left;
+        -ms-transform-origin: left;
+            transform-origin: left;
+    -webkit-transform: scale(0.85);
+        -ms-transform: scale(0.85);
+            transform: scale(0.85);
   }
   .SecondaryHeaderImage {
     display: none;
@@ -40,7 +44,8 @@
   width: 300px;
   height: 300px;
   background-color: #fff;
-  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.29);
+  -webkit-box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.29);
+          box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.29);
   border: 2px solid #fff;
 }
 .TileTitle {
@@ -58,7 +63,8 @@
   left: 10px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
   width: calc(100% - 40px);
   font-size: 14px;
 }
@@ -71,10 +77,20 @@
 .LogoutButton {
   cursor: pointer;
   position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: -ms-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   right: 10px;
   top: 10px;
   width: 145px;
@@ -82,12 +98,15 @@
   text-align: center;
   background: #ffffff;
   color: #333;
-  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+          box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
 }
 @media only screen and (max-width: 700px) {
   .LogoutButton {
     width: 60px;
-    transform: scale(0.85);
+    -webkit-transform: scale(0.85);
+        -ms-transform: scale(0.85);
+            transform: scale(0.85);
   }
 }
 .LogoutButton i {
@@ -103,10 +122,19 @@
 .SettingsButton {
   cursor: pointer;
   position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   right: 160px;
   top: 10px;
   width: 145px;
@@ -114,13 +142,16 @@
   text-align: center;
   background: #ffffff;
   color: #333;
-  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+          box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
 }
 @media only screen and (max-width: 700px) {
   .SettingsButton {
     right: 70px;
     width: 60px;
-    transform: scale(0.85);
+    -webkit-transform: scale(0.85);
+        -ms-transform: scale(0.85);
+            transform: scale(0.85);
   }
 }
 .SettingsButton i {
@@ -159,23 +190,33 @@
 
 .SettingsInner {
   padding-top: 20px;
+  display: -ms-grid;
   display: grid;
-  grid-template-areas: "nav content";
+      grid-template-areas: "nav content";
 
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: auto 1fr;
+  -ms-grid-columns: 250px 1fr;
+
+      grid-template-columns: 250px 1fr;
+  -ms-grid-rows: auto 1fr;
+      grid-template-rows: auto 1fr;
   grid-gap: 10px;
   padding-top: 20px;
 }
 
 .SettingsInner nav {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
   grid-area: nav;
   margin-left: 0.5rem;
 }
 .SettingsInner nav div {
   text-transform: uppercase;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: left;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
   cursor: pointer;
   margin: 0 5px 10px 0;
 }
@@ -184,6 +225,8 @@
 }
 
 .SettingsInner main {
+  -ms-grid-row: 1;
+  -ms-grid-column: 2;
   grid-area: content;
   border-left: 1px solid #ccc;
   padding: 0 0 0 20px;
@@ -191,8 +234,10 @@
 
 @media (max-width: 768px) {
   .SettingsInner {
-    grid-template-columns: 50px 1fr;
-    grid-template-rows: auto 1fr;
+    -ms-grid-columns: 50px 1fr;
+        grid-template-columns: 50px 1fr;
+    -ms-grid-rows: auto 1fr;
+        grid-template-rows: auto 1fr;
     grid-gap: 10px;
     height: 100vh;
   }
@@ -202,7 +247,9 @@
     border: none;
   }
   .SettingsInner nav div {
-    justify-content: flex-end;
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
   }
   .SettingsInner nav span {
     display: none;
@@ -214,8 +261,12 @@
 }
 
 .DateTimePicker {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: start;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
 }
 .DateTimePicker div {
   padding: 0 20px 0 0;
@@ -231,4 +282,49 @@
   font-weight: 700;
   font-size: 24px;
   font-style: normal;
+}
+.SettingsMenuItemsWrapper {
+  height: 55px;
+  background-color: #239F85;  
+}
+.SettingsMenuItem {
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  color: #fff;
+}
+.SettingsMenuItem > i {
+  position: relative;
+  bottom: -6px;
+}
+
+.OKButton {
+  display: inline-block;
+  border: none;
+  padding: 1rem 2rem;
+  margin: 0;
+  text-decoration: none;
+  background: #0069ed;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, 
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.OKButton:hover {
+  background: #0053ba;
+}
+.OKButton:focus {
+  background: #0053ba;
+}
+.OKButton:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+}
+.OKButton:active {
+    transform: scale(0.99);
 }

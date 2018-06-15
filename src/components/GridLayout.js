@@ -94,132 +94,136 @@ class GridLayout extends Component {
             >
               <i className="material-icons">close</i>
             </div>
-
-            <div className={styles.SettingsInner}>
-              <nav style={{ height: height - 100 }}>
-                <div
-                  onClick={() =>
-                    this.setState({
-                      settingsMenuId: 0
-                    })}
+            <div className={styles.SettingsMenuItemsWrapper}>
+              <div
+                className={styles.SettingsMenuItem}
+                onClick={() =>
+                  this.setState({
+                    settingsMenuId: 0
+                  })}
+              >
+                <i className="material-icons">access_time</i>
+                <span
+                  className={`${settingsMenuId === 0
+                    ? styles.ActiveMenu
+                    : null}`}
                 >
-                  <i className="material-icons">access_time</i>
-                  <span
-                    className={`${settingsMenuId === 0
-                      ? styles.ActiveMenu
-                      : null}`}
-                  >
-                    Date/Time settings
-                  </span>
-                </div>
+                  Date/Time settings
+                </span>
+              </div>
 
-                <div
-                  onClick={() =>
-                    this.setState({
-                      settingsMenuId: 1
-                    })}
+              <div
+                className={styles.SettingsMenuItem}
+                onClick={() =>
+                  this.setState({
+                    settingsMenuId: 1
+                  })}
+              >
+                <i className="material-icons">layers</i>
+                <span
+                  className={`${settingsMenuId === 1
+                    ? styles.ActiveMenu
+                    : null}`}
                 >
-                  <i className="material-icons">layers</i>
-                  <span
-                    className={`${settingsMenuId === 1
-                      ? styles.ActiveMenu
-                      : null}`}
-                  >
-                    Background layers
-                  </span>
-                </div>
+                  Background layers
+                </span>
+              </div>
 
-                <div
-                  className={styles.ContactInfoLogoParent}
-                  onClick={() =>
-                    this.setState({
-                      settingsMenuId: 2
-                    })}
+              <div
+                className={styles.SettingsMenuItem}
+                onClick={() =>
+                  this.setState({
+                    settingsMenuId: 2
+                  })}
+              >
+                <i className="material-icons">copyright</i>
+                <span
+                  className={`${settingsMenuId === 2
+                    ? styles.ActiveMenu
+                    : null}`}
                 >
-                  <i className={styles.ContactInfoLogo}>&copy;</i>
-                  <span
-                    className={`${settingsMenuId === 2
-                      ? styles.ActiveMenu
-                      : null}`}
-                  >
-                    Contact
-                  </span>
-                </div>
-              </nav>
-              <main style={{ height: height - 100 }}>
-                {settingsMenuId === 0 ? (
-                  <div>
-                    <h4 style={{ padding: 0, margin: 0 }}>
-                      Date/time settings &nbsp;
-                      <button onClick={this.props.resetDateTime}>Reset</button>
-                    </h4>
-                    <hr />
-                    <div className={styles.DateTimePicker}>
-                      <div>
-                        <h5>Date (e.g. "23/12/2018")</h5>
-                        <input
-                          type="date"
-                          name="date"
-                          value={this.props.date}
-                          onChange={event =>
-                            this.props.changeDate(event.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <h5>Time (e.g. "09:15 AM")</h5>
-                        <input
-                          type="time"
-                          name="time"
-                          value={this.props.time}
-                          onChange={event =>
-                            this.props.changeTime(event.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-                {settingsMenuId === 1 ? (
-                  <div>
-                    <h4 style={{ padding: 0, margin: 0 }}>Map settings</h4>
-                    <hr />
-                    <div className={styles.MapSettings}>
-                      <p>
-                        There are {MAP_BACKGROUNDS
-                          ? MAP_BACKGROUNDS.length
-                          : 0}{" "}
-                        available map background(s):
-                        {MAP_BACKGROUNDS[0].description} and{" "}
-                        {MAP_BACKGROUNDS[1].description}.
-                      </p>
-                      <p>
-                        Currently selected:&nbsp;
-                        <strong>
-                          {this.props.currentMapBackground.description}
-                        </strong>.
-                      </p>
-                      <button onClick={this.toggleMapBackground.bind(this)}>
-                        Switch
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
-
-                {settingsMenuId === 2 ? (
-                  <div>
-                    <h4 style={{ padding: 0, margin: 0 }}>Contact info</h4>
-                    <hr />
-                    <p>
-                      For software issues with the FloodSmart Parramatta System
-                      please contact Nelen & Schuurmans on {nensMail()}. For any
-                      other issues, or suggestions for improvements to the
-                      Parramatta Floodsmart System system, please contact Chris
-                      Gooch on tel.&nbsp;
-                      {chrisTel()} or email {chrisMail()}
-                    </p>
-                  </div>
-                ) : null}
-              </main>
+                  Contact
+                </span>
+              </div>
             </div>
+
+            <main style={{ height: height - 100 }}>
+              {settingsMenuId === 0 ? (
+                <div style={{padding: 20}}>
+                  <h4 style={{ padding: 0, margin: 0 }}>
+                    Date/time settings &nbsp;
+                    <button onClick={this.props.resetDateTime}>Reset</button>
+                  </h4>
+                  <hr />
+                  <div className={styles.DateTimePicker}>
+                    <div>
+                      <h5>Date (e.g. "23/12/2018")</h5>
+                      <input
+                        type="date"
+                        name="date"
+                        value={this.props.date}
+                        onChange={event =>
+                          this.props.changeDate(event.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <h5>Time (e.g. "09:15 AM")</h5>
+                      <input
+                        type="time"
+                        name="time"
+                        value={this.props.time}
+                        onChange={event =>
+                          this.props.changeTime(event.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <br/>
+                  <button className={styles.OKButton} onClick={() => this.setState({ settingsMenu: false })}>OK</button>
+                </div>
+              ) : null}
+              {settingsMenuId === 1 ? (
+                <div style={{padding: 20}}>
+                  <h4 style={{ padding: 0, margin: 0 }}>Map settings</h4>
+                  <hr />
+                  <div className={styles.MapSettings}>
+                    <p>
+                      There are {MAP_BACKGROUNDS
+                        ? MAP_BACKGROUNDS.length
+                        : 0}{" "}
+                      available map background(s):
+                      {MAP_BACKGROUNDS[0].description} and{" "}
+                      {MAP_BACKGROUNDS[1].description}.
+                    </p>
+                    <p>
+                      Currently selected:&nbsp;
+                      <strong>
+                        {this.props.currentMapBackground.description}
+                      </strong>.
+                    </p>
+                    <button onClick={this.toggleMapBackground.bind(this)}>
+                      Switch
+                    </button>
+                  </div>
+                  <br/>
+                  <button className={styles.OKButton} onClick={() => this.setState({ settingsMenu: false })}>OK</button>                  
+                </div>
+              ) : null}
+
+              {settingsMenuId === 2 ? (
+                <div style={{padding: 20}}>
+                  <h4 style={{ padding: 0, margin: 0 }}>Contact info</h4>
+                  <hr />
+                  <p>
+                    For software issues with the FloodSmart Parramatta System
+                    please contact Nelen & Schuurmans on {nensMail()}. For any
+                    other issues, or suggestions for improvements to the
+                    Parramatta Floodsmart System system, please contact Chris
+                    Gooch on tel.&nbsp;
+                    {chrisTel()} or email {chrisMail()}
+                  </p>
+                </div>
+              ) : null}
+            </main>
           </div>
         </DocumentTitle>
       );
