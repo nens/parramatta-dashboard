@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/nens/parramatta-dashboard/compare/v0.1.6...v0.3.0) (2018-06-15)
+
+
+### Bug Fixes
+
+* **Chart:** Removed gradient, Area->Line ([#40](https://github.com/nens/parramatta-dashboard/issues/40)) ([1279181](https://github.com/nens/parramatta-dashboard/commit/1279181))
+* **CSS:** Adds media query to disable view in lizard button ([#39](https://github.com/nens/parramatta-dashboard/issues/39)) ([8ed712d](https://github.com/nens/parramatta-dashboard/commit/8ed712d))
+* **iframe:** Position fix ([feeddeb](https://github.com/nens/parramatta-dashboard/commit/feeddeb))
+* **Map:** Adds colored SVG markers using divIcon. ([#43](https://github.com/nens/parramatta-dashboard/issues/43)) ([598d6fc](https://github.com/nens/parramatta-dashboard/commit/598d6fc))
+* **ServiceWorker:** This disables the serviceWorker. ([#48](https://github.com/nens/parramatta-dashboard/issues/48)) ([2e19975](https://github.com/nens/parramatta-dashboard/commit/2e19975))
+* **Sidebar:** Adds overflow:hidden to the sidebar tiles ([9c7598a](https://github.com/nens/parramatta-dashboard/commit/9c7598a))
+* **Styling:** Adds grey background when grid tile is displaying an image. Adds overflow:hidden to Tile css ([da3b306](https://github.com/nens/parramatta-dashboard/commit/da3b306))
+* **TermsOrLogin:** Always shows terms modal on page load (but for development you can set termsSigned manually in localstorage) ([#41](https://github.com/nens/parramatta-dashboard/issues/41)) ([b23d77f](https://github.com/nens/parramatta-dashboard/commit/b23d77f))
+
+
+### Features
+
+* **GridLayout:** Add datetimepicker to settings. ([#66](https://github.com/nens/parramatta-dashboard/issues/66)) ([c37600c](https://github.com/nens/parramatta-dashboard/commit/c37600c))
+
+
+
 <a name="0.2.30"></a>
 ## [0.2.30](https://github.com/nens/parramatta-dashboard/compare/v0.2.29...v0.2.30) (2018-06-06)
 
