@@ -18,7 +18,7 @@ import {
   setMapBackgroundAction
 } from "../actions";
 import { getCurrentMapBackground } from "../reducers";
-import { MAP_BACKGROUNDS } from "../config";
+import { MAP_BACKGROUNDS, MOBILE_BREAKPOINT } from "../config";}
 
 import debounce from "lodash/debounce";
 
@@ -314,7 +314,7 @@ class GridLayout extends Component {
             className={styles.LogoCombo}
           />
 
-          {width > 700 ? (
+          {width > MOBILE_BREAKPOINT ? (
             <div
               className={styles.SettingsButton}
               onClick={() =>
@@ -333,7 +333,7 @@ class GridLayout extends Component {
             className={styles.LogoutButton}
             onClick={() => this.props.session.bootstrap.doLogout()}
           >
-            {width > 700 ? (
+            {width > MOBILE_BREAKPOINT ? (
               <span>
                 <i className="material-icons">lock</i>&nbsp;&nbsp;Log out
               </span>
@@ -343,7 +343,7 @@ class GridLayout extends Component {
             <Ink />
           </div>
           <div>
-            {width > 700
+            {width > MOBILE_BREAKPOINT
               ? tileComponents.map((tc, i) => {
                   return (
                     <div

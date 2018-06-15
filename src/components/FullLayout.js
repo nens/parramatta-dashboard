@@ -4,6 +4,7 @@ import timeIcon from "../graphics/icon-chart.svg";
 import radarIcon from "../graphics/icon-radar.svg";
 import DocumentTitle from "react-document-title";
 import StatisticsTile from "./StatisticsTile";
+import { MOBILE_BREAKPOINT } from "../config";}
 import Map from "./Map";
 import FullStatistics from "./FullStatistics";
 import ExternalTile from "./ExternalTile";
@@ -46,7 +47,7 @@ class FullLayout extends Component {
     const { height, width } = this.state;
     const tilesById = getTileById(id);
     const selectedTile = tilesById[0];
-    const isMobile = width < 700 ? true : false;
+    const isMobile = width < MOBILE_BREAKPOINT ? true : false;
     if (tilesById.length === 0) {
       return <div />;
     }

@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { Map } from "immutable";
 import { getLegend } from "../actions";
+import { MOBILE_BREAKPOINT } from "../config";}
 import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import styles from "./Legend.css";
@@ -115,7 +116,7 @@ class Legend extends Component {
       uuid,
       iframeModeActive
     } = this.props;
-    const isMobile = !iframeModeActive && width < 700 ? true : false;
+    const isMobile = !iframeModeActive && width < MOBILE_BREAKPOINT ? true : false;
     const legendsList = Map(legends).toJS();
     const legendSteps =
       drawRaster && legendsList[uuid] && legendsList[uuid].data
