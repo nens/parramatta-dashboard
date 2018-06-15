@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { Map } from "immutable";
 import { getLegend } from "../actions";
-import { MOBILE_BREAKPOINT } from "../config";}
+import { MOBILE_BREAKPOINT } from "../config";
 import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import styles from "./Legend.css";

@@ -18,7 +18,7 @@ import {
   setMapBackgroundAction
 } from "../actions";
 import { getCurrentMapBackground } from "../reducers";
-import { MAP_BACKGROUNDS, MOBILE_BREAKPOINT } from "../config";}
+import { MAP_BACKGROUNDS, MOBILE_BREAKPOINT } from "../config";
 
 import debounce from "lodash/debounce";
 

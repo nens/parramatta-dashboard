@@ -4,7 +4,7 @@ import timeIcon from "../graphics/icon-chart.svg";
 import radarIcon from "../graphics/icon-radar.svg";
 import DocumentTitle from "react-document-title";
 import StatisticsTile from "./StatisticsTile";
-import { MOBILE_BREAKPOINT } from "../config";}
+import { MOBILE_BREAKPOINT } from "../config";
 import Map from "./Map";
 import FullStatistics from "./FullStatistics";
 import ExternalTile from "./ExternalTile";
