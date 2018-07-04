@@ -16,6 +16,11 @@ import getParameterByName from "./util/getQueryParams.js";
 // import FullLayout from "./components/FullLayout";
 // import { Route } from "react-router-dom";
 
+let logiframe = getParameterByName("iframe");
+console.log('getParameterByName("iframe")');
+console.log(logiframe);
+console.log(typeof logiframe);
+
 class TermsOrLoginOrAppComponent extends Component {
   constructor() {
     super();

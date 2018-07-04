@@ -116,16 +116,22 @@ class Legend extends Component {
       uuid,
       iframeModeActive
     } = this.props;
-    const isMobile = !iframeModeActive && width < MOBILE_BREAKPOINT ? true : false;
+    const isMobile =
+      !iframeModeActive && width < MOBILE_BREAKPOINT ? true : false;
     const legendsList = Map(legends).toJS();
     const legendSteps =
       drawRaster && legendsList[uuid] && legendsList[uuid].data
         ? legendsList[uuid].data.legend
         : [];
 
+    console.log("iframeModeActive " + iframeModeActive);
+
+    let legendCssClass = getLegendCssClass(iframeModeActive, isMobile);
+
     return (
       <div
-        className={isMobile ? styles.LegendMobile : styles.Legend}
+        //className={isMobile ? styles.LegendMobile : styles.Legend}
+        className={legendCssClass}
         key={"legend-" + tile.id}
         style={{
           bottom: isOpen ? 0 : -300
@@ -194,6 +200,16 @@ function mapDispatchToProps(dispatch) {
     doGetLegend: (uuid, wmsInfo, styles) =>
       dispatch(getLegend(uuid, wmsInfo, styles))
   };
+}
+
+function getLegendCssClass(iframeModeActive, isMobile) {
+  if (iframeModeActive === true) {
+    return styles.legendIframe;
+  } else if (isMobile === true) {
+    return styles.LegendMobile;
+  } else {
+    return styles.Legend;
+  }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Legend));
