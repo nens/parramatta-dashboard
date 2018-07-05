@@ -106,6 +106,16 @@ class Legend extends Component {
     ));
   }
 
+  getLegendCssClass(iframeModeActive, isMobile) {
+    if (iframeModeActive === true) {
+      return styles.legendIframe;
+    } else if (isMobile === true) {
+      return styles.LegendMobile;
+    } else {
+      return styles.Legend;
+    }
+  }
+
   render() {
     const { width, isOpen } = this.state;
     const {
@@ -123,14 +133,10 @@ class Legend extends Component {
       drawRaster && legendsList[uuid] && legendsList[uuid].data
         ? legendsList[uuid].data.legend
         : [];
-
-    console.log("iframeModeActive " + iframeModeActive);
-
-    let legendCssClass = getLegendCssClass(iframeModeActive, isMobile);
+    const legendCssClass = this.getLegendCssClass(iframeModeActive, isMobile);
 
     return (
       <div
-        //className={isMobile ? styles.LegendMobile : styles.Legend}
         className={legendCssClass}
         key={"legend-" + tile.id}
         style={{
@@ -200,16 +206,6 @@ function mapDispatchToProps(dispatch) {
     doGetLegend: (uuid, wmsInfo, styles) =>
       dispatch(getLegend(uuid, wmsInfo, styles))
   };
-}
-
-function getLegendCssClass(iframeModeActive, isMobile) {
-  if (iframeModeActive === true) {
-    return styles.legendIframe;
-  } else if (isMobile === true) {
-    return styles.LegendMobile;
-  } else {
-    return styles.Legend;
-  }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Legend));
