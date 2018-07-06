@@ -107,9 +107,9 @@ class Legend extends Component {
   }
 
   getLegendCssClass(iframeModeActive, isMobile) {
-    if (iframeModeActive === true) {
+    if (iframeModeActive) {
       return styles.legendIframe;
-    } else if (isMobile === true) {
+    } else if (isMobile) {
       return styles.LegendMobile;
     } else {
       return styles.Legend;
@@ -126,8 +126,7 @@ class Legend extends Component {
       uuid,
       iframeModeActive
     } = this.props;
-    const isMobile =
-      !iframeModeActive && width < MOBILE_BREAKPOINT ? true : false;
+    const isMobile = !iframeModeActive && width < MOBILE_BREAKPOINT;
     const legendsList = Map(legends).toJS();
     const legendSteps =
       drawRaster && legendsList[uuid] && legendsList[uuid].data
