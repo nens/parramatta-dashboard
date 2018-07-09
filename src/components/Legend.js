@@ -106,6 +106,16 @@ class Legend extends Component {
     ));
   }
 
+  getLegendCssClass(iframeModeActive, isMobile) {
+    if (iframeModeActive) {
+      return styles.legendIframe;
+    } else if (isMobile) {
+      return styles.LegendMobile;
+    } else {
+      return styles.Legend;
+    }
+  }
+
   render() {
     const { width, isOpen } = this.state;
     const {
@@ -116,16 +126,17 @@ class Legend extends Component {
       uuid,
       iframeModeActive
     } = this.props;
-    const isMobile = !iframeModeActive && width < MOBILE_BREAKPOINT ? true : false;
+    const isMobile = !iframeModeActive && width < MOBILE_BREAKPOINT;
     const legendsList = Map(legends).toJS();
     const legendSteps =
       drawRaster && legendsList[uuid] && legendsList[uuid].data
         ? legendsList[uuid].data.legend
         : [];
+    const legendCssClass = this.getLegendCssClass(iframeModeActive, isMobile);
 
     return (
       <div
-        className={isMobile ? styles.LegendMobile : styles.Legend}
+        className={legendCssClass}
         key={"legend-" + tile.id}
         style={{
           bottom: isOpen ? 0 : -300
