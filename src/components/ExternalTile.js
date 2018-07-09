@@ -15,7 +15,9 @@ class ExternalTileComponent extends Component {
   renderImageFull(title, imageUrl, width, height) {
     return (
       <div style={{ width, height, display: "flex" }}>
-        <img src={imageUrl} alt={title} className={styles.externalImageFull} />
+        <div className={styles.externalImageFull}>
+          <img src={imageUrl} alt={title} />
+        </div>
       </div>
     );
   }
