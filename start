@@ -5,7 +5,7 @@ import sys
 import os
 
 NPM_OR_YARN = 'yarn'
-CMD_TEMPLATE = ' PROXY_USERNAME=%s PROXY_PASSWORD=%s yarn ' + NPM_OR_YARN
+CMD_TEMPLATE = ' PROXY_USERNAME=%s PROXY_PASSWORD=%s ' + NPM_OR_YARN + ' start'
 
 def get_username():
     try:
@@ -41,5 +41,4 @@ def get_password():
 if __name__ == '__main__':
     username = get_username()
     password = get_password()
-    os.system(' PROXY_USERNAME=%s PROXY_PASSWORD=%s yarn start' % \
-        (username, password))
+    os.system(CMD_TEMPLATE % (username, password))
