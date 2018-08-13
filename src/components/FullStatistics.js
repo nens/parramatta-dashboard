@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Scrollbars } from "react-custom-scrollbars";
 import { fetchAlarms } from "../actions";
 import { IconActiveAlarmSVG, IconInactiveAlarmSVG } from "./Icons";
 
@@ -74,19 +75,21 @@ class FullStatistics extends Component {
         className={styles.FullStatistics}
         style={{ height, paddingLeft: isMobile ? 0 : 200 }}
       >
-        <div
-          style={{
-            position: "relative",
-            top: 60,
-            left: 20,
-            width: "100%"
-          }}
-        >
-          <div className={styles.Title}>
-            All configured alarms ({numberOfAlarms})
+        <Scrollbars height={height} renderTrackHorizontal={() => <div />}>
+          <div
+            style={{
+              position: "relative",
+              top: 60,
+              left: 20,
+              width: "100%"
+            }}
+          >
+            <div className={styles.Title}>
+              All configured alarms ({numberOfAlarms})
+            </div>
+            {this.getAlarmsTable()}
           </div>
-          {this.getAlarmsTable()}
-        </div>
+        </Scrollbars>
       </div>
     );
   }
