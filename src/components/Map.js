@@ -468,9 +468,6 @@ class MapComponent extends Component {
           className={styles.MapStyleFull}
         >
           <TileLayer url={this.props.mapBackground.url} />
-          {/*tile.rasters
-            ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
-            : null*/}
           {tile.rasters && this.areAllTileLayersPresent()
             ? Object.values(this.state.tileLayersPresent)
             : null}
@@ -488,7 +485,7 @@ class MapComponent extends Component {
     if (!lBounds) return null;
 
     return (
-      <div id={"map-container-" + tile.id} className={styles.MapStyleTile}>
+      <div className={styles.MapStyleTile}>
         <Map
           bounds={lBounds}
           attributionControl={false}
