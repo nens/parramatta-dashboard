@@ -37,13 +37,51 @@ Have a look at the [buck-trap README](https://github.com/nens/buck-trap/blob/mas
 Production bundle
 =================
 
-Run `yarn build` and look in the `build/` folder.
+Run `yarn build` and look in the `dist/` folder.
+Now verify that the files in the `dist/` folder were updated.
 
 
 Releasing
 =========
 
-To be written...
+To tag this as a new release and to add the `dist` folder to the release
+attachments on github.com we use nens/buck-trap. If you have not already done so, create a github token and add it to `deploy/auth.json`.
+
+You can create your tokens here: https://github.com/settings/tokens Grant the token full access under the repo section
+
+The `auth.json` file should like similar to this:
+
+```json
+{
+    "token": "Your-token-that-you-created-on-github"
+}
+```
+
+Release:
+
+```sh
+npm run release
+```
+
+Buck-trap ups version number in `package.json`, compiles the `CHANGELOG.md` tags and creates a github release with a zipped `dist/`.
+Verify in github that a new `release` was created with the correct version number.
+
+_NOTE: Sometimes buck trap messes up for unknown reasons. It does everything except  making the github release. It hangs with the message: `tag already exists`. This sucks because you will have to [clean up the tag](https://nathanhoad.net/how-to-delete-a-remote-git-tag) and revert the release commit._
+
+_NOTE on the NOTE: One time reverting the release commit an making a new release  it did not update the CHANGELOG.md again which resulted in this PR: [#821](https://github.com/nens/lizard-client/pull/821)._
+
+_NOTE: When the `npm run release` script asks for authentication to github even though the token above was configured correctly, then this is probably because you are referencing the repository over https in package.json. The repository url should be the ssh variant which can be found on github under `clone repo`.
+
+### Releasing hotfixes or patches
+Consider fixing bugs before creating new features or release bugfixes together with features. This significantly simplifies development. If you do decide on fixing a bug after merging features and you cannot wait for another official release, create a bugfix branch as described by the [nens workflow](https://github.com/nens/inframan/blob/master/workflow/workflow.rst#bug-fixes).
+
+Do not linger your bugfixes around. It was a bug right? Otherwise you might as well just put it in the normal feature flow. So create a [distribution](#build), release and deploy it. The fixes can be rolled out as patches without affecting the main release track. To run buck-trap from this branch and to release the branch with its `CHANGELOG.md`:
+
+```sh
+npm run release -- -b fixes_<bugged version you want to fix>
+```
+
+The `CHANGELOG.md` would have to be merged with master after the release, which might give some merge conflicts. C'est la vie.
 
 
 Deployment
@@ -51,8 +89,31 @@ Deployment
 
 Uses Ansible for deployment.
 
-See the deploy/ folder for details.
-To be written...
+Ansible requires:
+
+- the file `deploy/hosts` which can be created from `deploy.hosts.example` by filling out the server names. But it is best is to ask a collegue for this file.
+- the file `deploy/group_vars/all` which can be created from `deploy/group_vars/all.example` by filling each line with the correct value. But best is to ask a collegue for this file.
+
+Ansible requires you to set a public ssh key on the remote server. Run the following command to send your public key to the server:
+
+```sh
+ssh-copy-id <USERNAME>@<SERVER_NAME>
+```
+
+Now deploy for staging:
+
+```sh
+npm run staging-deploy
+```
+
+Or deploy for production:
+
+```sh
+npm run production-deploy
+```
+
+
+_NOTE: When ansible complains about permissions this may be because the owners for some files were changed to `root`, where this should be `buildout`. In this case use ssh to connect to the server and navigate to the folder of the deployment path. Then change the owner of the `dist/` folder to buildout: ```chown -R buildout:buildout /dist```._
 
 
 Internationalisation
