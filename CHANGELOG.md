@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.7"></a>
+## [0.3.7](https://github.com/nens/parramatta-dashboard/compare/v0.3.6...v0.3.7) (2018-09-07)
+
+
+
 <a name="0.3.6"></a>
 ## [0.3.6](https://github.com/nens/parramatta-dashboard/compare/v0.3.3...v0.3.6) (2018-09-07)
 
