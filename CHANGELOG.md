@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.6"></a>
+## [0.3.6](https://github.com/nens/parramatta-dashboard/compare/v0.3.3...v0.3.6) (2018-09-07)
+
+
+### Bug Fixes
+
+* **legend:** legend off in iframe ([87a5105](https://github.com/nens/parramatta-dashboard/commit/87a5105))
+* **legend:** remove logs + better structure ([7b5d441](https://github.com/nens/parramatta-dashboard/commit/7b5d441))
+* **verbosity:** remove verbose code ([14e105e](https://github.com/nens/parramatta-dashboard/commit/14e105e))
+
+
+
 <a name="0.3.5"></a>
 ## [0.3.5](https://github.com/nens/parramatta-dashboard/compare/v0.2.30...v0.3.5) (2018-07-09)
 
