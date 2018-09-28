@@ -92,6 +92,7 @@ Uses Ansible for deployment.
 Ansible requires:
 
 - the file `deploy/hosts` which can be created from `deploy.hosts.example` by filling out the server names. But it is best is to ask a collegue for this file.
+- the file `deploy/production_hosts` which can be created from `deploy/production_hosts.example` by filling out the server names. But it is best is to ask a collegue for this file.
 - the file `deploy/group_vars/all` which can be created from `deploy/group_vars/all.example` by filling each line with the correct value. But best is to ask a collegue for this file.
 
 Ansible requires you to set a public ssh key on the remote server. Run the following command to send your public key to the server:
