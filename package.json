@@ -48,6 +48,7 @@
     "immutable": "^3.8.2",
     "jest": "20.0.4",
     "leaflet": "^1.2.0",
+    "lizard-api-client": "../lizard-api-client",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "object-assign": "4.1.1",
@@ -154,7 +155,7 @@
   },
   "proxy": {
     "/bootstrap/": {
-      "target": "https://parramatta.lizard.net/",
+      "target": "https://nxt3.staging.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
@@ -164,7 +165,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://parramatta.lizard.net/",
+      "target": "https://nxt3.staging.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
