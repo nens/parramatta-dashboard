@@ -8,8 +8,9 @@ This is the React/Redux-based dashboard web-app for the City of Parramatta.
 Installation
 ============
 
-- Required: A working nodejs and yarn installation.
+- Required: A working nodejs and yarn installation
 - (temporarily, until release of lizard-api-client) make sure that you have the github repository `lizard-api-client` as a folder parallel to the root directory of this repository, see [lizard-api-client](https://github.com/nens/lizard-api-client)
+- Inside `lizard-api-client` repository: do `yarn install`
 - In the root directory of the repository: `$ yarn install`
 - ...followed by `$ PROXY_USERNAME=<your_sso_username> PROXY_PASSWORD=<your_sso_password> yarn start`
 
