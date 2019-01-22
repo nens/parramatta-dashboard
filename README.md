@@ -11,7 +11,7 @@ Installation
 - Required: A working nodejs and yarn installation
 - (temporarily, until release of lizard-api-client) make sure that you have the github repository `lizard-api-client` as a folder parallel to the root directory of this repository, see [lizard-api-client](https://github.com/nens/lizard-api-client)
 
-- Inside `lizard-api-client` repository: do `$ yarn install`
+- Inside `lizard-api-client` repository: do `$ yarn install` followed by `$ npm run start` 
 
 - In the root directory of this repository (parramatta-dashboard): do
 - `$ npm link lizard-api-client`
