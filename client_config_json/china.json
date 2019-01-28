@@ -1,0 +1,207 @@
+{
+  "tiles": [
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "cbcb087"
+        }
+      ],
+      "shortTitle": "Flooded Area",
+      "title": "Flooded Area",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "87.83",
+        "26.92",
+        "93.37",
+        "21.82"
+      ],
+      "type": "map",
+      "id": 1
+    },
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "7a465382"
+        }
+      ],
+      "shortTitle": "Flood occurence",
+      "title": "Flood occurence",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "87.83",
+        "26.92",
+        "93.37",
+        "21.82"
+      ],
+      "type": "map",
+      "id": 2
+    },
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "ef1af82"
+        }
+      ],
+      "shortTitle": "Soil Moisture",
+      "title": "Soil Moisture",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "3.45",
+        "53.49",
+        "6.49",
+        "50.64"
+      ],
+      "type": "map",
+      "id": 3
+    },
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "ee9ac9b"
+        }
+      ],
+      "shortTitle": "Evatranspiration",
+      "title": "Evatranspiration",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "25.52",
+        "1.01",
+        "1.88",
+        "30.67"
+      ],
+      "type": "map",
+      "id": 5
+    },
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "da0643b"
+        }
+      ],
+      "shortTitle": "Water productivity",
+      "title": "Water productivity",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "25.52",
+        "1.01",
+        "1.88",
+        "30.67"
+      ],
+      "type": "map",
+      "id": 6
+    },
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "71982ed"
+        }
+      ],
+      "shortTitle": "Rain Trends",
+      "title": "Rain Trends",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "25.52",
+        "1.01",
+        "1.88",
+        "30.67"
+      ],
+      "type": "map",
+      "id": 7
+    },
+    {
+      "rasters": [
+        {
+          "opacity": "1",
+          "uuid": "ed62039"
+        }
+      ],
+      "shortTitle": "Rain ",
+      "title": "Rain ",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0,
+        "modulo": 300
+      },
+      "bbox": [
+        "25.52",
+        "1.01",
+        "1.88",
+        "30.67"
+      ],
+      "type": "map",
+      "id": 8
+    },
+    {
+      "": {
+        "title": "12 hour rainfall forecast (AEST)",
+        "url": "https://parramatta.lizard.net/media/generated/parramatta.gif",
+        "imageUrl": "https://parramatta.lizard.net/media/generated/parramatta.gif",
+        "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$51dcbd3,raster$6ccb42c/point@-33.7973,150.9801,14/-0Days12Hours+1Days0Hours",
+        "renderAsImage": true,
+        "type": "external",
+        "id": 10
+      },
+      "title": "12 hour rainfall forecast (AEST)",
+      "url": "https://parramatta.lizard.net/media/generated/parramatta.gif",
+      "imageUrl": "https://parramatta.lizard.net/media/generated/parramatta.gif",
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$51dcbd3,raster$6ccb42c/point@-33.7973,150.9801,14/-0Days12Hours+1Days0Hours",
+      "renderAsImage": true,
+      "type": "external",
+      "id": 11
+    }
+  ],
+  "meta": {
+    "gridView": {
+      "columnCount": 3
+    },
+    "logo": "http://www.disney-plaatjes.nl/files/disney/mickey-mouse/mickey-mouse-disney-829.jpg",
+    "mapBackgrounds": [
+      {
+        "url": "https://{s}.tiles.mapbox.com/v3/nelenschuurmans.l15e647c/{z}/{x}/{y}.png",
+        "description": "Neutral Map"
+      }
+    ],
+    "title": "Earth Observation Water",
+    "headerColors": {
+      "bg": "#16a085",
+      "fg": "#ffffff"
+    }
+  }
+}
