@@ -9,6 +9,7 @@ import Map from "./Map";
 import FullStatistics from "./FullStatistics";
 import ExternalTile from "./ExternalTile";
 import TimeseriesTile from "./TimeseriesTile";
+import PlotlyTile from "./PlotlyTile";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
@@ -79,6 +80,18 @@ class FullLayout extends Component {
       case "timeseries":
         element = (
           <TimeseriesTile
+            isFull={true}
+            timeseries={selectedTile.timeseries}
+            tile={selectedTile}
+            showAxis={true}
+            marginLeft={isMobile ? 0 : 195}
+            marginTop={50}
+          />
+        );
+        break;
+      case "plotlytile":
+        element = (
+          <PlotlyTile
             isFull={true}
             timeseries={selectedTile.timeseries}
             tile={selectedTile}

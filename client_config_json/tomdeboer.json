@@ -282,6 +282,92 @@
       "id": 6
     },
     {
+      "shortTitle": "BLAAAAA PLOTLY TILE",
+      "title": "123 McCoy Park (Toongabbie Creek) (For LGH -24.42m)",
+      "data": [
+        {
+          "x": [1, 2, 3],
+          "y": [2, 6, 3],
+          "xy": {
+            "type": "timeseries",
+            "uuid": "0f0d0957-40af-4f7e-91bd-d4af804a9af6"
+          },
+          "type": "scatter",
+          "mode": "lines+points",
+          "marker": {"color": "red"}
+        },
+        {
+          "type": "bar", 
+          "x": [1, 2, 3], 
+          "y": [2, 5, 3]
+        }
+      ],
+      "type": "plotlytile",
+      "id": 7,
+      "layout": {"width": 320, "height": 240, "title": "A Fancy Plot"},
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "30.4",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "27.70",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "27.07",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "McCoy Park",
+        "Blacktown Dog Pound",
+        "Kings Langley",
+        "Seven Hills WS201",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#f1c026",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205509@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.952261633",
+              "-33.779484495"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.952261633",
+              "-33.779484495"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ]
+    },
+    {
       "shortTitle": "Greystanes (McCoy Park warning area)",
       "title": "Greystanes (McCoy Park warning area) (No actual gauge)",
       "thresholds": [
@@ -336,7 +422,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 7
+      "id": 8
     },
     {
       "shortTitle": "Johnstons Bridge (Toongabbie Creek)",
@@ -404,7 +490,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 8
+      "id": 9
     },
     {
       "shortTitle": "Oakes Road (Toongabbie warning area)",
@@ -461,7 +547,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 9
+      "id": 10
     },
     {
       "shortTitle": "Briens Road (Wentworthville and L. Toongabbie Warning Area)",
@@ -529,7 +615,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 10
+      "id": 11
     },
     {
       "shortTitle": "Redbank Road (Westmead and N. Parramatta Warning Area)",
@@ -594,7 +680,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 11
+      "id": 12
     },
     {
       "shortTitle": "Loyalty Road (Darling Mills Creek)",
@@ -662,7 +748,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 12
+      "id": 13
     },
     {
       "shortTitle": "Lake Parramatta (Hunts Creek)",
@@ -730,7 +816,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 13
+      "id": 14
     },
     {
       "shortTitle": "North Parramatta (Darling Mills warning area)",
@@ -798,7 +884,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 14
+      "id": 15
     },
     {
       "shortTitle": "Marsden Weir (Parramatta River)",
@@ -863,7 +949,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 15
+      "id": 16
     },
     {
       "shortTitle": "Riverside Theatre (Parramatta CBD Warning Area)",
@@ -928,7 +1014,7 @@
         }
       ],
       "type": "timeseries",
-      "id": 16
+      "id": 9999
     },
     {
       "shortTitle": "Brickfields Creek (Brickfields Creek warning area)",

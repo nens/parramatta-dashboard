@@ -5,6 +5,7 @@ import Tile from "./Tile";
 import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
 import TimeseriesTile from "./TimeseriesTile";
+import PlotlyTile from "./PlotlyTile";
 import StatisticsTile from "./StatisticsTile";
 import ExternalTile from "./ExternalTile";
 import Map from "./Map";
@@ -263,6 +264,23 @@ class GridLayout extends Component {
               onClick={() => history.push(`/full/${tile.id}`)}
             >
               <TimeseriesTile
+                isFull={false}
+                timeseries={tile.timeseries}
+                tile={tile}
+                showAxis={true}
+                marginLeft={0}
+                marginTop={30}
+              />
+            </Tile>
+          );
+        case "plotlytile":
+          return (
+            <Tile
+              {...this.props}
+              title={shortTitle}
+              onClick={() => history.push(`/full/${tile.id}`)}
+            >
+              <PlotlyTile
                 isFull={false}
                 timeseries={tile.timeseries}
                 tile={tile}
