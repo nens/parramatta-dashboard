@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
 import { DEV_MODE_DOMAIN } from "../config.js";
+import { createCookie, readCookie, eraseCookie } from "../util/cookies.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
-    const APP_RUNS_IN_DEV_MODE =
-      window.location.href.indexOf(DEV_MODE_DOMAIN) > -1;
+    const APP_RUNS_IN_DEV_MODE = false;
+    // window.location.href.indexOf(DEV_MODE_DOMAIN) > -1;
     super();
     this.state = {
       boxChecked: APP_RUNS_IN_DEV_MODE,
@@ -16,12 +17,31 @@ class TermsAndConditionsComponent extends Component {
   }
 
   componentDidMount() {
-    if (this.state.devMode) {
+    console.log(
+      'readCookie("termsAndConditionsSigned")',
+      readCookie("termsAndConditionsSigned") + "123",
+      typeof readCookie("termsAndConditionsSigned")
+    );
+    console.log(
+      "TermsAndConditionsComponent clientConfiguration ",
+      this.props.clientConfiguration
+    );
+    if (this.props.clientConfiguration.showTermsAndConditions !== true) {
+      this.props.termsSigned();
+    } else if (
+      this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
+        true &&
+      readCookie("termsAndConditionsSigned") === "true"
+    ) {
+      console.log("cookie for terms and conditions");
+      this.props.termsSigned();
+    } else if (this.state.devMode) {
       console.log("[*] dev Environment: no need to check them checkb0xes...");
-      const checkboxDOM = document.getElementById("termsCheckbox");
-      checkboxDOM.checked = true;
-      this.setState({ boxChecked: true });
-      this.clickButton();
+      // const checkboxDOM = document.getElementById("termsCheckbox");
+      // checkboxDOM.checked = true;
+      // this.setState({ boxChecked: true });
+      // document.body.scrollTop = document.documentElement.scrollTop = 0;
+      this.props.termsSigned();
     }
   }
 
@@ -35,6 +55,12 @@ class TermsAndConditionsComponent extends Component {
       // Scroll up -- otherwise we're going to a tiles page that may also be scrolled down
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       this.props.termsSigned();
+      if (
+        this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
+        true
+      ) {
+        createCookie("termsAndConditionsSigned", true, 100);
+      }
     }
   }
 

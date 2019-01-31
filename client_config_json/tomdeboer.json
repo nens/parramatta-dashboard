@@ -1,4 +1,7 @@
 {
+  "showTermsAndConditions": true,
+  "termsAndConditionsSetAgreedCookie": true,
+
   "referenceLevels": {
     "205502": "LGH: 6.993 mAHD",
     "205503": "LGH: 20.989 mAHD",

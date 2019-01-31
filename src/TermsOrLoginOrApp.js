@@ -42,6 +42,14 @@ class TermsOrLoginOrAppComponent extends Component {
   render() {
     const { iframeModeActive } = this.props;
 
+    console.log(
+      "orororor ",
+      this.hasBootstrap(),
+      this.props.sessionState &&
+        this.props.sessionState.bootstrap &&
+        this.props.sessionState.bootstrap.configuration
+    );
+
     if (!this.hasBootstrap() || iframeModeActive === null) {
       return (
         <div className={styles.LoadingIndicator}>
@@ -52,7 +60,14 @@ class TermsOrLoginOrAppComponent extends Component {
       if (!this.props.sessionState.bootstrap.authenticated) {
         this.props.sessionState.bootstrap.doLogin();
       } else if (!this.state.termsSigned) {
-        return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
+        return (
+          <TermsAndConditions
+            termsSigned={this.termsSigned.bind(this)}
+            clientConfiguration={
+              this.props.sessionState.bootstrap.configuration
+            }
+          />
+        );
       } else {
         return (
           <Router basename="/floodsmart">
@@ -71,6 +86,7 @@ class TermsOrLoginOrAppComponent extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log("mapstatetoProps TermsOrLoginOrApp ", state);
   return {
     sessionState: state.session,
     iframeModeActive: state.iframeMode.active
