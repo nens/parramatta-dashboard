@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
 import { DEV_MODE_DOMAIN } from "../config.js";
+import { createCookie, readCookie, eraseCookie } from "../util/cookies.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
@@ -16,12 +17,16 @@ class TermsAndConditionsComponent extends Component {
   }
 
   componentDidMount() {
-    if (this.state.devMode) {
-      console.log("[*] dev Environment: no need to check them checkb0xes...");
-      const checkboxDOM = document.getElementById("termsCheckbox");
-      checkboxDOM.checked = true;
-      this.setState({ boxChecked: true });
-      this.clickButton();
+    if (this.props.clientConfiguration.showTermsAndConditions !== true) {
+      this.props.termsSigned();
+    } else if (
+      this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
+        true &&
+      readCookie("termsAndConditionsSigned") === "true"
+    ) {
+      this.props.termsSigned();
+    } else if (this.state.devMode) {
+      this.props.termsSigned();
     }
   }
 
@@ -35,6 +40,13 @@ class TermsAndConditionsComponent extends Component {
       // Scroll up -- otherwise we're going to a tiles page that may also be scrolled down
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       this.props.termsSigned();
+
+      if (
+        this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
+        true
+      ) {
+        createCookie("termsAndConditionsSigned", true, 100); // 100 days
+      }
     }
   }
 

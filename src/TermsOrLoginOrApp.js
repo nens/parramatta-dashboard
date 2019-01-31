@@ -52,7 +52,14 @@ class TermsOrLoginOrAppComponent extends Component {
       if (!this.props.sessionState.bootstrap.authenticated) {
         this.props.sessionState.bootstrap.doLogin();
       } else if (!this.state.termsSigned) {
-        return <TermsAndConditions termsSigned={this.termsSigned.bind(this)} />;
+        return (
+          <TermsAndConditions
+            termsSigned={this.termsSigned.bind(this)}
+            clientConfiguration={
+              this.props.sessionState.bootstrap.configuration
+            }
+          />
+        );
       } else {
         return (
           <Router basename="/floodsmart">
