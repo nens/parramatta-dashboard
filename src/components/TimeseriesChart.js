@@ -375,7 +375,18 @@ class TimeseriesChartComponent extends Component {
     let annotations = [];
     let thresholdLines, thresholdAnnotations;
 
-    const now = getNow(this.props.configuredNow).getTime();
+    const nowDate = getNow(this.props.configuredNow);
+    const now = nowDate.getTime();
+    const nowPlus3HoursDate = nowDate.setHours(nowDate.getHours() + 3);
+    const nowPlus12HoursDate = nowDate.setHours(nowDate.getHours() + 12);
+    console.log(
+      "[F] getAnnotationsAndShapes now ",
+      now,
+      getNow(this.props.configuredNow),
+      this.props.configuredNow,
+      nowPlus3HoursDate,
+      nowPlus12HoursDate
+    );
     const alarmReferenceLines = this.alarmReferenceLines(axes);
 
     if (thresholds) {
@@ -403,6 +414,34 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and for "now".
+    const plus12Line = {
+      type: "line",
+      layer: "above",
+      x0: nowPlus12HoursDate,
+      x1: nowPlus12HoursDate,
+      yref: "paper",
+      y0: 0,
+      y1: 1,
+      line: {
+        dash: "dot",
+        color: "red",
+        width: isFull ? 4 : 2
+      }
+    };
+    const plus3Line = {
+      type: "line",
+      layer: "above",
+      x0: nowPlus3HoursDate,
+      x1: nowPlus3HoursDate,
+      yref: "paper",
+      y0: 0,
+      y1: 1,
+      line: {
+        dash: "dot",
+        color: "red",
+        width: isFull ? 4 : 2
+      }
+    };
     const nowLine = {
       type: "line",
       layer: "above",
@@ -414,7 +453,7 @@ class TimeseriesChartComponent extends Component {
       line: {
         dash: "dot",
         color: "red",
-        width: isFull ? 2 : 1
+        width: isFull ? 6 : 3
       }
     };
 
@@ -441,6 +480,8 @@ class TimeseriesChartComponent extends Component {
     }
 
     shapes.push(nowLine);
+    shapes.push(plus3Line);
+    shapes.push(plus12Line);
     return { annotations, shapes };
   }
 
