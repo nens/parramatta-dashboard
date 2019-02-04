@@ -579,7 +579,8 @@ class TimeseriesChartComponent extends Component {
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
-    const layout = this.getLayout(this.state.wantedAxes, thresholds);
+    let layout = this.getLayout(this.state.wantedAxes, thresholds);
+    layout["yaxis"] = { fixedrange: true };
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
@@ -628,6 +629,8 @@ class TimeseriesChartComponent extends Component {
     }
 
     const Plot = plotComponentFactory(window.Plotly);
+    let layout = this.getLayout(this.state.wantedAxes);
+    layout["yaxis"] = { fixedragne: true };
 
     return (
       <div
@@ -644,7 +647,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="gridPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes)}
+            layout={layout}
             config={{ displayModeBar: false }}
           />
         ) : (
