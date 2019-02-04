@@ -403,6 +403,7 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and for "now".
+    console.log("now", now); // epoch
     const nowLine = {
       type: "line",
       layer: "above",
@@ -429,7 +430,63 @@ class TimeseriesChartComponent extends Component {
       showarrow: false
     };
 
+    // Return lines for alarms, ts thresholds and for "now".
+    const threeHoursinEpoch = 3 * 60 * 60 * 1000;
+    const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
+
+    const nowPlus3Line = {
+      type: "line",
+      layer: "above",
+      x0: now + threeHoursinEpoch,
+      x1: now + threeHoursinEpoch,
+      yref: "paper",
+      y0: 0,
+      y1: 1,
+      line: {
+        dash: "dot",
+        color: "purple",
+        width: isFull ? 2 : 1
+      }
+    };
+    const nowPlus3Annotation = {
+      text: "NOW+3",
+      bordercolor: "purple",
+      x: now + threeHoursinEpoch,
+      xanchor: "right",
+      yref: "paper",
+      y: 1,
+      yanchor: "top",
+      showarrow: false
+    };
+
+    const nowPlus12Line = {
+      type: "line",
+      layer: "above",
+      x0: now + twelveHoursinEpoch,
+      x1: now + twelveHoursinEpoch,
+      yref: "paper",
+      y0: 0,
+      y1: 1,
+      line: {
+        dash: "dot",
+        color: "green",
+        width: isFull ? 2 : 1
+      }
+    };
+    const nowPlus12Annotation = {
+      text: "NOW-12",
+      bordercolor: "green",
+      x: now + twelveHoursinEpoch,
+      xanchor: "right",
+      yref: "paper",
+      y: 1,
+      yanchor: "top",
+      showarrow: false
+    };
+
     annotations.push(nowAnnotation);
+    annotations.push(nowPlus3Annotation);
+    annotations.push(nowPlus12Annotation);
 
     if (thresholds) {
       thresholdLines.forEach(thLine => {
@@ -441,6 +498,8 @@ class TimeseriesChartComponent extends Component {
     }
 
     shapes.push(nowLine);
+    shapes.push(nowPlus3Line);
+    shapes.push(nowPlus12Line);
     return { annotations, shapes };
   }
 
