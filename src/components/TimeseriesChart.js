@@ -444,13 +444,13 @@ class TimeseriesChartComponent extends Component {
       y1: 1,
       line: {
         dash: "dot",
-        color: "purple",
+        color: "orange",
         width: isFull ? 2 : 1
       }
     };
     const nowPlus3Annotation = {
       text: "NOW+3",
-      bordercolor: "purple",
+      bordercolor: "orange",
       x: now + threeHoursinEpoch,
       xanchor: "right",
       yref: "paper",
@@ -474,7 +474,7 @@ class TimeseriesChartComponent extends Component {
       }
     };
     const nowPlus12Annotation = {
-      text: "NOW-12",
+      text: "NOW+12",
       bordercolor: "green",
       x: now + twelveHoursinEpoch,
       xanchor: "right",
@@ -556,7 +556,7 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
-    return {
+    const result = {
       width: width,
       height: height,
       yaxis: {
@@ -579,9 +579,14 @@ class TimeseriesChartComponent extends Component {
         showgrid: true,
         range: [this.state.start, this.state.end]
       },
+      dragmode: "pan", // make panning the default instead of zooming
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
+
+    // if (isFull) result.xaxis.dtick = 3600000; // Hourly ticks when chart isFull
+
+    return result;
   }
 
   render() {
@@ -687,6 +692,7 @@ class TimeseriesChartComponent extends Component {
     }
 
     const Plot = plotComponentFactory(window.Plotly);
+    const layout = this.getLayout(this.state.wantedAxes);
 
     return (
       <div
