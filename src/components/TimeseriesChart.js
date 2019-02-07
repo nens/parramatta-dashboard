@@ -497,7 +497,7 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
-    return {
+    const result = {
       width: width,
       height: height,
       yaxis: {
@@ -523,6 +523,9 @@ class TimeseriesChartComponent extends Component {
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
+
+    if (isFull) result.xaxis.dtick = 3600000; // Hourly ticks when chart isFull
+    return result;
   }
 
   render() {
