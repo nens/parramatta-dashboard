@@ -584,8 +584,6 @@ class TimeseriesChartComponent extends Component {
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
 
-    if (isFull) result.xaxis.dtick = 3600000; // Hourly ticks when chart isFull
-
     return result;
   }
 
