@@ -641,9 +641,9 @@ class TimeseriesChartComponent extends Component {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
     const layout = this.getLayout(this.state.wantedAxes, thresholds);
-    // layout.dragmode = "zoom";  // default is zoom
-    // layout.yaxis = { fixedrange: true };
-    // layout.yaxis2 = { fixedrange: true };
+    layout.dragmode = "zoom"; // default is zoom
+    layout.yaxis = { fixedrange: true };
+    layout.yaxis2 = { fixedrange: true };
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
