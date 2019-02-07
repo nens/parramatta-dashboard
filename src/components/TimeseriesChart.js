@@ -403,7 +403,6 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and for "now".
-    console.log("now", now); // epoch
     const nowLine = {
       type: "line",
       layer: "above",
