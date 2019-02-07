@@ -402,90 +402,44 @@ class TimeseriesChartComponent extends Component {
       annotations = alarmReferenceLines.annotations;
     }
 
-    // Return lines for alarms, ts thresholds and for "now".
-    const nowLine = {
-      type: "line",
-      layer: "above",
-      x0: now,
-      x1: now,
-      yref: "paper",
-      y0: 0,
-      y1: 1,
-      line: {
-        dash: "dot",
-        color: "red",
-        width: isFull ? 2 : 1
-      }
-    };
-
-    const nowAnnotation = {
-      text: "NOW",
-      bordercolor: "red",
-      x: now,
-      xanchor: "right",
-      yref: "paper",
-      y: 1,
-      yanchor: "top",
-      showarrow: false
-    };
-
-    // Return lines for alarms, ts thresholds and for "now".
-    const threeHoursinEpoch = 3 * 60 * 60 * 1000;
-    const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
-
-    const nowPlus3Line = {
-      type: "line",
-      layer: "above",
-      x0: now + threeHoursinEpoch,
-      x1: now + threeHoursinEpoch,
-      yref: "paper",
-      y0: 0,
-      y1: 1,
-      line: {
-        dash: "dot",
-        color: "orange",
-        width: isFull ? 2 : 1
-      }
-    };
-    const nowPlus3Annotation = {
-      text: "NOW+3",
-      bordercolor: "orange",
-      x: now + threeHoursinEpoch,
-      xanchor: "right",
-      yref: "paper",
-      y: 1,
-      yanchor: "top",
-      showarrow: false
-    };
-
-    const nowPlus12Line = {
-      type: "line",
-      layer: "above",
-      x0: now + twelveHoursinEpoch,
-      x1: now + twelveHoursinEpoch,
-      yref: "paper",
-      y0: 0,
-      y1: 1,
-      line: {
-        dash: "dot",
-        color: "green",
-        width: isFull ? 2 : 1
-      }
-    };
-    const nowPlus12Annotation = {
-      text: "NOW+12",
-      bordercolor: "green",
-      x: now + twelveHoursinEpoch,
-      xanchor: "right",
-      yref: "paper",
-      y: 1,
-      yanchor: "top",
-      showarrow: false
-    };
-
+    // Return lines for alarms, ts thresholds
+    // Also include lines for "NOW", "NOW+3" and "NOW+12".
+    const nowLine = this.createVerticalLine(now, "red", isFull);
+    shapes.push(nowLine);
+    const nowAnnotation = this.createAnnotationForVerticalLine(
+      now,
+      "red",
+      "NOW"
+    );
     annotations.push(nowAnnotation);
-    annotations.push(nowPlus3Annotation);
-    annotations.push(nowPlus12Annotation);
+
+    const threeHoursinEpoch = 3 * 60 * 60 * 1000;
+    const nowPlus3HoursLine = this.createVerticalLine(
+      now + threeHoursinEpoch,
+      "orange",
+      isFull
+    );
+    shapes.push(nowPlus3HoursLine);
+    const nowPlus3HoursAnnotation = this.createAnnotationForVerticalLine(
+      now + threeHoursinEpoch,
+      "orange",
+      "NOW+3"
+    );
+    annotations.push(nowPlus3HoursAnnotation);
+
+    const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
+    const nowPlus12HoursLine = this.createVerticalLine(
+      now + twelveHoursinEpoch,
+      "green",
+      isFull
+    );
+    shapes.push(nowPlus12HoursLine);
+    const nowPlus12HoursAnnotation = this.createAnnotationForVerticalLine(
+      now + twelveHoursinEpoch,
+      "green",
+      "NOW+12"
+    );
+    annotations.push(nowPlus12HoursAnnotation);
 
     if (thresholds) {
       thresholdLines.forEach(thLine => {
@@ -496,10 +450,37 @@ class TimeseriesChartComponent extends Component {
       });
     }
 
-    shapes.push(nowLine);
-    shapes.push(nowPlus3Line);
-    shapes.push(nowPlus12Line);
     return { annotations, shapes };
+  }
+
+  createVerticalLine(timeInEpoch, color, isFull) {
+    return {
+      type: "line",
+      layer: "above",
+      x0: timeInEpoch,
+      x1: timeInEpoch,
+      yref: "paper",
+      y0: 0,
+      y1: 1,
+      line: {
+        dash: "dot",
+        color: color,
+        width: isFull ? 2 : 1
+      }
+    };
+  }
+
+  createAnnotationForVerticalLine(timeInEpoch, color, text) {
+    return {
+      text: text,
+      bordercolor: color,
+      x: timeInEpoch,
+      xanchor: "right",
+      yref: "paper",
+      y: 1,
+      yanchor: "top",
+      showarrow: false
+    };
   }
 
   getYAxis(axes, idx) {
