@@ -402,8 +402,8 @@ class TimeseriesChartComponent extends Component {
       annotations = alarmReferenceLines.annotations;
     }
 
-    // Return lines for alarms, ts thresholds
-    // Also include lines for "NOW", "NOW+3" and "NOW+12".
+    // Return lines for alarms, ts thresholds and timelines
+    // "NOW"
     const nowLine = this.createVerticalLine(now, "red", isFull);
     shapes.push(nowLine);
     const nowAnnotation = this.createAnnotationForVerticalLine(
@@ -412,7 +412,7 @@ class TimeseriesChartComponent extends Component {
       "NOW"
     );
     annotations.push(nowAnnotation);
-
+    // "NOW+3"
     const threeHoursinEpoch = 3 * 60 * 60 * 1000;
     const nowPlus3HoursLine = this.createVerticalLine(
       now + threeHoursinEpoch,
@@ -426,7 +426,7 @@ class TimeseriesChartComponent extends Component {
       "NOW+3"
     );
     annotations.push(nowPlus3HoursAnnotation);
-
+    // "NOW+12"
     const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
     const nowPlus12HoursLine = this.createVerticalLine(
       now + twelveHoursinEpoch,
