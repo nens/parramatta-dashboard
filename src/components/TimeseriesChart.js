@@ -536,7 +536,7 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
-    const result = {
+    return {
       width: width,
       height: height,
       yaxis: {
@@ -562,8 +562,6 @@ class TimeseriesChartComponent extends Component {
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
-
-    return result;
   }
 
   render() {
