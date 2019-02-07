@@ -579,7 +579,6 @@ class TimeseriesChartComponent extends Component {
         showgrid: true,
         range: [this.state.start, this.state.end]
       },
-      dragmode: "pan", // make panning the default instead of zooming
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
@@ -642,6 +641,9 @@ class TimeseriesChartComponent extends Component {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
     const layout = this.getLayout(this.state.wantedAxes, thresholds);
+    // layout.dragmode = "zoom";  // default is zoom
+    // layout.yaxis = { fixedrange: true };
+    // layout.yaxis2 = { fixedrange: true };
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
@@ -691,6 +693,7 @@ class TimeseriesChartComponent extends Component {
 
     const Plot = plotComponentFactory(window.Plotly);
     const layout = this.getLayout(this.state.wantedAxes);
+    layout.dragmode = false; // default is zoom
 
     return (
       <div
@@ -707,7 +710,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="gridPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes)}
+            layout={layout}
             config={{ displayModeBar: false }}
           />
         ) : (
