@@ -412,20 +412,20 @@ class TimeseriesChartComponent extends Component {
       "NOW"
     );
     annotations.push(nowAnnotation);
-    // "NOW+3"
-    const threeHoursinEpoch = 3 * 60 * 60 * 1000;
-    const nowPlus3HoursLine = this.createVerticalLine(
-      now + threeHoursinEpoch,
+    // "NOW+2"
+    const twoHoursinEpoch = 2 * 60 * 60 * 1000;
+    const nowPlus2HoursLine = this.createVerticalLine(
+      now + twoHoursinEpoch,
       "orange",
       isFull
     );
-    shapes.push(nowPlus3HoursLine);
-    const nowPlus3HoursAnnotation = this.createAnnotationForVerticalLine(
-      now + threeHoursinEpoch,
+    shapes.push(nowPlus2HoursLine);
+    const nowPlus2HoursAnnotation = this.createAnnotationForVerticalLine(
+      now + twoHoursinEpoch,
       "orange",
-      "NOW+3"
+      "NOW+2"
     );
-    annotations.push(nowPlus3HoursAnnotation);
+    annotations.push(nowPlus2HoursAnnotation);
     // "NOW+12"
     const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
     const nowPlus12HoursLine = this.createVerticalLine(
