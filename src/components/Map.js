@@ -34,6 +34,10 @@ class MapComponent extends Component {
         props.fetchRaster,
         props.tile.rasters[0].uuid
       );
+
+      props.tile.rasters.forEach(raster => {
+        getOrFetch(props.getRaster, props.fetchRaster, raster.uuid);
+      });
     }
     this.state = {
       firstRaster: firstRaster
@@ -47,6 +51,9 @@ class MapComponent extends Component {
         props.fetchRaster,
         props.tile.rasters[0].uuid
       );
+      props.tile.rasters.forEach(raster => {
+        getOrFetch(props.getRaster, props.fetchRaster, raster.uuid);
+      });
       if (firstRaster) {
         this.setState({ firstRaster });
       }
@@ -88,11 +95,12 @@ class MapComponent extends Component {
   }
 
   tileLayerForRaster(raster) {
-    let rasterObject = getOrFetch(
-      this.props.getRaster,
-      this.props.fetchRaster,
-      raster.uuid
-    );
+    // let rasterObject = getOrFetch(
+    //   this.props.getRaster,
+    //   this.props.fetchRaster,
+    //   raster.uuid
+    // );
+    let rasterObject = this.props.getRaster(raster.uuid).object;
 
     if (!rasterObject) {
       return null;
