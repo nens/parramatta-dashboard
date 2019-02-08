@@ -24,6 +24,35 @@ import styles from "./Map.css";
 import { IconActiveAlarm, IconInactiveAlarm, IconNoAlarm } from "./MapIcons";
 
 class MapComponent extends Component {
+  // make this to hold state of background layer
+  constructor(props) {
+    super(props);
+    let firstRaster = null;
+    if (props.tile.rasters && props.tile.rasters.length > 0) {
+      firstRaster = getOrFetch(
+        props.getRaster,
+        props.fetchRaster,
+        props.tile.rasters[0].uuid
+      );
+    }
+    this.state = {
+      firstRaster: firstRaster
+    };
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.tile.rasters && props.tile.rasters.length > 0) {
+      const firstRaster = getOrFetch(
+        props.getRaster,
+        props.fetchRaster,
+        props.tile.rasters[0].uuid
+      );
+      if (firstRaster) {
+        this.setState({ firstRaster });
+      }
+    }
+  }
+
   componentDidMount() {
     const { tile } = this.props;
     const inBboxFilter = this.getBbox().toLizardBbox();
@@ -332,21 +361,8 @@ class MapComponent extends Component {
 
   renderFull() {
     const { tile, width, height } = this.props;
-
+    const { firstRaster } = this.state;
     let legend = null;
-
-    let firstRasterUuid = null;
-    let firstRaster = null;
-
-    if (tile.rasters && tile.rasters.length > 0) {
-      // Only show a legend for the first raster.
-      firstRasterUuid = tile.rasters[0].uuid;
-      firstRaster = getOrFetch(
-        this.props.getRaster,
-        this.props.fetchRaster,
-        firstRasterUuid
-      );
-    }
 
     if (!firstRaster) {
       legend = (
@@ -362,7 +378,7 @@ class MapComponent extends Component {
           drawRaster={true}
           drawVectorIcons={this.tileHasVectors(tile)}
           tile={tile}
-          uuid={firstRasterUuid}
+          uuid={firstRaster.uuid}
           title={firstRaster.name}
           wmsInfo={firstRaster.wms_info}
           observationType={firstRaster.observation_type}
