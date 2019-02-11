@@ -100,7 +100,6 @@ class TimeseriesChartComponent extends Component {
       combinedEvents,
       wantedAxes: axes
     });
-    console.log("[F] componentWillMount axes", axes);
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -164,7 +163,6 @@ class TimeseriesChartComponent extends Component {
       }
 
       const axis = indexForType(axes, observationType);
-      console.log("[F] getAxesData axis", axis);
 
       if (axis === -1) {
         if (axes.length >= 3) {
@@ -176,8 +174,6 @@ class TimeseriesChartComponent extends Component {
           );
           return axes;
         }
-        console.log("[F] getAxesData axis", axis);
-        console.log("[F] getAxesData observationType", observationType);
         axes.push(observationType);
       }
     });
@@ -444,15 +440,6 @@ class TimeseriesChartComponent extends Component {
       "NOW+12 hours"
     );
     annotations.push(nowPlus12HoursAnnotation);
-    // now in epoch = 1549876612;
-    var now_epoch = 1549876612;
-    var oneHourEpoch = 1 * 60 * 60 * 1000;
-    const x0 = new Date("2019-02-10T11:00:01.000Z");
-    console.log("[F] getAnnotationsAndShapes x0", x0);
-    const x1 = new Date("2019-02-10T12:00:02.000Z");
-    console.log("[F] getAnnotationsAndShapes x1", x1);
-    const x2 = new Date("2019-02-10T13:00:01.000Z");
-    console.log("[F] getAnnotationsAndShapes x2", x2);
 
     let shapeNowToNowPlus2Hours = {
       type: "rect",
@@ -463,7 +450,7 @@ class TimeseriesChartComponent extends Component {
       x1: now + twoHoursinEpoch,
       y1: 1,
       fillcolor: "#FFC850", // orange in Lizard colours
-      opacity: 0.5, // configureerbaar
+      opacity: 0.5, // make this configurable?
       line: {
         width: 0
       }
@@ -477,7 +464,7 @@ class TimeseriesChartComponent extends Component {
       x1: now + twelveHoursinEpoch,
       y1: 1,
       fillcolor: "#FFF082", // yellow in Lizard colours
-      opacity: 0.5,
+      opacity: 0.5, // make this configurable?
       line: {
         width: 0
       }
@@ -663,9 +650,7 @@ class TimeseriesChartComponent extends Component {
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
-    console.log("[F] renderFull this.state.wantedAxes", this.state.wantedAxes);
     const layout = this.getLayout(this.state.wantedAxes, thresholds);
-    console.log("[F] renderFull layout", layout);
     layout.dragmode = "zoom"; // default is "zoom"
     // No longer be able to zoom on yaxis
     layout.yaxis.fixedrange = true;
@@ -675,15 +660,6 @@ class TimeseriesChartComponent extends Component {
     const SPINNER_SIZE = 48;
     const verticalOffset =
       Math.round(this.props.height / 2) - Math.round(SPINNER_SIZE / 2);
-    console.log("[F] renderFull combinedEvents", combinedEvents);
-    console.log(
-      "[F] renderFull combinedEvents[0]['x'][0]",
-      combinedEvents[0]["x"][0]
-    );
-    console.log(
-      "[F] renderFull typeof(combinedEvents[0]['x'][0])",
-      typeof combinedEvents[0]["x"][0]
-    ); // object, same as New Date
 
     return (
       <div
