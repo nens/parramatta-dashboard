@@ -100,6 +100,7 @@ class TimeseriesChartComponent extends Component {
       combinedEvents,
       wantedAxes: axes
     });
+    console.log("[F] componentWillMount axes", axes);
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -163,6 +164,7 @@ class TimeseriesChartComponent extends Component {
       }
 
       const axis = indexForType(axes, observationType);
+      console.log("[F] getAxesData axis", axis);
 
       if (axis === -1) {
         if (axes.length >= 3) {
@@ -174,6 +176,8 @@ class TimeseriesChartComponent extends Component {
           );
           return axes;
         }
+        console.log("[F] getAxesData axis", axis);
+        console.log("[F] getAxesData observationType", observationType);
         axes.push(observationType);
       }
     });
@@ -409,37 +413,77 @@ class TimeseriesChartComponent extends Component {
     const nowAnnotation = this.createAnnotationForVerticalLine(
       now,
       "red",
-      "NOW"
+      "NOW" // NOW
     );
     annotations.push(nowAnnotation);
     // "NOW+2"
     const twoHoursinEpoch = 2 * 60 * 60 * 1000;
     const nowPlus2HoursLine = this.createVerticalLine(
       now + twoHoursinEpoch,
-      "orange",
+      "#FFC850", // orange in Lizard colours
       isFull
     );
     shapes.push(nowPlus2HoursLine);
     const nowPlus2HoursAnnotation = this.createAnnotationForVerticalLine(
       now + twoHoursinEpoch,
-      "orange",
-      "NOW+2"
+      "#FFC850", // orange in Lizard colours
+      "NOW+2 hour"
     );
     annotations.push(nowPlus2HoursAnnotation);
     // "NOW+12"
     const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
     const nowPlus12HoursLine = this.createVerticalLine(
       now + twelveHoursinEpoch,
-      "green",
+      "#16A085", // green in Lizard colours
       isFull
     );
     shapes.push(nowPlus12HoursLine);
     const nowPlus12HoursAnnotation = this.createAnnotationForVerticalLine(
       now + twelveHoursinEpoch,
-      "green",
-      "NOW+12"
+      "#16A085", // green in Lizard colours
+      "NOW+12 hours"
     );
     annotations.push(nowPlus12HoursAnnotation);
+    // now in epoch = 1549876612;
+    var now_epoch = 1549876612;
+    var oneHourEpoch = 1 * 60 * 60 * 1000;
+    const x0 = new Date("2019-02-10T11:00:01.000Z");
+    console.log("[F] getAnnotationsAndShapes x0", x0);
+    const x1 = new Date("2019-02-10T12:00:02.000Z");
+    console.log("[F] getAnnotationsAndShapes x1", x1);
+    const x2 = new Date("2019-02-10T13:00:01.000Z");
+    console.log("[F] getAnnotationsAndShapes x2", x2);
+
+    let shapeNowToNowPlus2Hours = {
+      type: "rect",
+      xref: "x",
+      yref: "paper",
+      x0: now,
+      y0: 0,
+      x1: now + twoHoursinEpoch,
+      y1: 1,
+      fillcolor: "#FFC850", // orange in Lizard colours
+      opacity: 0.5, // configureerbaar
+      line: {
+        width: 0
+      }
+    };
+    let shapeNowPlusTwoHoursToNowPlusTwelveHours = {
+      type: "rect",
+      xref: "x",
+      yref: "paper",
+      x0: now + twoHoursinEpoch,
+      y0: 0,
+      x1: now + twelveHoursinEpoch,
+      y1: 1,
+      fillcolor: "#FFF082", // yellow in Lizard colours
+      opacity: 0.5,
+      line: {
+        width: 0
+      }
+    };
+    shapes.push(shapeNowToNowPlus2Hours);
+    shapes.push(shapeNowPlusTwoHoursToNowPlusTwelveHours);
 
     if (thresholds) {
       thresholdLines.forEach(thLine => {
@@ -561,6 +605,7 @@ class TimeseriesChartComponent extends Component {
       },
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
+      // plot_bgcolor: "yellow",
     };
   }
 
@@ -618,16 +663,27 @@ class TimeseriesChartComponent extends Component {
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
+    console.log("[F] renderFull this.state.wantedAxes", this.state.wantedAxes);
     const layout = this.getLayout(this.state.wantedAxes, thresholds);
+    console.log("[F] renderFull layout", layout);
     layout.dragmode = "zoom"; // default is "zoom"
-    // no longer be able to zoom on yaxis
+    // No longer be able to zoom on yaxis
     layout.yaxis.fixedrange = true;
-    // no longer be able to zoom on second yaxis
+    // No longer be able to zoom on second yaxis
     layout.yaxis2.fixedrange = true;
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
       Math.round(this.props.height / 2) - Math.round(SPINNER_SIZE / 2);
+    console.log("[F] renderFull combinedEvents", combinedEvents);
+    console.log(
+      "[F] renderFull combinedEvents[0]['x'][0]",
+      combinedEvents[0]["x"][0]
+    );
+    console.log(
+      "[F] renderFull typeof(combinedEvents[0]['x'][0])",
+      typeof combinedEvents[0]["x"][0]
+    ); // object, same as New Date
 
     return (
       <div
