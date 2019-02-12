@@ -407,7 +407,7 @@ class TimeseriesChartComponent extends Component {
     const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
     // Timelines with annotation
     // TODO: Make this configurable
-    let timelines = [
+    const timelines = [
       {
         time: now,
         color: "red",
