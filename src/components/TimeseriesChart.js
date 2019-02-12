@@ -403,58 +403,63 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and timelines
-    // "NOW"
-    const nowLine = this.createVerticalLine(now, "red", isFull);
-    shapes.push(nowLine);
-    const nowAnnotation = this.createAnnotationForVerticalLine(
-      now,
-      "red",
-      "NOW"
-    );
-    annotations.push(nowAnnotation);
-    // "NOW+2"
     const twoHoursinEpoch = 2 * 60 * 60 * 1000;
-    const nowPlus2HoursLine = this.createVerticalLine(
-      now + twoHoursinEpoch,
-      "#FFC850", // orange in Lizard colours
-      isFull
-    );
-    shapes.push(nowPlus2HoursLine);
-    const nowPlus2HoursAnnotation = this.createAnnotationForVerticalLine(
-      now + twoHoursinEpoch,
-      "#FFC850", // orange in Lizard colours
-      "NOW+2 hour"
-    );
-    annotations.push(nowPlus2HoursAnnotation);
-    // "NOW+12"
     const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
-    const nowPlus12HoursLine = this.createVerticalLine(
-      now + twelveHoursinEpoch,
-      "#16A085", // green in Lizard colours
-      isFull
-    );
-    shapes.push(nowPlus12HoursLine);
-    const nowPlus12HoursAnnotation = this.createAnnotationForVerticalLine(
-      now + twelveHoursinEpoch,
-      "#16A085", // green in Lizard colours
-      "NOW+12 hours"
-    );
-    annotations.push(nowPlus12HoursAnnotation);
+    // Timelines with annotation
+    // TODO: Make this configurable
+    let timelines = [
+      {
+        time: now,
+        color: "red",
+        text: "NOW"
+      },
+      {
+        time: now + twoHoursinEpoch,
+        color: "#FFC850", // orange in Lizard colours
+        text: "NOW+2 hour"
+      },
+      {
+        time: now + twelveHoursinEpoch,
+        color: "#16A085", // green in Lizard colours
+        text: "NOW+12 hour"
+      }
+    ];
+    timelines.forEach(function(timeline) {
+      const nowLine = createVerticalLine(timeline.time, timeline.color, isFull);
+      shapes.push(nowLine);
+      const nowAnnotation = createAnnotationForVerticalLine(
+        timeline.time,
+        timeline.color,
+        timeline.text
+      );
+      annotations.push(nowAnnotation);
+    });
 
-    let shapeNowToNowPlus2Hours = this.backgroundColorBetweenTwoX(
-      now,
-      now + twoHoursinEpoch,
-      "#FFC850", // orange in Lizard colours
-      0.5
-    );
-    shapes.push(shapeNowToNowPlus2Hours);
-    let shapeNowPlusTwoHoursToNowPlusTwelveHours = this.backgroundColorBetweenTwoX(
-      now + twoHoursinEpoch,
-      now + twelveHoursinEpoch,
-      "#FFF082", // yellow in Lizard colours
-      0.5
-    );
-    shapes.push(shapeNowPlusTwoHoursToNowPlusTwelveHours);
+    // Background colors
+    // TODO: Make this configurable
+    const backgroundColorShapes = [
+      {
+        x1: now,
+        x2: now + twoHoursinEpoch,
+        color: "#FFC850", // orange in Lizard colours
+        opacity: 0.5
+      },
+      {
+        x1: now + twoHoursinEpoch,
+        x2: now + twelveHoursinEpoch,
+        color: "#FFF082", // yellow in Lizard colours
+        opacity: 0.5
+      }
+    ];
+    backgroundColorShapes.forEach(function(backgroundColorShape) {
+      const backgroundShape = backgroundColorBetweenTwoX(
+        backgroundColorShape.x1,
+        backgroundColorShape.x2,
+        backgroundColorShape.color,
+        backgroundColorShape.opacity
+      );
+      shapes.push(backgroundShape);
+    });
 
     if (thresholds) {
       thresholdLines.forEach(thLine => {
@@ -466,60 +471,6 @@ class TimeseriesChartComponent extends Component {
     }
 
     return { annotations, shapes };
-  }
-
-  createVerticalLine(timeInEpoch, color, isFull) {
-    return {
-      type: "line",
-      layer: "above",
-      x0: timeInEpoch,
-      x1: timeInEpoch,
-      yref: "paper",
-      y0: 0,
-      y1: 1,
-      line: {
-        dash: "dot",
-        color: color,
-        width: isFull ? 2 : 1
-      }
-    };
-  }
-
-  backgroundColorBetweenTwoX(timeInEpoch1, timeInEpoch2, color, opacity) {
-    /*
-    This function creates a shape between 2 x values (with times in epoch)
-    that will be used to show a different background color between these 2
-    x values.
-
-    TODO: translate colors to Lizard colors?
-    */
-    return {
-      type: "rect",
-      xref: "x",
-      yref: "paper",
-      x0: timeInEpoch1,
-      y0: 0,
-      x1: timeInEpoch2,
-      y1: 1,
-      fillcolor: color,
-      opacity: opacity,
-      line: {
-        width: 0
-      }
-    };
-  }
-
-  createAnnotationForVerticalLine(timeInEpoch, color, text) {
-    return {
-      text: text,
-      bordercolor: color,
-      x: timeInEpoch,
-      xanchor: "right",
-      yref: "paper",
-      y: 1,
-      yanchor: "top",
-      showarrow: false
-    };
   }
 
   getYAxis(axes, idx) {
@@ -795,6 +746,65 @@ function mapStateToProps(state) {
     alarms: state.alarms,
     configuredNow: getConfiguredNow(state),
     bootstrap: getBootstrap(state)
+  };
+}
+
+function createVerticalLine(timeInEpoch, color, isFull) {
+  return {
+    type: "line",
+    layer: "above",
+    x0: timeInEpoch,
+    x1: timeInEpoch,
+    yref: "paper",
+    y0: 0,
+    y1: 1,
+    line: {
+      dash: "dot",
+      color: color,
+      width: isFull ? 2 : 1
+    }
+  };
+}
+
+function createAnnotationForVerticalLine(timeInEpoch, color, text) {
+  return {
+    text: text,
+    bordercolor: color,
+    x: timeInEpoch,
+    xanchor: "right",
+    yref: "paper",
+    y: 1,
+    yanchor: "top",
+    showarrow: false
+  };
+}
+
+function backgroundColorBetweenTwoX(
+  timeInEpoch1,
+  timeInEpoch2,
+  color,
+  opacity
+) {
+  /*
+  This function creates a shape between 2 x values (with times in epoch)
+  that will be used to show a different background color between these 2
+  x values.
+
+  TODO: translate colors to Lizard colors?
+  */
+  return {
+    type: "rect",
+    xref: "x",
+    yref: "paper",
+    x0: timeInEpoch1,
+    y0: 0,
+    x1: timeInEpoch2,
+    y1: 1,
+    fillcolor: color,
+    opacity: opacity,
+    line: {
+      width: 0
+    }
   };
 }
 
