@@ -409,22 +409,25 @@ class TimeseriesChartComponent extends Component {
     // TODO: Make this configurable
     const timelines = [
       {
-        time: now,
+        time: 0,
         color: "#C0392B", // red in Lizard colors
         lineDash: "dot",
-        text: "NOW"
+        text: "NOW",
+        isRelativeTimeFromNow: true
       },
       {
-        time: now + twoHoursinEpoch,
+        time: twoHoursinEpoch,
         color: "#FFC850", // orange in Lizard colors
         lineDash: "dot",
-        text: "NOW+2 hour"
+        text: "NOW+2 hour",
+        isRelativeTimeFromNow: true
       },
       {
         time: now + twelveHoursinEpoch,
         color: "#16A085", // green in Lizard colors
         lineDash: "dot",
-        text: "NOW+12 hour"
+        text: "NOW+12 hour",
+        isRelativeTimeFromNow: false
       }
     ];
     timelines.forEach(function(timeline) {
@@ -432,13 +435,17 @@ class TimeseriesChartComponent extends Component {
         timeline.time,
         timeline.color,
         timeline.lineDash,
-        isFull
+        isFull,
+        timeline.isRelativeTimeFromNow,
+        now
       );
       shapes.push(nowLine);
       const nowAnnotation = createAnnotationForVerticalLine(
         timeline.time,
         timeline.color,
-        timeline.text
+        timeline.text,
+        timeline.isRelativeTimeFromNow,
+        now
       );
       annotations.push(nowAnnotation);
     });
@@ -447,16 +454,18 @@ class TimeseriesChartComponent extends Component {
     // TODO: Make this configurable
     const backgroundColorShapes = [
       {
-        x1: now,
-        x2: now + twoHoursinEpoch,
+        x1: 0,
+        x2: twoHoursinEpoch,
         color: "#FFC850", // orange in Lizard colors
-        opacity: 0.5
+        opacity: 0.5,
+        isRelativeTimeFromNow: true
       },
       {
         x1: now + twoHoursinEpoch,
         x2: now + twelveHoursinEpoch,
         color: "#FFF082", // yellow in Lizard colors
-        opacity: 0.5
+        opacity: 0.5,
+        isRelativeTimeFromNow: false
       }
     ];
     backgroundColorShapes.forEach(function(backgroundColorShape) {
@@ -464,7 +473,9 @@ class TimeseriesChartComponent extends Component {
         backgroundColorShape.x1,
         backgroundColorShape.x2,
         backgroundColorShape.color,
-        backgroundColorShape.opacity
+        backgroundColorShape.opacity,
+        backgroundColorShape.isRelativeTimeFromNow,
+        now
       );
       shapes.push(backgroundShape);
     });
@@ -757,12 +768,19 @@ function mapStateToProps(state) {
   };
 }
 
-function createVerticalLine(timeInEpoch, color, lineDash, isFull) {
+function createVerticalLine(
+  timeInEpoch,
+  color,
+  lineDash,
+  isFull,
+  isRelativeTimeFromNow,
+  now
+) {
   return {
     type: "line",
     layer: "above",
-    x0: timeInEpoch,
-    x1: timeInEpoch,
+    x0: isRelativeTimeFromNow ? now + timeInEpoch : timeInEpoch,
+    x1: isRelativeTimeFromNow ? now + timeInEpoch : timeInEpoch,
     yref: "paper",
     y0: 0,
     y1: 1,
@@ -774,11 +792,17 @@ function createVerticalLine(timeInEpoch, color, lineDash, isFull) {
   };
 }
 
-function createAnnotationForVerticalLine(timeInEpoch, color, text) {
+function createAnnotationForVerticalLine(
+  timeInEpoch,
+  color,
+  text,
+  isRelativeTimeFromNow,
+  now
+) {
   return {
     text: text,
     bordercolor: color,
-    x: timeInEpoch,
+    x: isRelativeTimeFromNow ? now + timeInEpoch : timeInEpoch,
     xanchor: "right",
     yref: "paper",
     y: 1,
@@ -791,7 +815,9 @@ function backgroundColorBetweenTwoX(
   timeInEpoch1,
   timeInEpoch2,
   color,
-  opacity
+  opacity,
+  isRelativeTimeFromNow,
+  now
 ) {
   /*
   This function creates a shape between 2 x values (with times in epoch)
@@ -800,13 +826,14 @@ function backgroundColorBetweenTwoX(
 
   TODO: translate colors to Lizard colors?
   */
+
   return {
     type: "rect",
     xref: "x",
     yref: "paper",
-    x0: timeInEpoch1,
+    x0: isRelativeTimeFromNow ? now + timeInEpoch1 : timeInEpoch1,
     y0: 0,
-    x1: timeInEpoch2,
+    x1: isRelativeTimeFromNow ? now + timeInEpoch2 : timeInEpoch2,
     y1: 1,
     fillcolor: color,
     opacity: opacity,
