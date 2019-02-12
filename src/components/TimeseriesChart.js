@@ -410,22 +410,30 @@ class TimeseriesChartComponent extends Component {
     const timelines = [
       {
         time: now,
-        color: "red",
+        color: "#C0392B", // red in Lizard colors
+        lineDash: "dot",
         text: "NOW"
       },
       {
         time: now + twoHoursinEpoch,
-        color: "#FFC850", // orange in Lizard colours
+        color: "#FFC850", // orange in Lizard colors
+        lineDash: "dot",
         text: "NOW+2 hour"
       },
       {
         time: now + twelveHoursinEpoch,
-        color: "#16A085", // green in Lizard colours
+        color: "#16A085", // green in Lizard colors
+        lineDash: "dot",
         text: "NOW+12 hour"
       }
     ];
     timelines.forEach(function(timeline) {
-      const nowLine = createVerticalLine(timeline.time, timeline.color, isFull);
+      const nowLine = createVerticalLine(
+        timeline.time,
+        timeline.color,
+        timeline.lineDash,
+        isFull
+      );
       shapes.push(nowLine);
       const nowAnnotation = createAnnotationForVerticalLine(
         timeline.time,
@@ -441,13 +449,13 @@ class TimeseriesChartComponent extends Component {
       {
         x1: now,
         x2: now + twoHoursinEpoch,
-        color: "#FFC850", // orange in Lizard colours
+        color: "#FFC850", // orange in Lizard colors
         opacity: 0.5
       },
       {
         x1: now + twoHoursinEpoch,
         x2: now + twelveHoursinEpoch,
-        color: "#FFF082", // yellow in Lizard colours
+        color: "#FFF082", // yellow in Lizard colors
         opacity: 0.5
       }
     ];
@@ -749,7 +757,7 @@ function mapStateToProps(state) {
   };
 }
 
-function createVerticalLine(timeInEpoch, color, isFull) {
+function createVerticalLine(timeInEpoch, color, lineDash, isFull) {
   return {
     type: "line",
     layer: "above",
@@ -759,7 +767,7 @@ function createVerticalLine(timeInEpoch, color, isFull) {
     y0: 0,
     y1: 1,
     line: {
-      dash: "dot",
+      dash: lineDash,
       color: color,
       width: isFull ? 2 : 1
     }
