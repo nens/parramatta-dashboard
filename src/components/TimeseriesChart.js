@@ -409,21 +409,21 @@ class TimeseriesChartComponent extends Component {
     // TODO: Make this configurable
     const timelines = [
       {
-        time: 0,
+        epochTimeInMilliSeconds: 0,
         color: "#C0392B", // red in Lizard colors
         lineDash: "dot",
         text: "NOW",
         isRelativeTimeFromNow: true
       },
       {
-        time: twoHoursinEpoch,
+        epochTimeInMilliSeconds: twoHoursinEpoch,
         color: "#FFC850", // orange in Lizard colors
         lineDash: "dot",
         text: "NOW+2 hour",
         isRelativeTimeFromNow: true
       },
       {
-        time: now + twelveHoursinEpoch,
+        epochTimeInMilliSeconds: now + twelveHoursinEpoch,
         color: "#16A085", // green in Lizard colors
         lineDash: "dot",
         text: "NOW+12 hour",
@@ -454,15 +454,15 @@ class TimeseriesChartComponent extends Component {
     // TODO: Make this configurable
     const backgroundColorShapes = [
       {
-        x1: 0,
-        x2: twoHoursinEpoch,
+        x1EpochTimeInMilliSeconds: 0,
+        x2EpochTimeInMilliSeconds: twoHoursinEpoch,
         color: "#FFC850", // orange in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: true
       },
       {
-        x1: now + twoHoursinEpoch,
-        x2: now + twelveHoursinEpoch,
+        x1EpochTimeInMilliSeconds: now + twoHoursinEpoch,
+        x2EpochTimeInMilliSeconds: now + twelveHoursinEpoch,
         color: "#FFF082", // yellow in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: false
