@@ -409,7 +409,7 @@ class TimeseriesChartComponent extends Component {
     const nowAnnotation = this.createAnnotationForVerticalLine(
       now,
       "red",
-      "NOW" // NOW
+      "NOW"
     );
     annotations.push(nowAnnotation);
     // "NOW+2"
@@ -441,35 +441,19 @@ class TimeseriesChartComponent extends Component {
     );
     annotations.push(nowPlus12HoursAnnotation);
 
-    let shapeNowToNowPlus2Hours = {
-      type: "rect",
-      xref: "x",
-      yref: "paper",
-      x0: now,
-      y0: 0,
-      x1: now + twoHoursinEpoch,
-      y1: 1,
-      fillcolor: "#FFC850", // orange in Lizard colours
-      opacity: 0.5, // make this configurable?
-      line: {
-        width: 0
-      }
-    };
-    let shapeNowPlusTwoHoursToNowPlusTwelveHours = {
-      type: "rect",
-      xref: "x",
-      yref: "paper",
-      x0: now + twoHoursinEpoch,
-      y0: 0,
-      x1: now + twelveHoursinEpoch,
-      y1: 1,
-      fillcolor: "#FFF082", // yellow in Lizard colours
-      opacity: 0.5, // make this configurable?
-      line: {
-        width: 0
-      }
-    };
+    let shapeNowToNowPlus2Hours = this.backgroundColorBetweenTwoX(
+      now,
+      now + twoHoursinEpoch,
+      "#FFC850", // orange in Lizard colours
+      0.5
+    );
     shapes.push(shapeNowToNowPlus2Hours);
+    let shapeNowPlusTwoHoursToNowPlusTwelveHours = this.backgroundColorBetweenTwoX(
+      now + twoHoursinEpoch,
+      now + twelveHoursinEpoch,
+      "#FFF082", // yellow in Lizard colours
+      0.5
+    );
     shapes.push(shapeNowPlusTwoHoursToNowPlusTwelveHours);
 
     if (thresholds) {
@@ -497,6 +481,31 @@ class TimeseriesChartComponent extends Component {
         dash: "dot",
         color: color,
         width: isFull ? 2 : 1
+      }
+    };
+  }
+
+  backgroundColorBetweenTwoX(x1, x2, color, opacity) {
+    /*
+    This function creates a shape between 2 x values that will be used to
+    show a different background color between these 2 x values.
+
+    (int) x1, x2: x1 and x2 are epoch times in milliseconds.
+
+    TODO: translate colors to Lizard colors?
+    */
+    return {
+      type: "rect",
+      xref: "x",
+      yref: "paper",
+      x0: x1,
+      y0: 0,
+      x1: x2,
+      y1: 1,
+      fillcolor: color,
+      opacity: opacity,
+      line: {
+        width: 0
       }
     };
   }
