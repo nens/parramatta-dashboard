@@ -485,12 +485,11 @@ class TimeseriesChartComponent extends Component {
     };
   }
 
-  backgroundColorBetweenTwoX(x1, x2, color, opacity) {
+  backgroundColorBetweenTwoX(timeInEpoch1, timeInEpoch2, color, opacity) {
     /*
-    This function creates a shape between 2 x values that will be used to
-    show a different background color between these 2 x values.
-
-    (int) x1, x2: x1 and x2 are epoch times in milliseconds.
+    This function creates a shape between 2 x values (with times in epoch)
+    that will be used to show a different background color between these 2
+    x values.
 
     TODO: translate colors to Lizard colors?
     */
@@ -498,9 +497,9 @@ class TimeseriesChartComponent extends Component {
       type: "rect",
       xref: "x",
       yref: "paper",
-      x0: x1,
+      x0: timeInEpoch1,
       y0: 0,
-      x1: x2,
+      x1: timeInEpoch2,
       y1: 1,
       fillcolor: color,
       opacity: opacity,
@@ -601,7 +600,6 @@ class TimeseriesChartComponent extends Component {
       },
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
-      // plot_bgcolor: "yellow",
     };
   }
 
