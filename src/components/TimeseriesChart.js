@@ -432,7 +432,7 @@ class TimeseriesChartComponent extends Component {
     ];
     timelines.forEach(function(timeline) {
       const nowLine = createVerticalLine(
-        timeline.time,
+        timeline.epochTimeInMilliSeconds,
         timeline.color,
         timeline.lineDash,
         isFull,
@@ -441,7 +441,7 @@ class TimeseriesChartComponent extends Component {
       );
       shapes.push(nowLine);
       const nowAnnotation = createAnnotationForVerticalLine(
-        timeline.time,
+        timeline.epochTimeInMilliSeconds,
         timeline.color,
         timeline.text,
         timeline.isRelativeTimeFromNow,
@@ -454,15 +454,15 @@ class TimeseriesChartComponent extends Component {
     // TODO: Make this configurable
     const backgroundColorShapes = [
       {
-        x1EpochTimeInMilliSeconds: 0,
-        x2EpochTimeInMilliSeconds: twoHoursinEpoch,
+        x1EpochTimeInEpochMilliSeconds: 0,
+        x2EpochTimeInEpochMilliSeconds: twoHoursinEpoch,
         color: "#FFC850", // orange in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: true
       },
       {
-        x1EpochTimeInMilliSeconds: now + twoHoursinEpoch,
-        x2EpochTimeInMilliSeconds: now + twelveHoursinEpoch,
+        x1EpochTimeInEpochMilliSeconds: now + twoHoursinEpoch,
+        x2EpochTimeInEpochMilliSeconds: now + twelveHoursinEpoch,
         color: "#FFF082", // yellow in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: false
@@ -470,8 +470,8 @@ class TimeseriesChartComponent extends Component {
     ];
     backgroundColorShapes.forEach(function(backgroundColorShape) {
       const backgroundShape = backgroundColorBetweenTwoX(
-        backgroundColorShape.x1,
-        backgroundColorShape.x2,
+        backgroundColorShape.x1EpochTimeInEpochMilliSeconds,
+        backgroundColorShape.x2EpochTimeInEpochMilliSeconds,
         backgroundColorShape.color,
         backgroundColorShape.opacity,
         backgroundColorShape.isRelativeTimeFromNow,
