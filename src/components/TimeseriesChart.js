@@ -402,34 +402,90 @@ class TimeseriesChartComponent extends Component {
       annotations = alarmReferenceLines.annotations;
     }
 
-    // Return lines for alarms, ts thresholds and for "now".
-    const nowLine = {
-      type: "line",
-      layer: "above",
-      x0: now,
-      x1: now,
-      yref: "paper",
-      y0: 0,
-      y1: 1,
-      line: {
-        dash: "dot",
-        color: "red",
-        width: isFull ? 2 : 1
+    // Return lines for alarms, ts thresholds and timelines
+    const twoHoursinMilliSeconds = 2 * 60 * 60 * 1000;
+    const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
+    // Timelines with annotation
+    // TODO: Make this configurable
+    // if isRelativeTimeFromNow is true, the time of
+    // <x1/x2>epochTimeInMilliSeconds will be added (or substracted if the
+    // number is negative) from the current time in epoch (in milliseconds).
+    // if isRelativeTimeFromNow is false, the time of
+    // <x1/x2>epochTimeInMilliSeconds will be used as absolute time.
+    // Both are used here (for timeline and background colors and for relative
+    // and absolute) to show a working example of both.
+    const timelines = [
+      {
+        epochTimeInMilliSeconds: 0,
+        color: "#C0392B", // red in Lizard colors
+        lineDash: "dot",
+        text: "NOW",
+        isRelativeTimeFromNow: true
+      },
+      {
+        epochTimeInMilliSeconds: twoHoursinMilliSeconds,
+        color: "#FFC850", // orange in Lizard colors
+        lineDash: "dot",
+        text: "NOW+2 hour",
+        isRelativeTimeFromNow: true
+      },
+      {
+        epochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
+        color: "#16A085", // green in Lizard colors
+        lineDash: "dot",
+        text: "NOW+12 hour",
+        isRelativeTimeFromNow: false
       }
-    };
+    ];
+    timelines.forEach(function(timeline) {
+      const nowLine = createVerticalLine(
+        timeline.epochTimeInMilliSeconds,
+        timeline.color,
+        timeline.lineDash,
+        isFull,
+        timeline.isRelativeTimeFromNow,
+        now
+      );
+      shapes.push(nowLine);
+      const nowAnnotation = createAnnotationForVerticalLine(
+        timeline.epochTimeInMilliSeconds,
+        timeline.color,
+        timeline.text,
+        timeline.isRelativeTimeFromNow,
+        now
+      );
+      annotations.push(nowAnnotation);
+    });
 
-    const nowAnnotation = {
-      text: "NOW",
-      bordercolor: "red",
-      x: now,
-      xanchor: "right",
-      yref: "paper",
-      y: 1,
-      yanchor: "top",
-      showarrow: false
-    };
-
-    annotations.push(nowAnnotation);
+    // Background colors
+    // TODO: Make this configurable
+    const backgroundColorShapes = [
+      {
+        x1EpochTimeInMilliSeconds: 0,
+        x2EpochTimeInMilliSeconds: twoHoursinMilliSeconds,
+        color: "#FFC850", // orange in Lizard colors
+        opacity: 0.5,
+        isRelativeTimeFromNow: true
+      },
+      {
+        x1EpochTimeInMilliSeconds: now + twoHoursinMilliSeconds,
+        x2EpochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
+        color: "#FFF082", // yellow in Lizard colors
+        opacity: 0.5,
+        isRelativeTimeFromNow: false
+      }
+    ];
+    backgroundColorShapes.forEach(function(backgroundColorShape) {
+      const backgroundShape = backgroundColorBetweenTwoX(
+        backgroundColorShape.x1EpochTimeInMilliSeconds,
+        backgroundColorShape.x2EpochTimeInMilliSeconds,
+        backgroundColorShape.color,
+        backgroundColorShape.opacity,
+        backgroundColorShape.isRelativeTimeFromNow,
+        now
+      );
+      shapes.push(backgroundShape);
+    });
 
     if (thresholds) {
       thresholdLines.forEach(thLine => {
@@ -440,7 +496,6 @@ class TimeseriesChartComponent extends Component {
       });
     }
 
-    shapes.push(nowLine);
     return { annotations, shapes };
   }
 
@@ -502,10 +557,16 @@ class TimeseriesChartComponent extends Component {
       height: height,
       yaxis: {
         ...this.getYAxis(axes, 0),
+        // No longer be able to zoom on yaxis on isFull, but keep pointer
+        // cursor when isFull is false.
+        fixedrange: isFull ? true : false,
         visible: showAxis
       },
       yaxis2: {
         ...this.getYAxis(axes, 1),
+        // No longer be able to zoom on second yaxis on isFull, but keep
+        // pointer cursor when isFull is false.
+        fixedrange: isFull ? true : false,
         visible: showAxis
       },
       showlegend: isFull,
@@ -520,6 +581,8 @@ class TimeseriesChartComponent extends Component {
         showgrid: true,
         range: [this.state.start, this.state.end]
       },
+      // False makes it unable to interact with the graph when displayed as tile
+      dragmode: isFull ? "zoom" : false, // default is "zoom"
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
@@ -579,7 +642,6 @@ class TimeseriesChartComponent extends Component {
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
-    const layout = this.getLayout(this.state.wantedAxes, thresholds);
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
@@ -601,7 +663,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="fullPlot"
             data={combinedEvents}
-            layout={layout}
+            layout={this.getLayout(this.state.wantedAxes, thresholds)}
             config={{ displayModeBar: true }}
           />
         ) : (
@@ -709,6 +771,81 @@ function mapStateToProps(state) {
     alarms: state.alarms,
     configuredNow: getConfiguredNow(state),
     bootstrap: getBootstrap(state)
+  };
+}
+
+function createVerticalLine(
+  timeInEpoch,
+  color,
+  lineDash,
+  isFull,
+  isRelativeTimeFromNow,
+  now
+) {
+  return {
+    type: "line",
+    layer: "above",
+    x0: isRelativeTimeFromNow ? now + timeInEpoch : timeInEpoch,
+    x1: isRelativeTimeFromNow ? now + timeInEpoch : timeInEpoch,
+    yref: "paper",
+    y0: 0,
+    y1: 1,
+    line: {
+      dash: lineDash,
+      color: color,
+      width: isFull ? 2 : 1
+    }
+  };
+}
+
+function createAnnotationForVerticalLine(
+  timeInEpoch,
+  color,
+  text,
+  isRelativeTimeFromNow,
+  now
+) {
+  return {
+    text: text,
+    bordercolor: color,
+    x: isRelativeTimeFromNow ? now + timeInEpoch : timeInEpoch,
+    xanchor: "right",
+    yref: "paper",
+    y: 1,
+    yanchor: "top",
+    showarrow: false
+  };
+}
+
+function backgroundColorBetweenTwoX(
+  timeInEpoch1,
+  timeInEpoch2,
+  color,
+  opacity,
+  isRelativeTimeFromNow,
+  now
+) {
+  /*
+  This function creates a shape between 2 x values (with times in epoch)
+  that will be used to show a different background color between these 2
+  x values.
+
+  TODO: translate colors to Lizard colors?
+  */
+
+  return {
+    type: "rect",
+    xref: "x",
+    yref: "paper",
+    x0: isRelativeTimeFromNow ? now + timeInEpoch1 : timeInEpoch1,
+    y0: 0,
+    x1: isRelativeTimeFromNow ? now + timeInEpoch2 : timeInEpoch2,
+    y1: 1,
+    fillcolor: color,
+    opacity: opacity,
+    line: {
+      width: 0
+    }
   };
 }
 
