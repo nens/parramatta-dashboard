@@ -407,11 +407,11 @@ class TimeseriesChartComponent extends Component {
     const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
     // Timelines with annotation
     // TODO: Make this configurable
-    // if isRelativeTimeFromNow is true, the time of epochTimeInMilliSeconds
-    // will be added (or substracted if the number is negative) from the
-    // current time in epoch (in milliseconds).
-    // if isRelativeTimeFromNow is false, the time of epochTimeInMilliSeconds
-    // will be used as absolute time.
+    // if isRelativeTimeFromNow is true, the time of
+    // <x1/x2>epochTimeInMilliSeconds will be added (or substracted if the
+    // number is negative) from the current time in epoch (in milliseconds).
+    // if isRelativeTimeFromNow is false, the time of
+    // <x1/x2>epochTimeInMilliSeconds will be used as absolute time.
     const timelines = [
       {
         epochTimeInMilliSeconds: 0,
