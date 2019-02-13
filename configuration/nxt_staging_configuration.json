@@ -1,0 +1,189 @@
+{
+  "tiles": [
+    {
+      "wmsLayers": [
+        {
+          "layers": "cadaster",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "rasters": [
+        {
+          "opacity": "0.8",
+          "uuid": "907dff4"
+        }
+      ],
+      "shortTitle": "Water depth",
+      "title": "Water depth with a very long title that can be whatever",
+      "datetime": {
+        "to": "end",
+        "type": "relative",
+        "offset": -7200
+      },
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,scenario$1a09cb4,raster$907dff4/point@-33.7916,150.9768,14/-3Days0Hours+3Days0Hours",
+      "bbox": [
+        "150.96240520477298",
+        "-33.81217200269498",
+        "151.03141307830813",
+        "-33.78071682642826"
+      ],
+      "type": "map",
+      "id": 1
+    },
+    {
+      "wmsLayers": [
+        {
+          "layers": "gauges",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        },
+        {
+          "layers": "fwa",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1003,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "assetTypes": [
+        "measuringstation"
+      ],
+      "title": "Measuring stations",
+      "points": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              151,
+              "-33.8",
+              0
+            ]
+          },
+          "title": "This is a point"
+        }
+      ],
+      "bbox": [
+        "150.96240520477298",
+        "-33.81217200269498",
+        "151.03141307830813",
+        "-33.78071682642826"
+      ],
+      "extraLegends": [
+        {
+          "steps": [
+            {
+              "color": "#6e9bca",
+              "text": "Brickfields Creek"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "Darling Mills Creek"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "legend"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "need"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "to"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "function"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "still"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "with"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "scroll bar"
+            }
+          ],
+          "title": "Warning areas"
+        }
+      ],
+      "type": "map",
+      "id": 2
+    },
+    {
+      "type": "statistics",
+      "id": 3,
+      "title": "Breached thresholds"
+    },
+    {
+      "title": "Rain",
+      "url": "https://reg.bom.gov.au/nsw/flood/sydney.shtml",
+      "imageUrl": "https://nxt.staging.lizard.net/media/generated/parramatta.gif",
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$dcf2f11,scenario$969e390,raster$969e6e1/point@-33.7973,150.9801,14/-0Days18Hours+2Days22Hours",
+      "type": "external",
+      "id": 11
+    },
+    {
+      "colors": [
+        "#26A7F1",
+        "#000058"
+      ],
+      "title": "Westmead and North Parramatta",
+      "legendStrings": [
+        "Air Temperature",
+        "Rain"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/favourites/e25d7c93-9052-42cf-86f2-8cb6645ae16e",
+      "timeseries": [
+        "dba206c2-2c7f-49ef-83e8-767499bd1598"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.002886",
+              "-33.810804"
+            ]
+          },
+          "uuid": "14c4ef7"
+        }
+      ],
+      "type": "timeseries",
+      "id": 4
+    },
+    {
+      "title": "Toongabbie creek",
+      "legendStrings": [
+        "Toongabbie water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058"
+      ],
+      "timeseries": [
+        "1b7843d"
+      ],
+      "type": "timeseries",
+      "id": 5
+    }
+  ]
+}
