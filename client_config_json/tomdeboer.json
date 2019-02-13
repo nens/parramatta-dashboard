@@ -1,0 +1,1661 @@
+{
+  "referenceLevels": {
+    "205502": "LGH: 6.993 mAHD",
+    "205503": "LGH: 20.989 mAHD",
+    "205504": "LGH: 17.837 mAHD",
+    "205505": "LGH: 9.178 mAHD",
+    "205506": "LGH: 3.741 mAHD",
+    "205507": "LGH: 0.0 mAHD",
+    "205508": "LGH: 9.345 mAHD",
+    "205509": "LGH: 24.42 mAHD",
+    "205511": "LGH: unknown"
+  },
+  "tiles": [
+    {
+      "wmsLayers": [
+        {
+          "layers": "cadaster",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "rasters": [
+        {
+          "opacity": "0.8",
+          "uuid": "9880a383-0819-4ca3-ba57-5caa4d0b4305"
+        }
+      ],
+      "shortTitle": "Forecasted water depth T0",
+      "title": "Forecasted water depth T0",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 0
+      },
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,scenario$b563191,raster$9880a38/point/@-33.8038,150.9995,14/-0Days14Hours+0Days21Hours",
+      "bbox": [
+        "150.96240520477298",
+        "-33.81217200269498",
+        "151.03141307830813",
+        "-33.78071682642826"
+      ],
+      "type": "map",
+      "id": 1
+    },
+    {
+      "wmsLayers": [
+        {
+          "layers": "fwa",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1003,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        },
+        {
+          "layers": "rainfall_regions",
+          "format": "image/png",
+          "url": "https://maps1.project.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        },
+        {
+          "layers": "gauges",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "assetTypes": [
+        "measuringstation"
+      ],
+      "title": "Measuring stations",
+      "points": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.955850703",
+              "-33.780648433"
+            ]
+          },
+          "title": "Greystanes (McCoy Park warning area)"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.973366953",
+              "-33.783120446"
+            ]
+          },
+          "title": "Oakes Road (Toongabbie warning area)"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.008704700",
+              "-33.807539445"
+            ]
+          },
+          "title": "Brickfields Creek (Brickfields Creek Warning Area)"
+        }
+      ],
+      "bbox": [
+        "150.86",
+        "-33.84",
+        "151.05",
+        "-33.73"
+      ],
+      "extraLegends": [
+        {
+          "steps": [
+            {
+              "color": "#6e9bca",
+              "text": "Brickfields Creek"
+            },
+            {
+              "color": "#64dfc0",
+              "text": "Darling Mills Creek"
+            },
+            {
+              "color": "#e332e0",
+              "text": "Lower Toongabbie and Wentworthville"
+            },
+            {
+              "color": "#bbd573",
+              "text": "McCoys Park"
+            },
+            {
+              "color": "#ca3e5e",
+              "text": "Parramatta CBD Area"
+            },
+            {
+              "color": "#5c30d4",
+              "text": "Toongabbie Creek"
+            },
+            {
+              "color": "#da9851",
+              "text": "Westmead and North Parramatta"
+            }
+          ],
+          "title": "Warning areas"
+        }
+      ],
+      "type": "map",
+      "id": 5
+    },
+    {
+      "title": "12 hour rainfall forecast (AEST)",
+      "url": "https://parramatta.lizard.net/media/generated/parramatta.gif",
+      "imageUrl": "https://parramatta.lizard.net/media/generated/parramatta.gif",
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$51dcbd3,raster$6ccb42c/point@-33.7973,150.9801,14/-0Days12Hours+1Days0Hours",
+      "type": "external",
+      "id": 3
+    },
+    {
+      "wmsLayers": [
+        {
+          "layers": "cadaster",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "rasters": [
+        {
+          "opacity": "0.8",
+          "uuid": "9880a383-0819-4ca3-ba57-5caa4d0b4305"
+        }
+      ],
+      "shortTitle": "Forecasted water depth T+4H",
+      "title": "Forecasted water depth T+4H ",
+      "datetime": {
+        "to": "now",
+        "type": "relative",
+        "offset": 14400,
+        "modulo": 300
+      },
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,scenario$e9cac60,raster$9880a38/point/@-33.8038,150.9995,14/-0Days14Hours+0Days21Hours",
+      "bbox": [
+        "150.96240520477298",
+        "-33.81217200269498",
+        "151.03141307830813",
+        "-33.78071682642826"
+      ],
+      "type": "map",
+      "id": 4
+    },
+    {
+      "type": "statistics",
+      "id": 2,
+      "title": "Breached thresholds (operational forecast at .10 and .40)"
+    },
+    {
+      "shortTitle": "McCoy Park (Toongabbie creek)",
+      "title": "McCoy Park (Toongabbie Creek) (For LGH -24.42m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "30.4",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "27.70",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "27.07",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "McCoy Park",
+        "Blacktown Dog Pound",
+        "Kings Langley",
+        "Seven Hills WS201",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#f1c026",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205509@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "0f0d0957-40af-4f7e-91bd-d4af804a9af6",
+        "66f8a822-8632-4ada-a00a-9b76401cd713",
+        "369c6009-ed0f-44b8-8b77-944f9a56da30",
+        "baebfd87-8283-43e6-afd3-6bb7513ab578"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.952261633",
+              "-33.779484495"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.952261633",
+              "-33.779484495"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 6
+    },
+    {
+      "shortTitle": "Greystanes (McCoy Park warning area)",
+      "title": "Greystanes (McCoy Park warning area) (No actual gauge)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "30.40",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "27.08",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "26.55",
+          "label": "1:20"
+        }
+      ],
+      "colors": [
+        "#d487ff",
+        "#3179c6"
+      ],
+      "legendStrings": [
+        "Simulated water level",
+        "Steps forecast"
+      ],
+      "timeseries": [],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.955850703",
+              "-33.780648433"
+            ]
+          },
+          "uuid": "5fcd824"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.955850703",
+              "-33.780648433"
+            ]
+          },
+          "uuid": "6ccb42c"
+        }
+      ],
+      "type": "timeseries",
+      "id": 7
+    },
+    {
+      "shortTitle": "Johnstons Bridge (Toongabbie Creek)",
+      "title": "Johnstons Bridge (Toongabbie Creek) (For LGH - 17.84m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "29.58",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "26.22",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "25.59",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Johnston Bridge",
+        "Seven Hills Radio Station",
+        "Toongabbie Bowling Club",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205504@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "c1ab578c-8dd5-43c1-90d9-6e8aa57022e7",
+        "5608af04-4f38-4747-9c05-e81a7c30604a",
+        "a85cbac3-34de-4d1c-8799-8f87475c1543"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.96625672",
+              "-33.781178828"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.96625672",
+              "-33.781178828"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 8
+    },
+    {
+      "shortTitle": "Oakes Road (Toongabbie warning area)",
+      "title": "Oakes Road (Toongabbie Warning Area) (No actual gauge)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "28.27",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "24.62",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "23.97",
+          "label": "1:20"
+        }
+      ],
+      "colors": [
+        "#d487ff",
+        "#3179c6"
+      ],
+      "legendStrings": [
+        "Simulated water level",
+        "Steps forecast"
+      ],
+      "timeseries": [],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.973366953",
+              "-33.783120446"
+            ]
+          },
+          "uuid": "5fcd824"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.973366953",
+              "-33.783120446"
+            ]
+          },
+          "uuid": "6ccb42c"
+        }
+      ],
+      "type": "timeseries",
+      "id": 9
+    },
+    {
+      "shortTitle": "Briens Road (Wentworthville and L. Toongabbie Warning Area)",
+      "title": "Briens Road (Wentworthville and L. Toongabbie Warning Area) (For LGH -9.35m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "18.56",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "16.23",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "15.44",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Briens Road",
+        "Merrylands West",
+        "Baulkham Hills South",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205508@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "0de5c794-05cf-46cd-8ac5-00882ef371b7",
+        "41821176-f028-4c47-a5fd-dc16aa1778da",
+        "60c7370a-bb3b-4796-88ac-2f22e6e6f5e9"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.981054813",
+              "-33.80033354"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.981054813",
+              "-33.80033354"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 10
+    },
+    {
+      "shortTitle": "Redbank Road (Westmead and N. Parramatta Warning Area)",
+      "title": "Redbank Road (Westmead and N. Parramatta Warning Area) (For LGH -6.99m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "16.43",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "13.3",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "12.23",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Redbank Road",
+        "Redbank Road",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205502@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "88ddb4f6-8599-4890-9bb3-72727b27f3cf",
+        "a62833d5-8533-4e43-8c72-960572caf027"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.991793767",
+              "-33.79940335"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.991793767",
+              "-33.79940335"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 11
+    },
+    {
+      "shortTitle": "Loyalty Road (Darling Mills Creek)",
+      "title": "Loyalty Road (Darling Mills Creek) (For LGH -20.99m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "43.01",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "34",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "32",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Loyalty Road Basin",
+        "West Pennant Hills",
+        "Muirfield Golf Course",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205503@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "937fcb8d-5d05-4803-9764-1ef55c01285e",
+        "e6f7009f-c1b8-490f-9d61-c42b96c2628f",
+        "e53b782c-3176-4511-ae09-8e969c64293b"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.005370013",
+              "-33.775744393"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.005370013",
+              "-33.775744393"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 12
+    },
+    {
+      "shortTitle": "Lake Parramatta (Hunts Creek)",
+      "title": "Lake Parramatta (Hunts Creek) (LGH unknown)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "30.79",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "29.63",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "29.53",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Lake Parramatta",
+        "Lake Parramatta",
+        "Burnside Homes",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205511@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "0c11bc91-5222-4e65-ab66-f593f3cdc20a",
+        "d0b8e050-47eb-45d5-95ed-d10e8876257c",
+        "021c2c14-58c8-4a3d-9df9-9369c27a8eb5"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.006651",
+              "-33.791032"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.006651",
+              "-33.791032"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 13
+    },
+    {
+      "shortTitle": "North Parramatta (Darling Mills warning area)",
+      "title": "North Parramatta (Darling Mills Warning Area) (For LGH -9.18m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "18.20",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "15.02",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "14.32",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "North Parramatta",
+        "Northmead Bowling Club",
+        "Lake Parramatta",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#c626f1",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205505@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "1818a7e3-9994-400f-b8a4-c190f8102417",
+        "e9d610b6-a458-49c3-9f93-ab04e7cf3d0a",
+        "d0b8e050-47eb-45d5-95ed-d10e8876257c"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.999452385",
+              "-33.795870894"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.999452385",
+              "-33.795870894"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 14
+    },
+    {
+      "shortTitle": "Marsden Weir (Parramatta River)",
+      "title": "Marsden Weir (Parramatta River) (For LGH -3.74m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "10.43",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "8.52",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "7.45",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Marsden Weir",
+        "Valentine Avenue",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205506@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "62617bb2-30f5-4df7-8dca-31a055e29c53",
+        "e626f522-47da-4c84-bd85-45d56b5fce01"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.001535771",
+              "-33.811338687"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.001535771",
+              "-33.811338687"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 15
+    },
+    {
+      "shortTitle": "Riverside Theatre (Parramatta CBD Warning Area)",
+      "title": "Riverside Theatre (Parramatta CBD Warning Area) (For LGH -0m)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "10.16",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "8.22",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "7.13",
+          "label": "1:20"
+        }
+      ],
+      "legendStrings": [
+        "Riverside Theatre",
+        "Valentine Avenue",
+        "Steps forecast",
+        "Simulated water level"
+      ],
+      "colors": [
+        "#26A7F1",
+        "#000058",
+        "#3179c6",
+        "#d487ff"
+      ],
+      "viewInLizardLink": "https://parramatta.lizard.net/en/map/topography,assetgroup$9c2d7b6,raster$6ccb42c/point/measuringstation$205507@-33.7834,150.9636,13/-2Days0Hours+0Days12Hours",
+      "timeseries": [
+        "ce26f2e1-34c8-4fbb-abfa-204a06282f43",
+        "e626f522-47da-4c84-bd85-45d56b5fce01"
+      ],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.003709711",
+              "-33.810578678"
+            ]
+          },
+          "uuid": "6ccb42c"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.003709711",
+              "-33.810578678"
+            ]
+          },
+          "uuid": "5fcd824"
+        }
+      ],
+      "type": "timeseries",
+      "id": 16
+    },
+    {
+      "shortTitle": "Brickfields Creek (Brickfields Creek warning area)",
+      "title": "Brickfields Creek (Brickfields Creek warning area) (No actual gauge)",
+      "thresholds": [
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "10.04",
+          "label": "PMF"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "8.37",
+          "label": "1:100"
+        },
+        {
+          "color": "#4f5051",
+          "unitReference": "mAHD",
+          "value": "8.20",
+          "label": "1:20"
+        }
+      ],
+      "colors": [
+        "#d487ff",
+        "#3179c6"
+      ],
+      "legendStrings": [
+        "Simulated water level",
+        "Steps forecast"
+      ],
+      "timeseries": [],
+      "rasterIntersections": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.008704700",
+              "-33.807539445"
+            ]
+          },
+          "uuid": "5fcd824"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.008704700",
+              "-33.807539445"
+            ]
+          },
+          "uuid": "6ccb42c"
+        }
+      ],
+      "type": "timeseries",
+      "id": 21
+    },
+    {
+      "shortTitle": "Rain North",
+      "title": "Rain Gauges Northern Region",
+      "legendStrings": [
+        "Kings Langley",
+        "Seven Hills WS201",
+        "Baulkham Hills South",
+        "Toongabbie Bowling Club"
+      ],
+      "colors": [
+        "#FF0000",
+        "#00FF00",
+        "#26A7F1",
+        "#000058",
+        "#3179c6"
+      ],
+      "timeseries": [
+        "369c6009-ed0f-44b8-8b77-944f9a56da30",
+        "baebfd87-8283-43e6-afd3-6bb7513ab578",
+        "60c7370a-bb3b-4796-88ac-2f22e6e6f5e9",
+        "a85cbac3-34de-4d1c-8799-8f87475c1543"
+      ],
+      "type": "timeseries",
+      "id": 17
+    },
+    {
+      "shortTitle": "Rain West",
+      "title": "Rain Gauges Western Region",
+      "legendStrings": [
+        "Blacktown Bowling Club",
+        "Blacktown Dog Pound",
+        "Seven Hills Radio Station",
+        "Prospect Reservoir"
+      ],
+      "colors": [
+        "#FF0000",
+        "#00FF00",
+        "#26A7F1",
+        "#000058",
+        "#3179c6"
+      ],
+      "timeseries": [
+        "ce7963a8-aae4-4810-8d9d-d9d3869ae4b2",
+        "66f8a822-8632-4ada-a00a-9b76401cd713",
+        "5608af04-4f38-4747-9c05-e81a7c30604a",
+        "49969142-7890-4177-8cb3-7b920715ac7a"
+      ],
+      "type": "timeseries",
+      "id": 18
+    },
+    {
+      "shortTitle": "Rain East",
+      "title": "Rain Gauges Eastern Region",
+      "legendStrings": [
+        "Baulkham Hills Reservoir",
+        "West Pennant Hills",
+        "Northmead Bowling Club",
+        "Lake Parramatta",
+        "Muirfield Golf Course",
+        "Burnside Homes"
+      ],
+      "colors": [
+        "#FF0000",
+        "#00FF00",
+        "#26A7F1",
+        "#000058",
+        "#3179c6",
+        "#FFFF00"
+      ],
+      "timeseries": [
+        "e9521be2-3425-4ad4-81af-1b88a6750c41",
+        "e6f7009f-c1b8-490f-9d61-c42b96c2628f",
+        "e9d610b6-a458-49c3-9f93-ab04e7cf3d0a",
+        "d0b8e050-47eb-45d5-95ed-d10e8876257c",
+        "e53b782c-3176-4511-ae09-8e969c64293b",
+        "021c2c14-58c8-4a3d-9df9-9369c27a8eb5"
+      ],
+      "type": "timeseries",
+      "id": 19
+    },
+    {
+      "shortTitle": "Rain South",
+      "title": "Rain Gauges Southern Region",
+      "legendStrings": [
+        "Cumberland Golf Course ",
+        "Redbank Road",
+        "Merrylands West",
+        "Valentine Avenue"
+      ],
+      "colors": [
+        "#FF0000",
+        "#00FF00",
+        "#26A7F1",
+        "#000058",
+        "#3179c6"
+      ],
+      "timeseries": [
+        "5eb1fad7-180d-44d5-a83b-74105760cddc",
+        "a62833d5-8533-4e43-8c72-960572caf027",
+        "41821176-f028-4c47-a5fd-dc16aa1778da",
+        "e626f522-47da-4c84-bd85-45d56b5fce01"
+      ],
+      "type": "timeseries",
+      "id": 20
+    }
+  ],
+  "iframeBaseTileId": 5,
+  "publicTiles": [
+    {
+      "wmsLayers": [
+        {
+          "layers": "creeks",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1003,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        },
+        {
+          "layers": "gauges",
+          "format": "image/png",
+          "url": "https://geoserver9.lizard.net/geoserver/parramatta/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1",
+          "height": 256,
+          "zindex": 1004,
+          "width": 256,
+          "srs": "EPSG:3857",
+          "transparent": true
+        }
+      ],
+      "assetTypes": [
+        "measuringstation"
+      ],
+      "title": "Measuring stations",
+      "points": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.955850703",
+              "-33.780648433"
+            ]
+          },
+          "title": "Greystanes (McCoy Park warning area)"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "150.973366953",
+              "-33.783120446"
+            ]
+          },
+          "title": "Oakes Road (Toongabbie warning area)"
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              "151.008704700",
+              "-33.807539445"
+            ]
+          },
+          "title": "Brickfields Creek"
+        }
+      ],
+      "bbox": [
+        "150.86",
+        "-33.84",
+        "151.05",
+        "-33.73"
+      ],
+      "type": "map",
+      "id": 5
+    },
+    {
+      "shortTitle": "Blacktown WL Gauge",
+      "title": "Blacktown Creek (International Peace Park) (For LGH -35.27m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "41",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Blacktown WL Gauge"
+      ],
+      "timeseries": [
+        "86cefeba-6a03-4998-b8b0-aae61083dc5b"
+      ],
+      "type": "timeseries",
+      "id": 6
+    },
+    {
+      "shortTitle": "McCoy Park WL Gauge",
+      "title": "McCoy Park (Toongabbie Creek) (For LGH -24.42m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "30.4",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "McCoy Park WL Gauge"
+      ],
+      "timeseries": [
+        "0f0d0957-40af-4f7e-91bd-d4af804a9af6"
+      ],
+      "type": "timeseries",
+      "id": 7
+    },
+    {
+      "shortTitle": "Johnstons Bridge WL Gauge",
+      "title": "Johnstons Bridge (Toongabbie Creek) (For LGH - 17.84m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "29.58",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Johnstons Bridge WL Gauge"
+      ],
+      "timeseries": [
+        "c1ab578c-8dd5-43c1-90d9-6e8aa57022e7"
+      ],
+      "type": "timeseries",
+      "id": 8
+    },
+    {
+      "shortTitle": "Briens Road WL Gauge",
+      "title": "Briens Road (Toongabbie Creek) (For LGH -9.35m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "18.56",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Briens Road WL Gauge"
+      ],
+      "timeseries": [
+        "0de5c794-05cf-46cd-8ac5-00882ef371b7"
+      ],
+      "type": "timeseries",
+      "id": 10
+    },
+    {
+      "shortTitle": "Redbank Road WL Gauge",
+      "title": "Redbank Road (Toongabbie Creek) (For LGH -6.99m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "16.43",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Redbank Road WL Gauge",
+        "Redbank Road (Rain)"
+      ],
+      "timeseries": [
+        "88ddb4f6-8599-4890-9bb3-72727b27f3cf",
+        "a62833d5-8533-4e43-8c72-960572caf027"
+      ],
+      "type": "timeseries",
+      "id": 11
+    },
+    {
+      "shortTitle": "Loyalty Road WL Gauge",
+      "title": "Loyalty Road (Darling Mills Creek) (For LGH -20.99m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "18.20",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Loyalty Road WL Gauge"
+      ],
+      "timeseries": [
+        "937fcb8d-5d05-4803-9764-1ef55c01285e"
+      ],
+      "type": "timeseries",
+      "id": 12
+    },
+    {
+      "shortTitle": "Lake Parramatta WL Gauge",
+      "title": "Lake Parramatta (Hunts Creek)",
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Lake Parramatta WL Gauge"
+      ],
+      "timeseries": [
+        "0c11bc91-5222-4e65-ab66-f593f3cdc20a"
+      ],
+      "type": "timeseries",
+      "id": 13
+    },
+    {
+      "shortTitle": "North Parramatta WL Gauge",
+      "title": "North Parramatta (Darling Mills Creek) (For LGH -9.18m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "18.20",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "North Parramatta WL Gauge"
+      ],
+      "timeseries": [
+        "1818a7e3-9994-400f-b8a4-c190f8102417"
+      ],
+      "type": "timeseries",
+      "id": 14
+    },
+    {
+      "shortTitle": "Marsden Weir WL Gauge",
+      "title": "Marsden Weir (Parramatta River) (For LGH -3.74m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "10.43",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Marsden Weir WL Gauge"
+      ],
+      "timeseries": [
+        "62617bb2-30f5-4df7-8dca-31a055e29c53"
+      ],
+      "type": "timeseries",
+      "id": 15
+    },
+    {
+      "shortTitle": "Riverside Theatre WL Gauge",
+      "title": "Riverside Theatre (Parramatta River) (For LGH -0m)",
+      "thresholds": [
+        {
+          "color": "#ffffff",
+          "unitReference": "mAHD",
+          "value": "10.16",
+          "label": "."
+        }
+      ],
+      "colors": [
+        "#26A7F1"
+      ],
+      "legendStrings": [
+        "Riverside Theatre WL Gauge"
+      ],
+      "timeseries": [
+        "ce26f2e1-34c8-4fbb-abfa-204a06282f43"
+      ],
+      "type": "timeseries",
+      "id": 16
+    },
+    {
+      "shortTitle": "Kings Langley (Rain)",
+      "title": "Kings Langley (Soccer Federation)",
+      "legendStrings": [
+        "Kings Langley (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "369c6009-ed0f-44b8-8b77-944f9a56da30"
+      ],
+      "type": "timeseries",
+      "id": 17
+    },
+    {
+      "shortTitle": "Blacktown Bowling Club (Rain)",
+      "title": "Blacktown Bowling Club",
+      "legendStrings": [
+        "Blacktown Bowling Club (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "ce7963a8-aae4-4810-8d9d-d9d3869ae4b2"
+      ],
+      "type": "timeseries",
+      "id": 18
+    },
+    {
+      "shortTitle": "Blacktown Dog Pound (Rain)",
+      "title": "Blacktown Dog Pound",
+      "legendStrings": [
+        "Blacktown Dog Pound (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "66f8a822-8632-4ada-a00a-9b76401cd713"
+      ],
+      "type": "timeseries",
+      "id": 19
+    },
+    {
+      "shortTitle": "Seven Hills Radio Station (Rain)",
+      "title": "Seven Hills Radio Station",
+      "legendStrings": [
+        "Seven Hills Radio Station (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "5608af04-4f38-4747-9c05-e81a7c30604a"
+      ],
+      "type": "timeseries",
+      "id": 20
+    },
+    {
+      "shortTitle": "Prospect Reservoir (Rain)",
+      "title": "Prospect Reservoir",
+      "legendStrings": [
+        "Prospect Reservoir (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "49969142-7890-4177-8cb3-7b920715ac7a"
+      ],
+      "type": "timeseries",
+      "id": 21
+    },
+    {
+      "shortTitle": "Seven Hills WS201 (Rain)",
+      "title": "Seven Hills WS201",
+      "legendStrings": [
+        "Seven Hills WS201 (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "baebfd87-8283-43e6-afd3-6bb7513ab578"
+      ],
+      "type": "timeseries",
+      "id": 22
+    },
+    {
+      "shortTitle": "Cumberland Golf Course (Rain)",
+      "title": "Cumberland Golf Course (Greystanes)",
+      "legendStrings": [
+        "Cumberland Golf Course (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "5eb1fad7-180d-44d5-a83b-74105760cddc"
+      ],
+      "type": "timeseries",
+      "id": 23
+    },
+    {
+      "shortTitle": "Baulkham Hills Reservoir (Rain)",
+      "title": "Baulkham Hills Reservoir (Swimming Pool)",
+      "legendStrings": [
+        "Baulkham Hills Reservoir (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "e9521be2-3425-4ad4-81af-1b88a6750c41"
+      ],
+      "type": "timeseries",
+      "id": 24
+    },
+    {
+      "shortTitle": "Baulkham Hills South (Rain)",
+      "title": "Baulkham Hills South (Eucalyptus court)",
+      "legendStrings": [
+        "Baulkham Hills South (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "60c7370a-bb3b-4796-88ac-2f22e6e6f5e9"
+      ],
+      "type": "timeseries",
+      "id": 25
+    },
+    {
+      "shortTitle": "Toongabbie Bowling Club (Rain)",
+      "title": "Toongabbie Bowling Club",
+      "legendStrings": [
+        "Toongabbie Bowling Club (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "a85cbac3-34de-4d1c-8799-8f87475c1543"
+      ],
+      "type": "timeseries",
+      "id": 26
+    },
+    {
+      "shortTitle": "West Pennant Hills (Rain)",
+      "title": "West Pennant Hills (Cumberland State forest)",
+      "legendStrings": [
+        "West Pennant Hills (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "e6f7009f-c1b8-490f-9d61-c42b96c2628f"
+      ],
+      "type": "timeseries",
+      "id": 27
+    },
+    {
+      "shortTitle": "Redbank Road (Rain)",
+      "title": "Redbank Road (Westmead)",
+      "legendStrings": [
+        "Redbank Road (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "a62833d5-8533-4e43-8c72-960572caf027"
+      ],
+      "type": "timeseries",
+      "id": 28
+    },
+    {
+      "shortTitle": "Northmead Bowling Club (Rain)",
+      "title": "Northmead Bowling Club",
+      "legendStrings": [
+        "Northmead Bowling Club (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "e9d610b6-a458-49c3-9f93-ab04e7cf3d0a"
+      ],
+      "type": "timeseries",
+      "id": 29
+    },
+    {
+      "shortTitle": "Lake Parramatta (Rain)",
+      "title": "Lake Parramatta",
+      "legendStrings": [
+        "Lake Parramatta (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "d0b8e050-47eb-45d5-95ed-d10e8876257c"
+      ],
+      "type": "timeseries",
+      "id": 30
+    },
+    {
+      "shortTitle": "Muirfield Golf Course (Rain)",
+      "title": "Muirfield Golf Course (North Rocks)",
+      "legendStrings": [
+        "Muirfield Golf Course (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "e53b782c-3176-4511-ae09-8e969c64293b"
+      ],
+      "type": "timeseries",
+      "id": 31
+    },
+    {
+      "shortTitle": "Burnside Homes (Rain)",
+      "title": "Burnside Homes (North Parramatta)",
+      "legendStrings": [
+        "Burnside Homes (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "021c2c14-58c8-4a3d-9df9-9369c27a8eb5"
+      ],
+      "type": "timeseries",
+      "id": 32
+    },
+    {
+      "shortTitle": "Merrylands West (Rain)",
+      "title": "Merrylands West (Canal Road)",
+      "legendStrings": [
+        "Merrylands West (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "41821176-f028-4c47-a5fd-dc16aa1778da"
+      ],
+      "type": "timeseries",
+      "id": 33
+    },
+    {
+      "shortTitle": "Valentine Avenue (Rain)",
+      "title": "Valentine Avenue (Parramatta)",
+      "legendStrings": [
+        "Valentine Avenue (Rain)"
+      ],
+      "colors": [
+        "#FF0000"
+      ],
+      "timeseries": [
+        "e626f522-47da-4c84-bd85-45d56b5fce01"
+      ],
+      "type": "timeseries",
+      "id": 34
+    }
+  ]
+}

@@ -76,8 +76,16 @@ class MapComponent extends Component {
         rasterObject.first_value_timestamp,
         rasterObject.last_value_timestamp
       );
+      // console.log(
+      //   'wmsUrl if  ',
+      //   wmsUrl,
+      //   this.props.tile.datetime,
+      //   rasterObject.first_value_timestamp,
+      //   rasterObject.last_value_timestamp
+      // );
     } else {
       wmsUrl = rasterObject.wms_info.endpoint;
+      // console.log('wmsUrl else  ', wmsUrl);
     }
 
     return (
@@ -327,6 +335,7 @@ class MapComponent extends Component {
   }
 
   render() {
+    // console.log('mapcomponent render');
     return this.props.isFull ? this.renderFull() : this.renderSmall();
   }
 
@@ -423,6 +432,8 @@ class MapComponent extends Component {
 
   renderSmall() {
     const { tile } = this.props;
+
+    // console.log('rendersmall');
 
     return (
       <div className={styles.MapStyleTile}>

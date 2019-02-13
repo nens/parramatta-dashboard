@@ -71,6 +71,8 @@ class GridLayout extends Component {
   }
 
   render() {
+    // console.log('gridlayout ' );
+
     const { width, height, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
 
@@ -149,7 +151,7 @@ class GridLayout extends Component {
 
             <main style={{ height: height - 100 }}>
               {settingsMenuId === 0 ? (
-                <div style={{padding: 20}}>
+                <div style={{ padding: 20 }}>
                   <h4 style={{ padding: 0, margin: 0 }}>
                     Date/time settings &nbsp;
                     <button onClick={this.props.resetDateTime}>Reset</button>
@@ -177,12 +179,17 @@ class GridLayout extends Component {
                       />
                     </div>
                   </div>
-                  <br/>
-                  <button className={styles.OKButton} onClick={() => this.setState({ settingsMenu: false })}>OK</button>
+                  <br />
+                  <button
+                    className={styles.OKButton}
+                    onClick={() => this.setState({ settingsMenu: false })}
+                  >
+                    OK
+                  </button>
                 </div>
               ) : null}
               {settingsMenuId === 1 ? (
-                <div style={{padding: 20}}>
+                <div style={{ padding: 20 }}>
                   <h4 style={{ padding: 0, margin: 0 }}>Map settings</h4>
                   <hr />
                   <div className={styles.MapSettings}>
@@ -204,13 +211,18 @@ class GridLayout extends Component {
                       Switch
                     </button>
                   </div>
-                  <br/>
-                  <button className={styles.OKButton} onClick={() => this.setState({ settingsMenu: false })}>OK</button>                  
+                  <br />
+                  <button
+                    className={styles.OKButton}
+                    onClick={() => this.setState({ settingsMenu: false })}
+                  >
+                    OK
+                  </button>
                 </div>
               ) : null}
 
               {settingsMenuId === 2 ? (
-                <div style={{padding: 20}}>
+                <div style={{ padding: 20 }}>
                   <h4 style={{ padding: 0, margin: 0 }}>Contact info</h4>
                   <hr />
                   <p>
