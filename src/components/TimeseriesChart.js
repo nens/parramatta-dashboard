@@ -552,6 +552,10 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
+    console.log("[F] getLayout showAxis", showAxis);
+    console.log("[F] getLayout this.state.start", this.state.start);
+    console.log("[F] getLayout this.state.end", this.state.end);
+
     return {
       width: width,
       height: height,
@@ -576,11 +580,12 @@ class TimeseriesChartComponent extends Component {
       },
       margin: margin,
       xaxis: {
-        visible: showAxis,
+        visible: showAxis, // showAxis
         type: "date",
         showgrid: true,
         range: [this.state.start, this.state.end]
       },
+      // hoverinfo: "x+y",  // gaat om hoveren over het datapunt, niet over de xas?
       // False makes it unable to interact with the graph when displayed as tile
       dragmode: isFull ? "zoom" : false, // default is "zoom"
       shapes: annotationsAndShapes.shapes,
@@ -634,6 +639,8 @@ class TimeseriesChartComponent extends Component {
       tile.legendStrings
     );
 
+    console.log("combinedEvents", combinedEvents);
+    console.log("tile", tile);
     return this.props.isFull
       ? this.renderFull(axes, combinedEvents, tile)
       : this.renderTile(axes, combinedEvents, tile);

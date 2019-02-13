@@ -59,7 +59,7 @@ export function combineEventSeries(series, axes, colors, full, legendStrings) {
         .map(event => (event.hasOwnProperty("max") ? event.max : event.sum))
         .map(makeFixed),
       name: getNameForLegend(serie, legendStrings, idx),
-      hoverinfo: full ? "name+y" : "none",
+      hoverinfo: full ? "x+name+y" : "none", // x+name+y
       hoverlabel: {
         namelength: -1
       }
