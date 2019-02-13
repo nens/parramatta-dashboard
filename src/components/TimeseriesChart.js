@@ -403,10 +403,15 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and timelines
-    const twoHoursinEpoch = 2 * 60 * 60 * 1000;
-    const twelveHoursinEpoch = 12 * 60 * 60 * 1000;
+    const twoHoursinMilliSeconds = 2 * 60 * 60 * 1000;
+    const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
     // Timelines with annotation
     // TODO: Make this configurable
+    // if isRelativeTimeFromNow is true, the time of epochTimeInMilliSeconds
+    // will be added (or substracted if the number is negative) from the
+    // current time in epoch (in milliseconds).
+    // if isRelativeTimeFromNow is false, the time of epochTimeInMilliSeconds
+    // will be used as absolute time.
     const timelines = [
       {
         epochTimeInMilliSeconds: 0,
@@ -416,14 +421,14 @@ class TimeseriesChartComponent extends Component {
         isRelativeTimeFromNow: true
       },
       {
-        epochTimeInMilliSeconds: twoHoursinEpoch,
+        epochTimeInMilliSeconds: twoHoursinMilliSeconds,
         color: "#FFC850", // orange in Lizard colors
         lineDash: "dot",
         text: "NOW+2 hour",
         isRelativeTimeFromNow: true
       },
       {
-        epochTimeInMilliSeconds: now + twelveHoursinEpoch,
+        epochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
         color: "#16A085", // green in Lizard colors
         lineDash: "dot",
         text: "NOW+12 hour",
@@ -455,14 +460,14 @@ class TimeseriesChartComponent extends Component {
     const backgroundColorShapes = [
       {
         x1EpochTimeInMilliSeconds: 0,
-        x2EpochTimeInMilliSeconds: twoHoursinEpoch,
+        x2EpochTimeInMilliSeconds: twoHoursinMilliSeconds,
         color: "#FFC850", // orange in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: true
       },
       {
-        x1EpochTimeInMilliSeconds: now + twoHoursinEpoch,
-        x2EpochTimeInMilliSeconds: now + twelveHoursinEpoch,
+        x1EpochTimeInMilliSeconds: now + twoHoursinMilliSeconds,
+        x2EpochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
         color: "#FFF082", // yellow in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: false
