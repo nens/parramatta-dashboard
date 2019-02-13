@@ -454,15 +454,15 @@ class TimeseriesChartComponent extends Component {
     // TODO: Make this configurable
     const backgroundColorShapes = [
       {
-        x1EpochTimeInEpochMilliSeconds: 0,
-        x2EpochTimeInEpochMilliSeconds: twoHoursinEpoch,
+        x1EpochTimeInMilliSeconds: 0,
+        x2EpochTimeInMilliSeconds: twoHoursinEpoch,
         color: "#FFC850", // orange in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: true
       },
       {
-        x1EpochTimeInEpochMilliSeconds: now + twoHoursinEpoch,
-        x2EpochTimeInEpochMilliSeconds: now + twelveHoursinEpoch,
+        x1EpochTimeInMilliSeconds: now + twoHoursinEpoch,
+        x2EpochTimeInMilliSeconds: now + twelveHoursinEpoch,
         color: "#FFF082", // yellow in Lizard colors
         opacity: 0.5,
         isRelativeTimeFromNow: false
@@ -470,8 +470,8 @@ class TimeseriesChartComponent extends Component {
     ];
     backgroundColorShapes.forEach(function(backgroundColorShape) {
       const backgroundShape = backgroundColorBetweenTwoX(
-        backgroundColorShape.x1EpochTimeInEpochMilliSeconds,
-        backgroundColorShape.x2EpochTimeInEpochMilliSeconds,
+        backgroundColorShape.x1EpochTimeInMilliSeconds,
+        backgroundColorShape.x2EpochTimeInMilliSeconds,
         backgroundColorShape.color,
         backgroundColorShape.opacity,
         backgroundColorShape.isRelativeTimeFromNow,
