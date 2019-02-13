@@ -555,10 +555,16 @@ class TimeseriesChartComponent extends Component {
       height: height,
       yaxis: {
         ...this.getYAxis(axes, 0),
+        // No longer be able to zoom on yaxis on isFull, but keep pointer
+        // cursor when isFull is false.
+        fixedrange: isFull ? true : false,
         visible: showAxis
       },
       yaxis2: {
         ...this.getYAxis(axes, 1),
+        // No longer be able to zoom on second yaxis on isFull, but keep
+        // pointer cursor when isFull is false.
+        fixedrange: isFull ? true : false,
         visible: showAxis
       },
       showlegend: isFull,
@@ -573,6 +579,8 @@ class TimeseriesChartComponent extends Component {
         showgrid: true,
         range: [this.state.start, this.state.end]
       },
+      // False makes it unable to interact with the graph when displayed as tile
+      dragmode: isFull ? "zoom" : false, // default is "zoom"
       shapes: annotationsAndShapes.shapes,
       annotations: isFull ? annotationsAndShapes.annotations : []
     };
@@ -632,12 +640,6 @@ class TimeseriesChartComponent extends Component {
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
-    const layout = this.getLayout(this.state.wantedAxes, thresholds);
-    layout.dragmode = "zoom"; // default is "zoom"
-    // No longer be able to zoom on yaxis
-    layout.yaxis.fixedrange = true;
-    // No longer be able to zoom on second yaxis
-    layout.yaxis2.fixedrange = true;
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
@@ -659,7 +661,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="fullPlot"
             data={combinedEvents}
-            layout={layout}
+            layout={this.getLayout(this.state.wantedAxes, thresholds)}
             config={{ displayModeBar: true }}
           />
         ) : (
@@ -686,9 +688,6 @@ class TimeseriesChartComponent extends Component {
     }
 
     const Plot = plotComponentFactory(window.Plotly);
-    const layout = this.getLayout(this.state.wantedAxes);
-    // No longer be able to interact with the graph when displayed as tile
-    layout.dragmode = false; // default is "zoom"
 
     return (
       <div
@@ -705,7 +704,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="gridPlot"
             data={combinedEvents}
-            layout={layout}
+            layout={this.getLayout(this.state.wantedAxes)}
             config={{ displayModeBar: false }}
           />
         ) : (
