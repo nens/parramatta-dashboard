@@ -412,6 +412,8 @@ class TimeseriesChartComponent extends Component {
     // number is negative) from the current time in epoch (in milliseconds).
     // if isRelativeTimeFromNow is false, the time of
     // <x1/x2>epochTimeInMilliSeconds will be used as absolute time.
+    // Both are used here (for timeline and background colors and for relative
+    // and absolute) to show a working example of both.
     const timelines = [
       {
         epochTimeInMilliSeconds: 0,
