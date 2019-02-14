@@ -572,7 +572,9 @@ class TimeseriesChartComponent extends Component {
       showlegend: isFull,
       legend: {
         x: 0.02,
-        borderwidth: 1
+        borderwidth: 1,
+        bordercolor: "rgb(22, 160, 133)", // Lizard green
+        bgcolor: "rgba(22, 160, 133, 0.25)" // Lizard green
       },
       margin: margin,
       xaxis: {
