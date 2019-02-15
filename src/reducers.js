@@ -7,6 +7,7 @@ import {
   RECEIVE_TIMESERIES_EVENTS,
   FETCH_RASTER_EVENTS,
   RECEIVE_RASTER_EVENTS,
+  SET_DATE_TIME,
   SET_DATE,
   SET_TIME,
   RESET_DATETIME,
@@ -217,6 +218,12 @@ function settings(
   action
 ) {
   switch (action.type) {
+    case SET_DATE_TIME:
+      return {
+        ...state,
+        configuredDate: action.data.date,
+        configuredTime: action.data.time
+      };
     case SET_DATE:
       return { ...state, configuredDate: action.date };
     case SET_TIME:

@@ -4,7 +4,7 @@ import FullLayout from "./components/FullLayout";
 import { connect } from "react-redux";
 import { Route, withRouter } from "react-router-dom";
 
-import { fetchAlarms } from "./actions";
+import { fetchAlarms, setDateTimeAction } from "./actions";
 import styles from "./App.css";
 
 class App extends Component {
@@ -12,6 +12,28 @@ class App extends Component {
     if (!this.props.iframeModeActive) {
       this.props.fetchAlarms();
     }
+
+    const props = this.props;
+
+    setInterval(function() {
+      console.log("increment timer _____ ", new Date());
+
+      const jsDateObject = new Date();
+      const dateStr =
+        jsDateObject.getUTCFullYear() +
+        "-" +
+        (jsDateObject.getUTCMonth() + 1) +
+        "-" +
+        jsDateObject.getUTCDate();
+      const timeStr =
+        jsDateObject.getUTCHours() + ":" + jsDateObject.getUTCMinutes();
+
+      props.setDateTimeAction(dateStr, timeStr);
+
+      // store.dispatch({
+      //   type : 'INCREMENT_TIMER'
+      // })
+    }, 50000);
   }
 
   render() {
@@ -32,7 +54,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchAlarms: () => fetchAlarms(dispatch)
+    fetchAlarms: () => fetchAlarms(dispatch),
+    setDateTimeAction: (date, time) => setDateTimeAction(dispatch)
   };
 }
 

@@ -162,8 +162,10 @@ class GridLayout extends Component {
                         type="date"
                         name="date"
                         value={this.props.date}
-                        onChange={event =>
-                          this.props.changeDate(event.target.value)}
+                        onChange={event => {
+                          console.log(event.target.value);
+                          this.props.changeDate(event.target.value);
+                        }}
                       />
                     </div>
                     <div>
@@ -172,8 +174,13 @@ class GridLayout extends Component {
                         type="time"
                         name="time"
                         value={this.props.time}
-                        onChange={event =>
-                          this.props.changeTime(event.target.value)}
+                        onChange={event => {
+                          console.log(
+                            "this.props.changeTime",
+                            event.target.value
+                          );
+                          this.props.changeTime(event.target.value);
+                        }}
                       />
                     </div>
                   </div>

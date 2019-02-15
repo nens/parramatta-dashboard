@@ -23,6 +23,7 @@ export const RECEIVE_BOOTSTRAP_SUCCESS = "RECEIVE_BOOTSTRAP_SUCCESS";
 export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 
 // SettingsActions
+export const SET_DATE_TIME = "SET_DATE_TIME";
 export const SET_DATE = "SET_DATE";
 export const SET_TIME = "SET_TIME";
 export const RESET_DATETIME = "RESET_DATETIME";
@@ -44,6 +45,24 @@ const setIframeModeAction = bool => {
     bool
   };
 };
+
+// setInterval( function() {
+//   console.log('increment timer _____ ', new Date())
+
+//   const jsDateObject = new Date();
+//   const dateStr = jsDateObject.getUTCFullYear() + '-' + (jsDateObject.getUTCMonth() + 1 ) + '-' jsDateObject.getUTCDate();
+//   const timeStr = jsDateObject.getUTCHours() + ':' + jsDateObject.getUTCMinutes();
+
+//   setDateTimeAction(
+//     dateStr,
+//     timeStr
+//   );
+
+//   // store.dispatch({
+//   //   type : 'INCREMENT_TIMER'
+//   // })
+
+// }, 50000 )
 
 export function setIframeMode(dispatch, mustSetIframeMode) {
   dispatch(setIframeModeAction(mustSetIframeMode));
@@ -199,6 +218,17 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
     end,
     events
   };
+};
+
+export const setDateTimeAction = function(dispatch) {
+  return (date, time) =>
+    dispatch({
+      type: SET_DATE_TIME,
+      data: {
+        data: date,
+        time: time
+      }
+    });
 };
 
 export const setDateAction = function(dispatch) {
