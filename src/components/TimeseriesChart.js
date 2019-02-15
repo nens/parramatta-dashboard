@@ -571,8 +571,23 @@ class TimeseriesChartComponent extends Component {
       },
       showlegend: isFull,
       legend: {
-        x: 0.02,
-        borderwidth: 1
+        x: 0.02, // 1.02 is default
+        xanchor: "", // left is default
+        y: 1, // 1 is default
+        yanchor: "", // auto is default
+        borderwidth: 1,
+        bordercolor: "black",
+        bgcolor: "rgba(255, 255, 255, 0.5)",
+        font: {
+          family: "",
+          size: 12,
+          color: ""
+        },
+        orientation: "", // default is v
+        traceorder: "", // normal is default ?
+        tracegroupgap: 10, // default is 10
+        uirevision: "", // default is layout.uirevision ?
+        valign: ""
       },
       margin: margin,
       xaxis: {
