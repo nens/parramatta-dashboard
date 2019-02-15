@@ -19,14 +19,34 @@ import {
 import { BoundingBox, isSamePoint } from "../util/bounds";
 
 import { Map, Marker, Popup, TileLayer, WMSTileLayer } from "react-leaflet";
+
 import Legend from "./Legend";
 import styles from "./Map.css";
 import { IconActiveAlarm, IconInactiveAlarm, IconNoAlarm } from "./MapIcons";
 
+const TILE_HEIGHT = 300;
+
 class MapComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rasterCount: props.tile.rasters ? props.tile.rasters.length : 0,
+      tileLayersPresent: {},
+      lBounds: null,
+
+      // For a "small map", we want to fetch only a minimum WMS images per
+      // raster, a.o.t. a grid of tiles which are each 256*256 px.
+      smallTileDims: { width: 256, height: 256 }
+    };
+
+    this.setTileLayerForRaster = this.setTileLayerForRaster.bind(this);
+  }
   componentDidMount() {
     const { tile } = this.props;
-    const inBboxFilter = this.getBbox().toLizardBbox();
+    const bbox = this.getBbox();
+    const inBboxFilter = bbox.toLizardBbox();
+    const lBounds = bbox.toLeafletBounds();
+    this.setState({ lBounds });
 
     if (tile.assetTypes) {
       tile.assetTypes.forEach(assetType => {
@@ -48,7 +68,24 @@ class MapComponent extends Component {
       });
     }
   }
-
+  componentWillReceiveProps(newProps) {
+    this.setSmallTileDims();
+    const rasters = newProps.tile.rasters || [];
+    rasters.forEach(r => {
+      if (!this.state.tileLayersPresent[r.uuid]) this.setTileLayerForRaster(r);
+    });
+  }
+  setSmallTileDims() {
+    const MULTIPLIER = 1.4; // Make sure tile is somewhate larger than required
+    if (!this.props.isFull) {
+      this.setState({
+        smallTileDims: {
+          width: Math.ceil((window.innerWidth / 3 - 20) * MULTIPLIER),
+          height: Math.ceil(TILE_HEIGHT * MULTIPLIER)
+        }
+      });
+    }
+  }
   getBbox() {
     // Either get it from the tile or return the global constant.
     if (this.props && this.props.tile && this.props.tile.bbox) {
@@ -57,18 +94,7 @@ class MapComponent extends Component {
     }
     return BOUNDS;
   }
-
-  tileLayerForRaster(raster) {
-    let rasterObject = getOrFetch(
-      this.props.getRaster,
-      this.props.fetchRaster,
-      raster.uuid
-    );
-
-    if (!rasterObject) {
-      return null;
-    }
-
+  getRasterWmsUrl(rasterObject) {
     let wmsUrl;
     if (rasterObject.last_value_timestamp && this.props.tile.datetime) {
       wmsUrl = rasterObject.wms_info.addTimeToEndpoint(
@@ -79,9 +105,36 @@ class MapComponent extends Component {
     } else {
       wmsUrl = rasterObject.wms_info.endpoint;
     }
-
+    return wmsUrl;
+  }
+  areAllTileLayersPresent() {
     return (
+      this.state.rasterCount ===
+      Object.keys(this.state.tileLayersPresent).length
+    );
+  }
+  setTileLayerForRaster(raster) {
+    const rasterObject = getOrFetch(
+      this.props.getRaster,
+      this.props.fetchRaster,
+      raster.uuid
+    );
+
+    if (!rasterObject) {
+      return;
+    }
+
+    const tileSize = this.props.isFull
+      ? 256
+      : Math.max(
+          this.state.smallTileDims.width,
+          this.state.smallTileDims.height
+        );
+
+    const wmsUrl = this.getRasterWmsUrl(rasterObject);
+    const newTileLayer = (
       <WMSTileLayer
+        tileSize={tileSize}
         url={wmsUrl}
         key={rasterObject.uuid}
         layers={rasterObject.wms_info.layer}
@@ -89,6 +142,10 @@ class MapComponent extends Component {
         opacity={raster.opacity ? Number.parseFloat(raster.opacity) : 0}
       />
     );
+
+    const updatedTileLayers = { ...this.state.tileLayersPresent };
+    updatedTileLayers[raster.uuid] = newTileLayer;
+    this.setState({ tileLayersPresent: updatedTileLayers });
   }
 
   iconForAsset(asset) {
@@ -411,8 +468,8 @@ class MapComponent extends Component {
           className={styles.MapStyleFull}
         >
           <TileLayer url={this.props.mapBackground.url} />
-          {tile.rasters
-            ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
+          {tile.rasters && this.areAllTileLayersPresent()
+            ? Object.values(this.state.tileLayersPresent)
             : null}
           {this.markers()}
           {wmsLayers}
@@ -423,11 +480,14 @@ class MapComponent extends Component {
 
   renderSmall() {
     const { tile } = this.props;
+    const { lBounds } = this.state;
+
+    if (!lBounds) return null;
 
     return (
       <div className={styles.MapStyleTile}>
         <Map
-          bounds={this.getBbox().toLeafletBounds()}
+          bounds={lBounds}
           attributionControl={false}
           dragging={false}
           touchZoom={false}
@@ -441,8 +501,8 @@ class MapComponent extends Component {
           className={styles.MapStyleTile}
         >
           <TileLayer url={this.props.mapBackground.url} />
-          {tile.rasters
-            ? tile.rasters.map(raster => this.tileLayerForRaster(raster))
+          {tile.rasters && this.areAllTileLayersPresent()
+            ? Object.values(this.state.tileLayersPresent)
             : null}
           {this.markers()}
         </Map>

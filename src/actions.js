@@ -71,7 +71,6 @@ export function fetchAlarms(dispatch) {
 
   getRasterAlarms({ active: true, page_size: 1000 }).then(
     alarms => {
-      console.log("[P] Received alarms:", alarms);
       dispatch(receiveAlarmsAction(alarms, false));
     },
     error => {
