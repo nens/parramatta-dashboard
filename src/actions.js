@@ -142,7 +142,7 @@ export function fetchBootstrap(dispatch, sessionState) {
 
   dispatch(fetchBootstrapAction());
 
-  getBootstrap("parramatta-dashboard").then(
+  getBootstrap("tomdeboer").then(
     bootstrap => {
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },
