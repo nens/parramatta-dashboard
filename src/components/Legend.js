@@ -133,7 +133,7 @@ class Legend extends Component {
         ? legendsList[uuid].data.legend
         : [];
     const legendCssClass = this.getLegendCssClass(iframeModeActive, isMobile);
-    const opacity = 0.8; // ToDO: make this dynamically
+    const opacity = 0.8; // ToDO: make this dynamically and get it from tile
 
     return (
       <div
