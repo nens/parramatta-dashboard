@@ -24,48 +24,39 @@ import styles from "./Map.css";
 import { IconActiveAlarm, IconInactiveAlarm, IconNoAlarm } from "./MapIcons";
 
 class MapComponent extends Component {
-  // make this to hold state of background layer
+  // make this to fetch all rasters
   constructor(props) {
     super(props);
-    let firstRaster = null;
-    console.log("props.tile.rasters", props.tile.rasters);
-    if (props.tile.rasters && props.tile.rasters.length > 0) {
-      firstRaster = getOrFetch(
-        props.getRaster,
-        props.fetchRaster,
-        props.tile.rasters[0].uuid
-      );
-
-      props.tile.rasters.forEach((raster, ind) => {
-        console.log("if (ind !== 0) {", ind);
-        if (ind !== 0) {
-          getOrFetch(props.getRaster, props.fetchRaster, raster.uuid);
-        }
+    if (props.tile.rasters) {
+      props.tile.rasters.forEach(raster => {
+        getOrFetch(
+          // props.getRaster,
+          makeGetter(this.props.rasters),
+          props.fetchRaster,
+          raster.uuid
+        );
       });
     }
-    this.state = {
-      firstRaster: firstRaster
-    };
   }
 
-  // comment out component will receive props because this should be done in the constructor
-  componentWillReceiveProps(props) {
-    if (props.tile.rasters && props.tile.rasters.length > 0) {
-      const firstRaster = getOrFetch(
-        props.getRaster,
-        props.fetchRaster,
-        props.tile.rasters[0].uuid
-      );
-      props.tile.rasters.forEach((raster, ind) => {
-        if (ind !== 0) {
-          getOrFetch(props.getRaster, props.fetchRaster, raster.uuid);
-        }
-      });
-      if (firstRaster) {
-        this.setState({ firstRaster });
-      }
-    }
-  }
+  // // comment out component will receive props because this should be done in the constructor
+  // componentWillReceiveProps(props) {
+  //   if (props.tile.rasters && props.tile.rasters.length > 0) {
+  //     const firstRaster = getOrFetch(
+  //       props.getRaster,
+  //       props.fetchRaster,
+  //       props.tile.rasters[0].uuid
+  //     );
+  //     props.tile.rasters.forEach((raster, ind) => {
+  //       if (ind !== 0) {
+  //         getOrFetch(props.getRaster, props.fetchRaster, raster.uuid);
+  //       }
+  //     });
+  //     if (firstRaster) {
+  //       this.setState({ firstRaster });
+  //     }
+  //   }
+  // }
 
   componentDidMount() {
     const { tile } = this.props;
@@ -102,13 +93,7 @@ class MapComponent extends Component {
   }
 
   tileLayerForRaster(raster) {
-    console.log("raster.uuid _______ ", raster.uuid);
-    // let rasterObject = getOrFetch(
-    //   this.props.getRaster,
-    //   this.props.fetchRaster,
-    //   raster.uuid
-    // );
-    let rasterObject = this.props.getRaster(raster.uuid).object;
+    let rasterObject = makeGetter(this.props.rasters)(raster.uuid).object;
 
     if (!rasterObject) {
       return null;
@@ -116,33 +101,12 @@ class MapComponent extends Component {
 
     let wmsUrl;
     if (rasterObject.last_value_timestamp && this.props.tile.datetime) {
-      console.log(
-        "raster.uuid _______ 2 ",
-        raster.uuid,
-        new DateTime(this.props.tile.datetime)
-      );
-      console.log(
-        "raster.uuid _______ 3 ",
-        rasterObject.first_value_timestamp,
-        rasterObject.last_value_timestamp
-      );
       wmsUrl = rasterObject.wms_info.addTimeToEndpoint(
         new DateTime(this.props.tile.datetime),
         rasterObject.first_value_timestamp,
         rasterObject.last_value_timestamp
       );
-      console.log(
-        "raster.uuid _______ 3.5 ",
-        rasterObject.first_value_timestamp,
-        rasterObject.last_value_timestamp
-      );
-      console.log("raster.uuid _______ 4 ", raster.uuid, wmsUrl);
     } else {
-      console.log(
-        "raster.uuid _______ 999 ",
-        raster.uuid,
-        rasterObject.wms_info.endpoint
-      );
       wmsUrl = rasterObject.wms_info.endpoint;
     }
 
@@ -154,20 +118,6 @@ class MapComponent extends Component {
         styles={rasterObject.options.styles}
         opacity={raster.opacity ? Number.parseFloat(raster.opacity) : 0}
       />
-      // <WMSTileLayer
-      //         key={i}
-      //         url={layer.url}
-      //         format={layer.format}
-      //         layers={layer.layers}
-      //         transparent={layer.transparent}
-      //         width={layer.width}
-      //         height={layer.height}
-      //         srs={layer.srs}
-      //         opacity={layer.opacity !== undefined ? layer.opacity : 0.5}
-      //       />
-      // <div>
-
-      // </div>
     );
   }
 
@@ -407,13 +357,18 @@ class MapComponent extends Component {
   }
 
   render() {
-    console.log("render map component __ ");
     return this.props.isFull ? this.renderFull() : this.renderSmall();
   }
 
   renderFull() {
     const { tile, width, height } = this.props;
-    const { firstRaster } = this.state;
+    let firstRaster = null;
+    if (this.props.tile.rasters && this.props.tile.rasters[0]) {
+      firstRaster = makeGetter(this.props.rasters)(
+        this.props.tile.rasters[0].uuid
+      ).object;
+    }
+
     let legend = null;
 
     if (!firstRaster) {
@@ -523,7 +478,6 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
-    getRaster: makeGetter(state.rasters),
     alarms: state.alarms,
     timeseriesMetadata: state.timeseries,
     allTiles: getAllTiles(state),

@@ -71,7 +71,6 @@ class GridLayout extends Component {
   }
 
   render() {
-    console.log("render map component __  gridd");
     const { width, height, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
 
