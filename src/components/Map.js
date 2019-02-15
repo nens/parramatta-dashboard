@@ -407,6 +407,7 @@ class MapComponent extends Component {
   }
 
   render() {
+    console.log("render map component __ ");
     return this.props.isFull ? this.renderFull() : this.renderSmall();
   }
 
