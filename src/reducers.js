@@ -300,8 +300,14 @@ export const getAllTiles = function(state) {
   if (configuration)
     if (state.iframeMode.active) {
       if (configuration.publicTiles) return configuration.publicTiles;
+      else
+        console.error(
+          "[E] Could not find 'publicTiles' in client-config, " +
+            "while iframeMode is active!"
+        );
     } else {
       if (configuration.tiles) return configuration.tiles;
+      else console.error("[E] Could not find 'tiles' in client-config!");
     }
   return [];
 };
