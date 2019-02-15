@@ -369,7 +369,14 @@ class TimeseriesChartComponent extends Component {
   }
 
   getAnnotationsAndShapes(axes, thresholds) {
-    const { isFull } = this.props;
+    const { isFull, tile } = this.props;
+    console.log("tile", tile);
+    console.log("tile.timelines", tile.timelines);
+    let timelines = [];
+    if (tile.timelines) {
+      timelines = tile.timelines;
+    }
+    console.log("timelines", timelines);
 
     let shapes = [];
     let annotations = [];
@@ -403,40 +410,26 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and timelines
-    const twoHoursinMilliSeconds = 2 * 60 * 60 * 1000;
-    const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
+
     // Timelines with annotation
-    // TODO: Make this configurable
-    // if isRelativeTimeFromNow is true, the time of
-    // <x1/x2>epochTimeInMilliSeconds will be added (or substracted if the
-    // number is negative) from the current time in epoch (in milliseconds).
-    // if isRelativeTimeFromNow is false, the time of
-    // <x1/x2>epochTimeInMilliSeconds will be used as absolute time.
-    // Both are used here (for timeline and background colors and for relative
-    // and absolute) to show a working example of both.
-    const timelines = [
-      {
-        epochTimeInMilliSeconds: 0,
-        color: "#C0392B", // red in Lizard colors
-        lineDash: "dot",
-        text: "NOW",
-        isRelativeTimeFromNow: true
-      },
-      {
-        epochTimeInMilliSeconds: twoHoursinMilliSeconds,
-        color: "#FFC850", // orange in Lizard colors
-        lineDash: "dot",
-        text: "NOW+2 hour",
-        isRelativeTimeFromNow: true
-      },
-      {
-        epochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
-        color: "#16A085", // green in Lizard colors
-        lineDash: "dot",
-        text: "NOW+12 hour",
-        isRelativeTimeFromNow: false
-      }
-    ];
+    // Always show nowline
+    const nowLine = createVerticalLine(
+      0,
+      "#C0392B", // red in Lizard colors
+      "dot",
+      isFull,
+      true,
+      now
+    );
+    shapes.push(nowLine);
+    const nowAnnotation = createAnnotationForVerticalLine(
+      0,
+      "#C0392B", // red in Lizard colors
+      "NOW",
+      true,
+      now
+    );
+    annotations.push(nowAnnotation);
     timelines.forEach(function(timeline) {
       const nowLine = createVerticalLine(
         timeline.epochTimeInMilliSeconds,
@@ -458,6 +451,8 @@ class TimeseriesChartComponent extends Component {
     });
 
     // Background colors
+    const twoHoursinMilliSeconds = 2 * 60 * 60 * 1000;
+    const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
     // TODO: Make this configurable
     const backgroundColorShapes = [
       {
