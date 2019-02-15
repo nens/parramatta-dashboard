@@ -30,7 +30,6 @@ class MapComponent extends Component {
     if (props.tile.rasters) {
       props.tile.rasters.forEach(raster => {
         getOrFetch(
-          // props.getRaster,
           makeGetter(this.props.rasters),
           props.fetchRaster,
           raster.uuid
@@ -38,25 +37,6 @@ class MapComponent extends Component {
       });
     }
   }
-
-  // // comment out component will receive props because this should be done in the constructor
-  // componentWillReceiveProps(props) {
-  //   if (props.tile.rasters && props.tile.rasters.length > 0) {
-  //     const firstRaster = getOrFetch(
-  //       props.getRaster,
-  //       props.fetchRaster,
-  //       props.tile.rasters[0].uuid
-  //     );
-  //     props.tile.rasters.forEach((raster, ind) => {
-  //       if (ind !== 0) {
-  //         getOrFetch(props.getRaster, props.fetchRaster, raster.uuid);
-  //       }
-  //     });
-  //     if (firstRaster) {
-  //       this.setState({ firstRaster });
-  //     }
-  //   }
-  // }
 
   componentDidMount() {
     const { tile } = this.props;
