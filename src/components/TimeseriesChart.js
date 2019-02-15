@@ -370,13 +370,16 @@ class TimeseriesChartComponent extends Component {
 
   getAnnotationsAndShapes(axes, thresholds) {
     const { isFull, tile } = this.props;
-    console.log("tile", tile);
-    console.log("tile.timelines", tile.timelines);
+
     let timelines = [];
     if (tile.timelines) {
       timelines = tile.timelines;
     }
-    console.log("timelines", timelines);
+
+    let backgroundColorShapes = [];
+    if (tile.backgroundColorShapes) {
+      backgroundColorShapes = tile.backgroundColorShapes;
+    }
 
     let shapes = [];
     let annotations = [];
@@ -450,26 +453,8 @@ class TimeseriesChartComponent extends Component {
       annotations.push(nowAnnotation);
     });
 
-    // Background colors
-    const twoHoursinMilliSeconds = 2 * 60 * 60 * 1000;
-    const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
-    // TODO: Make this configurable
-    const backgroundColorShapes = [
-      {
-        x1EpochTimeInMilliSeconds: 0,
-        x2EpochTimeInMilliSeconds: twoHoursinMilliSeconds,
-        color: "#FFC850", // orange in Lizard colors
-        opacity: 0.5,
-        isRelativeTimeFromNow: true
-      },
-      {
-        x1EpochTimeInMilliSeconds: now + twoHoursinMilliSeconds,
-        x2EpochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
-        color: "#FFF082", // yellow in Lizard colors
-        opacity: 0.5,
-        isRelativeTimeFromNow: false
-      }
-    ];
+    // Background color shapes to show a certain background color between
+    // two x axis values.
     backgroundColorShapes.forEach(function(backgroundColorShape) {
       const backgroundShape = backgroundColorBetweenTwoX(
         backgroundColorShape.x1EpochTimeInMilliSeconds,
