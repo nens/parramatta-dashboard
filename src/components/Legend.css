@@ -26,6 +26,7 @@
   right: 0;
   border: 1px solid #ccc;
   box-shadow: 2px 2px 0px 2px rgba(0, 0, 0, 0.29);
+  opacity: 0.8;
 }
 .legendIframe {
   display: none;
