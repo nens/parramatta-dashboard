@@ -109,3 +109,12 @@ But there are more possibilities. Below are the possibilities for legend configu
 	"valign": "top"
 }
 ```
+
+## Legend (map)
+
+The legend of the map can also be configured.
+To configure the opacity of this legend, add an opacity to the configuration of an tile with type map, like below:
+
+```
+"opacity": 0.8
+```
