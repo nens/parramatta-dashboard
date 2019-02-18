@@ -553,11 +553,14 @@ class TimeseriesChartComponent extends Component {
       },
       showlegend: isFull,
       legend: {
-        x: 0.02, // 1.02 is default
-        xanchor: "", // left is default
-        y: 1, // 1 is default
-        yanchor: "", // auto is default
-        borderwidth: 1,
+        x: tile.legend && tile.legend.x ? tile.legend.x : 0.02, // 1.02 is default
+        xanchor:
+          tile.legend && tile.legend.xanchor ? tile.legend.xanchor : undefined, // left is default
+        y: tile.legend && tile.legend.y ? tile.legend.y : 1, // 1 is default
+        yanchor:
+          tile.legend && tile.legend.yanchor ? tile.legend.yanchor : undefined, // auto is default
+        borderwidth:
+          tile.legend && tile.legend.borderwidth ? tile.legend.borderwidth : 1,
         bordercolor:
           tile.legend && tile.legend.bordercolor
             ? tile.legend.bordercolor
@@ -565,15 +568,37 @@ class TimeseriesChartComponent extends Component {
         bgcolor:
           tile.legend && tile.legend.bgcolor ? tile.legend.bgcolor : undefined,
         font: {
-          family: "",
-          size: 12,
-          color: ""
+          family:
+            tile.legend && tile.legend.font && tile.legend.font.family
+              ? tile.legend.font.family
+              : undefined,
+          size:
+            tile.legend && tile.legend.font && tile.legend.font.size
+              ? tile.legend.font.size
+              : undefined, // 12
+          color:
+            tile.legend && tile.legend.font && tile.legend.font.color
+              ? tile.legend.font.color
+              : undefined
         },
-        orientation: "", // default is v
-        traceorder: "", // normal is default ?
-        tracegroupgap: 10, // default is 10
-        uirevision: "", // default is layout.uirevision ?
-        valign: ""
+        orientation:
+          tile.legend && tile.legend.orientation
+            ? tile.legend.orientation
+            : undefined, // default is v
+        traceorder:
+          tile.legend && tile.legend.traceorder
+            ? tile.legend.traceorder
+            : undefined, // normal is default ?
+        tracegroupgap:
+          tile.legend && tile.legend.tracegroupgap
+            ? tile.legend.tracegroupgap
+            : undefined, // default is 10
+        uirevision:
+          tile.legend && tile.legend.uirevision
+            ? tile.legend.uirevision
+            : undefined, // default is layout.uirevision ?
+        valign:
+          tile.legend && tile.legend.valign ? tile.legend.valign : undefined
       },
       margin: margin,
       xaxis: {
