@@ -133,11 +133,6 @@ class Legend extends Component {
         ? legendsList[uuid].data.legend
         : [];
     const legendCssClass = this.getLegendCssClass(iframeModeActive, isMobile);
-    // Set the opacity to 0.8 for backwards compatibility (when no opacity is set).
-    let opacity = 0.8;
-    if (tile.opacity) {
-      opacity = tile.opacity;
-    }
 
     return (
       <div
@@ -145,7 +140,7 @@ class Legend extends Component {
         key={"legend-" + tile.id}
         style={{
           bottom: isOpen ? 0 : -300,
-          opacity: opacity
+          opacity: tile.opacity ? tile.opacity : 0.8
         }}
       >
         <div
