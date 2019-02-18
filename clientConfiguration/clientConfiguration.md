@@ -4,6 +4,7 @@ The jsons in this folder contain the code per example mentioned below.
 # Timelines and backgroundColorShapes
 To add timelines to a type: timeseries tile, you can add the following to this tile:
 All the properties (epochTimeInMilliSeconds, color, lineDash, text, isRelativeTimeFromNow) are mandatory to configure a timeline.
+The time must be set in milliseconds. The time can be set relative from now (by setting isRelativeTimeFromNow to true and epochTimeInMilliSeconds to the time you want it to be relatiive from now, either a positive or negative number). The time can also be set absolute. In this case, isRelativeTimeFromNow should be set to false and epochTimeInMilliSeconds should be set to the epoch time in milliseconds.
 
 ```
 "timelines": [
@@ -41,6 +42,7 @@ All the properties (epochTimeInMilliSeconds, color, lineDash, text, isRelativeTi
 
 To add backgroundColorShapes (that create a background color) to a type: timeseries tile, you can add the following to this tile:
 All the properties (x1EpochTimeInMilliSeconds, x2EpochTimeInMilliSeconds, color, opacity, isRelativeTimeFromNow) are mandatory to configure a backgroundColorShape.
+Like with the timelines, the time must be set in milliseconds. The time can be set relative from now (by setting isRelativeTimeFromNow to true and epochTimeInMilliSeconds to the time you want it to be relatiive from now, either a positive or negative number). The time can also be set absolute. In this case, isRelativeTimeFromNow should be set to false and epochTimeInMilliSeconds should be set to the epoch time in milliseconds.
 
 ```
 "backgroundColorShapes": [
@@ -67,6 +69,8 @@ All the properties (x1EpochTimeInMilliSeconds, x2EpochTimeInMilliSeconds, color,
   }
 ]
 ```
+
+If you want a backgroundColorShape with a line to the right of it, you should create a timeline on that moment in time.
 
 # Legend
 
