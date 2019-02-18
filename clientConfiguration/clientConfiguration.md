@@ -2,6 +2,7 @@ In this folder, some examples are shown for the client configuration in the admi
 The jsons in this folder contain the code per example mentioned below.
 
 # Timelines and backgroundColorShapes
+example-with-timelines-and-backgroundcolorshapes.json
 To add timelines to a type: timeseries tile, you can add the following to this tile:
 All the properties (epochTimeInMilliSeconds, color, lineDash, text, isRelativeTimeFromNow) are mandatory to configure a timeline.
 The time must be set in milliseconds. The time can be set relative from now (by setting isRelativeTimeFromNow to true and epochTimeInMilliSeconds to the time you want it to be relatiive from now, either a positive or negative number). The time can also be set absolute. In this case, isRelativeTimeFromNow should be set to false and epochTimeInMilliSeconds should be set to the epoch time in milliseconds.
@@ -75,7 +76,8 @@ If you want a backgroundColorShape with a line to the right of it, you should cr
 # Legend
 
 ## Legend (timeseries)
-
+example-with-legend.json
+example-with-legend-show-possibilities.json
 The legend for timeseries tiles can also be configured.
 
 Below shows an example of what to add to the configuration of a timeseries tile for a legend that is white with 0.25 opacity:
