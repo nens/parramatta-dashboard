@@ -507,7 +507,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   getLayout(axes, thresholds = null) {
-    const { width, height, isFull, showAxis } = this.props;
+    const { width, height, isFull, showAxis, tile } = this.props;
 
     // We have a bunch of lines with labels, the labels are annotations and
     // the lines are shapes, that's why we have one function to make them.
@@ -532,6 +532,8 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
+    // Use the tile configuration for some of the configuration.
+    // Use the react-plotly default (undefined), if no configuration is set.
     return {
       width: width,
       height: height,
@@ -556,8 +558,12 @@ class TimeseriesChartComponent extends Component {
         y: 1, // 1 is default
         yanchor: "", // auto is default
         borderwidth: 1,
-        bordercolor: "black",
-        bgcolor: "rgba(255, 255, 255, 0.5)",
+        bordercolor:
+          tile.legend && tile.legend.bordercolor
+            ? tile.legend.bordercolor
+            : undefined,
+        bgcolor:
+          tile.legend && tile.legend.bgcolor ? tile.legend.bgcolor : undefined,
         font: {
           family: "",
           size: 12,
