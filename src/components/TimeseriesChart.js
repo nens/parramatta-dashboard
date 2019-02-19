@@ -552,6 +552,9 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
+    // Show the legend when isFull and if tile.showLegend is set to true or
+    // when isFull and tile.showLegend does not exist (to make it backwards
+    // compatible).
     let showLegend = false;
     if (isFull) {
       if (
