@@ -369,7 +369,17 @@ class TimeseriesChartComponent extends Component {
   }
 
   getAnnotationsAndShapes(axes, thresholds) {
-    const { isFull } = this.props;
+    const { isFull, tile } = this.props;
+
+    let timelines = [];
+    if (tile.timelines) {
+      timelines = tile.timelines;
+    }
+
+    let backgroundColorShapes = [];
+    if (tile.backgroundColorShapes) {
+      backgroundColorShapes = tile.backgroundColorShapes;
+    }
 
     let shapes = [];
     let annotations = [];
@@ -403,40 +413,26 @@ class TimeseriesChartComponent extends Component {
     }
 
     // Return lines for alarms, ts thresholds and timelines
-    const twoHoursinMilliSeconds = 2 * 60 * 60 * 1000;
-    const twelveHoursinMilliSeconds = 12 * 60 * 60 * 1000;
+
     // Timelines with annotation
-    // TODO: Make this configurable
-    // if isRelativeTimeFromNow is true, the time of
-    // <x1/x2>epochTimeInMilliSeconds will be added (or substracted if the
-    // number is negative) from the current time in epoch (in milliseconds).
-    // if isRelativeTimeFromNow is false, the time of
-    // <x1/x2>epochTimeInMilliSeconds will be used as absolute time.
-    // Both are used here (for timeline and background colors and for relative
-    // and absolute) to show a working example of both.
-    const timelines = [
-      {
-        epochTimeInMilliSeconds: 0,
-        color: "#C0392B", // red in Lizard colors
-        lineDash: "dot",
-        text: "NOW",
-        isRelativeTimeFromNow: true
-      },
-      {
-        epochTimeInMilliSeconds: twoHoursinMilliSeconds,
-        color: "#FFC850", // orange in Lizard colors
-        lineDash: "dot",
-        text: "NOW+2 hour",
-        isRelativeTimeFromNow: true
-      },
-      {
-        epochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
-        color: "#16A085", // green in Lizard colors
-        lineDash: "dot",
-        text: "NOW+12 hour",
-        isRelativeTimeFromNow: false
-      }
-    ];
+    // Always show nowline
+    const nowLine = createVerticalLine(
+      0,
+      "#C0392B", // red in Lizard colors
+      "dot",
+      isFull,
+      true,
+      now
+    );
+    shapes.push(nowLine);
+    const nowAnnotation = createAnnotationForVerticalLine(
+      0,
+      "#C0392B", // red in Lizard colors
+      "NOW",
+      true,
+      now
+    );
+    annotations.push(nowAnnotation);
     timelines.forEach(function(timeline) {
       const nowLine = createVerticalLine(
         timeline.epochTimeInMilliSeconds,
@@ -457,24 +453,8 @@ class TimeseriesChartComponent extends Component {
       annotations.push(nowAnnotation);
     });
 
-    // Background colors
-    // TODO: Make this configurable
-    const backgroundColorShapes = [
-      {
-        x1EpochTimeInMilliSeconds: 0,
-        x2EpochTimeInMilliSeconds: twoHoursinMilliSeconds,
-        color: "#FFC850", // orange in Lizard colors
-        opacity: 0.5,
-        isRelativeTimeFromNow: true
-      },
-      {
-        x1EpochTimeInMilliSeconds: now + twoHoursinMilliSeconds,
-        x2EpochTimeInMilliSeconds: now + twelveHoursinMilliSeconds,
-        color: "#FFF082", // yellow in Lizard colors
-        opacity: 0.5,
-        isRelativeTimeFromNow: false
-      }
-    ];
+    // Background color shapes to show a certain background color between
+    // two x axis values.
     backgroundColorShapes.forEach(function(backgroundColorShape) {
       const backgroundShape = backgroundColorBetweenTwoX(
         backgroundColorShape.x1EpochTimeInMilliSeconds,
@@ -565,6 +545,9 @@ class TimeseriesChartComponent extends Component {
       }
     }
 
+    // Use the tile configuration for some of the configuration.
+    // Use the react-plotly default (undefined), if no configuration is set.
+
     return {
       width: width,
       height: height,
@@ -584,23 +567,52 @@ class TimeseriesChartComponent extends Component {
       },
       showlegend: showLegend,
       legend: {
-        x: 0.02, // 1.02 is default
-        xanchor: "", // left is default
-        y: 1, // 1 is default
-        yanchor: "", // auto is default
-        borderwidth: 1,
-        bordercolor: "black",
-        bgcolor: "rgba(255, 255, 255, 0.5)",
+        x: tile.legend && tile.legend.x ? tile.legend.x : 0.02, // 1.02 is default
+        xanchor:
+          tile.legend && tile.legend.xanchor ? tile.legend.xanchor : undefined, // left is default
+        y: tile.legend && tile.legend.y ? tile.legend.y : 1, // 1 is default
+        yanchor:
+          tile.legend && tile.legend.yanchor ? tile.legend.yanchor : undefined, // auto is default
+        borderwidth:
+          tile.legend && tile.legend.borderwidth ? tile.legend.borderwidth : 1,
+        bordercolor:
+          tile.legend && tile.legend.bordercolor
+            ? tile.legend.bordercolor
+            : undefined,
+        bgcolor:
+          tile.legend && tile.legend.bgcolor ? tile.legend.bgcolor : undefined,
         font: {
-          family: "",
-          size: 12,
-          color: ""
+          family:
+            tile.legend && tile.legend.font && tile.legend.font.family
+              ? tile.legend.font.family
+              : undefined,
+          size:
+            tile.legend && tile.legend.font && tile.legend.font.size
+              ? tile.legend.font.size
+              : undefined, // 12
+          color:
+            tile.legend && tile.legend.font && tile.legend.font.color
+              ? tile.legend.font.color
+              : undefined
         },
-        orientation: "", // default is v
-        traceorder: "", // normal is default ?
-        tracegroupgap: 10, // default is 10
-        uirevision: "", // default is layout.uirevision ?
-        valign: ""
+        orientation:
+          tile.legend && tile.legend.orientation
+            ? tile.legend.orientation
+            : undefined, // default is v
+        traceorder:
+          tile.legend && tile.legend.traceorder
+            ? tile.legend.traceorder
+            : undefined, // normal is default ?
+        tracegroupgap:
+          tile.legend && tile.legend.tracegroupgap
+            ? tile.legend.tracegroupgap
+            : undefined, // default is 10
+        uirevision:
+          tile.legend && tile.legend.uirevision
+            ? tile.legend.uirevision
+            : undefined, // default is layout.uirevision ?
+        valign:
+          tile.legend && tile.legend.valign ? tile.legend.valign : undefined
       },
       margin: margin,
       xaxis: {

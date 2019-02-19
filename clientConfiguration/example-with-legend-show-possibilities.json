@@ -1,0 +1,19 @@
+"legend": {
+	"x": 5,
+	"xanchor": "right",
+	"y": "0.5",
+	"yanchor": "top",
+	"bgcolor": "rgba(22, 160, 133, 0.25)",
+	"bordercolor": "rgba(22, 160, 133, 1)",
+	"borderwidth": 3,
+	"font": {
+		"family": "Futura, monospace",
+		"size": 17,
+		"color": "purple"
+	},
+	"orientation": "h",
+	"traceorder": "reversed",
+	"tracegroupgap": 20,
+	"uirevision": "",
+	"valign": "top"
+}
