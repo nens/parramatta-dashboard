@@ -532,8 +532,22 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
+    // Show the legend when isFull and if tile.showLegend is set to true or
+    // when isFull and tile.showLegend does not exist (to make it backwards
+    // compatible).
+    let showLegend = false;
+    if (isFull) {
+      if (
+        (tile && tile.showLegend) ||
+        (tile && tile.showLegend === undefined)
+      ) {
+        showLegend = true;
+      }
+    }
+
     // Use the tile configuration for some of the configuration.
     // Use the react-plotly default (undefined), if no configuration is set.
+
     return {
       width: width,
       height: height,
@@ -551,7 +565,7 @@ class TimeseriesChartComponent extends Component {
         fixedrange: isFull ? true : false,
         visible: showAxis
       },
-      showlegend: isFull,
+      showlegend: showLegend,
       legend: {
         x: tile.legend && tile.legend.x ? tile.legend.x : 0.02, // 1.02 is default
         xanchor:
