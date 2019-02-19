@@ -24,6 +24,61 @@ import styles from "./Map.css";
 import { IconActiveAlarm, IconInactiveAlarm, IconNoAlarm } from "./MapIcons";
 
 class MapComponent extends Component {
+  // make this to fetch all rasters
+  constructor(props) {
+    super(props);
+    if (props.tile.rasters) {
+      props.tile.rasters.forEach(raster => {
+        getOrFetch(
+          makeGetter(this.props.rasters),
+          props.fetchRaster,
+          raster.uuid
+        );
+      });
+    }
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   Object.entries(this.props).forEach(([key, val]) =>
+  //     prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+  //   );
+  //   Object.entries(this.state).forEach(([key, val]) =>
+  //     prevState[key] !== val && console.log(`State '${key}' changed`)
+  //   );
+  // }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("shouldComponentUpdate 1");
+
+    // return shallowCompare(this, nextProps, nextState);
+    if (nextProps.rasters.data === this.props.rasters.data) {
+      console.log("shouldComponentUpdate 2");
+      let oldPropKeys = Object.keys(nextProps.rasters.data).map(e => e.uuid);
+      let newPropKeys = Object.keys(this.props.rasters.data).map(e => e.uuid);
+      let newPropKeysHasNewItem =
+        newPropKeys.filter(uuid => {
+          return !oldPropKeys.includes(uuid);
+        }).length !== 0;
+
+      if (newPropKeysHasNewItem) {
+        return true;
+      } else {
+        return false;
+      }
+
+      // if (oldPropKeys.length === newPropKeys.length) {
+      //   console.log('shouldComponentUpdate 3')
+      //   return false;
+      // } else {
+      //   console.log('shouldComponentUpdate 4')
+      //   return true;
+      // }
+    } else {
+      console.log("shouldComponentUpdate 5");
+      return false;
+    }
+  }
+
   componentDidMount() {
     const { tile } = this.props;
     const inBboxFilter = this.getBbox().toLizardBbox();
@@ -59,11 +114,7 @@ class MapComponent extends Component {
   }
 
   tileLayerForRaster(raster) {
-    let rasterObject = getOrFetch(
-      this.props.getRaster,
-      this.props.fetchRaster,
-      raster.uuid
-    );
+    let rasterObject = makeGetter(this.props.rasters)(raster.uuid).object;
 
     if (!rasterObject) {
       return null;
@@ -327,26 +378,20 @@ class MapComponent extends Component {
   }
 
   render() {
+    console.log("map component mapStateToProps render ");
     return this.props.isFull ? this.renderFull() : this.renderSmall();
   }
 
   renderFull() {
     const { tile, width, height } = this.props;
+    let firstRaster = null;
+    if (this.props.tile.rasters && this.props.tile.rasters[0]) {
+      firstRaster = makeGetter(this.props.rasters)(
+        this.props.tile.rasters[0].uuid
+      ).object;
+    }
 
     let legend = null;
-
-    let firstRasterUuid = null;
-    let firstRaster = null;
-
-    if (tile.rasters && tile.rasters.length > 0) {
-      // Only show a legend for the first raster.
-      firstRasterUuid = tile.rasters[0].uuid;
-      firstRaster = getOrFetch(
-        this.props.getRaster,
-        this.props.fetchRaster,
-        firstRasterUuid
-      );
-    }
 
     if (!firstRaster) {
       legend = (
@@ -362,7 +407,7 @@ class MapComponent extends Component {
           drawRaster={true}
           drawVectorIcons={this.tileHasVectors(tile)}
           tile={tile}
-          uuid={firstRasterUuid}
+          uuid={firstRaster.uuid}
           title={firstRaster.name}
           wmsInfo={firstRaster.wms_info}
           observationType={firstRaster.observation_type}
@@ -451,16 +496,62 @@ class MapComponent extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  // let rasters = state.rasters;
+  // let stateRasterKeys = Object.keys( state.rasters.data );
+  // let propRasterKeys = (ownProps.tile.rasters || []).map( e => e.uuid );
+
+  // stateRasterKeys.forEach(uuid=>{
+  //   console.log('propRasterKeys.includes(uuid)',uuid,  propRasterKeys.includes(uuid));
+  //   if (!propRasterKeys.includes(uuid)) {
+  //     rasters.data[uuid] = undefined;
+  //   }
+  // })
+
+  // let rasterData = {};
+  // (ownProps.tile.rasters || []).map( e => e.uuid ).forEach( uuid => {
+  //   rasterData[uuid] = state.rasters.data[uuid];
+  //   // rasterMetaData[uuid] = state.rasters.metadata[uuid];
+  // });
+
+  // console.log('map component mapStateToProps ',state,  Object.keys( state.rasters.data), ownProps, rasterData, rasterMetaData);
+
+  // let obj2 = {a:1,b:2}
+
+  // let newRasters = Object.assign(
+  //   //obj2 }
+  //   Object.entries((state.rasters && state.rasters.data) || {}).filter(([k,v]) => {
+  //     return propRasterKeys.includes(k);
+  //   }).map(([k,v]) => ({[k]:v}))
+  //   // {c: 4, d: 5}, {}
+  // );
+
+  // console.log(
+  //   '1234567',
+  //   newRasters
+  // )
+
+  console.log(
+    "getCurrentMapBackground(state)",
+    JSON.stringify(getCurrentMapBackground(state))
+  );
+
   return {
-    assets: state.assets,
+    assets: [], //state.assets,
     rasters: state.rasters,
-    getRaster: makeGetter(state.rasters),
-    alarms: state.alarms,
-    timeseriesMetadata: state.timeseries,
-    allTiles: getAllTiles(state),
-    mapBackground: getCurrentMapBackground(state),
-    referenceLevels: getReferenceLevels(state)
+    // rasters: {
+    //   data: newRasters, //[],//rasterData,
+    //   metadata: state.rasters.metadata,
+    // },
+    alarms: [], //state.alarms,
+    timeseriesMetadata: [], //state.timeseries,
+    allTiles: [], //getAllTiles(state),
+    mapBackground: {
+      description: "Topographical Map",
+      url:
+        "https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+    }, //getCurrentMapBackground(state),
+    referenceLevels: [] //getReferenceLevels(state)
   };
 }
 
