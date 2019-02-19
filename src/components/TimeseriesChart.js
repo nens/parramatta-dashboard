@@ -527,7 +527,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   getLayout(axes, thresholds = null) {
-    const { width, height, isFull, showAxis } = this.props;
+    const { width, height, isFull, showAxis, tile } = this.props;
 
     // We have a bunch of lines with labels, the labels are annotations and
     // the lines are shapes, that's why we have one function to make them.
@@ -552,6 +552,19 @@ class TimeseriesChartComponent extends Component {
       };
     }
 
+    // Show the legend when isFull and if tile.showLegend is set to true or
+    // when isFull and tile.showLegend does not exist (to make it backwards
+    // compatible).
+    let showLegend = false;
+    if (isFull) {
+      if (
+        (tile && tile.showLegend) ||
+        (tile && tile.showLegend === undefined)
+      ) {
+        showLegend = true;
+      }
+    }
+
     return {
       width: width,
       height: height,
@@ -569,7 +582,7 @@ class TimeseriesChartComponent extends Component {
         fixedrange: isFull ? true : false,
         visible: showAxis
       },
-      showlegend: isFull,
+      showlegend: showLegend,
       legend: {
         x: 0.02, // 1.02 is default
         xanchor: "", // left is default

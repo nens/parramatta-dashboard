@@ -117,6 +117,11 @@ class Legend extends Component {
   }
 
   render() {
+    // Don't show the legend if showLegend is set to false.
+    if (this.props.tile && this.props.tile.showLegend === false) {
+      return null;
+    }
+
     const { width, isOpen } = this.state;
     const {
       drawRaster,
