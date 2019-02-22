@@ -629,6 +629,8 @@ class TimeseriesChartComponent extends Component {
   }
 
   render() {
+    console.log("timeserieschart render 1");
+
     const { tile } = this.props;
 
     const timeseriesEvents = tile.timeseries

@@ -15,27 +15,23 @@ class App extends Component {
 
     const props = this.props;
 
+    // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
     setInterval(function() {
-      console.log("increment timer _____ ", new Date());
-
       const jsDateObject = new Date();
+      const utcMinutes = jsDateObject.getUTCMinutes();
+      const utcMinutesZeroPrefixed =
+        utcMinutes < 10 ? "0" + utcMinutes : utcMinutes;
+
       const dateStr =
         jsDateObject.getUTCFullYear() +
         "-" +
         (jsDateObject.getUTCMonth() + 1) +
         "-" +
         jsDateObject.getUTCDate();
-      const timeStr =
-        jsDateObject.getUTCHours() + ":" + jsDateObject.getUTCMinutes();
-
-      console.log("setInterval 5", dateStr, timeStr);
+      const timeStr = jsDateObject.getUTCHours() + ":" + utcMinutesZeroPrefixed;
 
       props.setDateTimeAction(dateStr, timeStr);
-
-      // store.dispatch({
-      //   type : 'INCREMENT_TIMER'
-      // })
-    }, 15000);
+    }, 60000);
   }
 
   render() {
