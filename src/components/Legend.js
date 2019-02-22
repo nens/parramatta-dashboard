@@ -117,6 +117,11 @@ class Legend extends Component {
   }
 
   render() {
+    // Don't show the legend if showLegend is set to false.
+    if (this.props.tile && this.props.tile.showLegend === false) {
+      return null;
+    }
+
     const { width, isOpen } = this.state;
     const {
       drawRaster,
@@ -139,7 +144,8 @@ class Legend extends Component {
         className={legendCssClass}
         key={"legend-" + tile.id}
         style={{
-          bottom: isOpen ? 0 : -300
+          bottom: isOpen ? 0 : -300,
+          opacity: tile.opacity ? tile.opacity : 0.8
         }}
       >
         <div
