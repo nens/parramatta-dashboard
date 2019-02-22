@@ -71,6 +71,7 @@ class GridLayout extends Component {
   }
 
   render() {
+    console.log("render gridlayout 1");
     const { width, height, settingsMenu, settingsMenuId } = this.state;
     const { tiles, history } = this.props;
 
@@ -399,6 +400,11 @@ class GridLayout extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(
+    "mapStateToProps gridlayout",
+    getConfiguredDate(state),
+    getConfiguredTime(state)
+  );
   return {
     session: state.session,
     tiles: getAllTiles(state),

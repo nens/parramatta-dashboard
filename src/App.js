@@ -28,12 +28,14 @@ class App extends Component {
       const timeStr =
         jsDateObject.getUTCHours() + ":" + jsDateObject.getUTCMinutes();
 
+      console.log("setInterval 5", dateStr, timeStr);
+
       props.setDateTimeAction(dateStr, timeStr);
 
       // store.dispatch({
       //   type : 'INCREMENT_TIMER'
       // })
-    }, 50000);
+    }, 15000);
   }
 
   render() {
@@ -55,7 +57,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchAlarms: () => fetchAlarms(dispatch),
-    setDateTimeAction: (date, time) => setDateTimeAction(dispatch)
+    setDateTimeAction: (date, time) => setDateTimeAction(dispatch)(date, time)
   };
 }
 

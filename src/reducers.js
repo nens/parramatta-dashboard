@@ -217,8 +217,10 @@ function settings(
   },
   action
 ) {
+  console.log("reducer settings", action);
   switch (action.type) {
     case SET_DATE_TIME:
+      console.log("reducer 2 settings", action);
       return {
         ...state,
         configuredDate: action.data.date,

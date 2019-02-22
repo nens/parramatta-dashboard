@@ -221,14 +221,17 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
 };
 
 export const setDateTimeAction = function(dispatch) {
-  return (date, time) =>
+  console.log("setDateTimeAction 1");
+  return (date, time) => {
+    console.log("setDateTimeAction 2");
     dispatch({
       type: SET_DATE_TIME,
       data: {
-        data: date,
+        date: date,
         time: time
       }
     });
+  };
 };
 
 export const setDateAction = function(dispatch) {
