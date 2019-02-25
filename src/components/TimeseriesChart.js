@@ -36,7 +36,9 @@ class TimeseriesChartComponent extends Component {
       wantedAxes: null,
       combinedEvents: null,
       isFinishedFetchingRasterEvents: false,
-      isFinishedFetchingTimeseriesEvents: false
+      isFinishedFetchingTimeseriesEvents: false,
+      // keep xaxis of plotly graph in case data is refreshed by timer but user zoomed in and likes to preserve the zoom level
+      zoomedXaxis: null
     };
 
     this._areAllRasterEventsLoaded = this._areAllRasterEventsLoaded.bind(this);
@@ -689,6 +691,13 @@ class TimeseriesChartComponent extends Component {
     const verticalOffset =
       Math.round(this.props.height / 2) - Math.round(SPINNER_SIZE / 2);
 
+    // set Xaxis of state in case user is zoomed in so zooming is preserved if component is updated by time refresh
+    let tmpLayout = this.getLayout(this.state.wantedAxes, thresholds);
+    // only set xaxis if it is actually set in state of component
+    if (this.state.zoomedXaxis) {
+      tmpLayout.xaxis = this.state.zoomedXaxis;
+    }
+
     return (
       <div
         id={this.state.componentRef}
@@ -705,8 +714,12 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="fullPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes, thresholds)}
+            layout={tmpLayout}
             config={{ displayModeBar: true }}
+            onUpdate={figure => {
+              // set Xaxis of state when user zoomes in so zooming is preserved if component is updated by time refresh
+              this.setState({ zoomedXaxis: figure.layout.xaxis });
+            }}
           />
         ) : (
           <div
