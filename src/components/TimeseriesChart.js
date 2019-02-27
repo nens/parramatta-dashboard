@@ -104,6 +104,30 @@ class TimeseriesChartComponent extends Component {
     });
   }
 
+  componentWillUpdate() {
+    const currentTime = currentPeriod(
+      this.props.configuredNow,
+      this.props.bootstrap
+    );
+    console.log(
+      "componentWillUpdate currentPeriod",
+      currentPeriod,
+      currentTime
+    );
+
+    if (this.state.start != currentTime.start) {
+      this.setState({
+        start: currentTime.start,
+        end: currentTime.end
+      });
+    }
+  }
+
+  componentDidUpdate() {
+    console.log("timeseriescharts componentDidUpdate 1");
+    this.updateTimeseries();
+  }
+
   /////////////////////////////////////////////////////////////////////////////
   // Component - custom functions /////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -115,11 +139,18 @@ class TimeseriesChartComponent extends Component {
   }
 
   updateTimeseries() {
-    (this.props.tile.timeseries || []).map(uuid =>
-      this.props.getTimeseriesEvents(uuid, this.state.start, this.state.end, {
-        minpoints: MAX_TIMESERIES_POINTS
-      })
-    );
+    console.log("updateTimeseries 1");
+    (this.props.tile.timeseries || []).map(uuid => {
+      console.log("updateTimeseries 2");
+      return this.props.getTimeseriesEvents(
+        uuid,
+        this.state.start,
+        this.state.end,
+        {
+          minpoints: MAX_TIMESERIES_POINTS
+        }
+      );
+    });
 
     (this.props.tile.rasterIntersections || []).map(intersection =>
       this.props.getRasterEvents(
@@ -779,56 +810,6 @@ class TimeseriesChartComponent extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    measuringstations: state.assets.measuringstation || {},
-    getRaster: makeGetter(state.rasters),
-    timeseries: state.timeseries,
-    rasterEvents: state.rasterEvents,
-    areRasterEventsLoaded: intersectionUuid => {
-      let shortIntersectionUuid, theRasterEventsObject;
-      if (!state.rasterEvents) {
-        console.log(
-          "[W] Cannot check for isFetching since state.rasterEvents =",
-          state.rasterEvents
-        );
-        return null;
-      } else {
-        for (let longUuid in state.rasterEvents) {
-          shortIntersectionUuid = longUuid.slice(0, 7);
-          if (shortIntersectionUuid === intersectionUuid) {
-            theRasterEventsObject = Object.values(
-              state.rasterEvents[longUuid]
-            )[0];
-            return theRasterEventsObject.isFetching === false;
-          }
-        }
-      }
-    },
-    timeseriesEvents: state.timeseriesEvents,
-    areTimeseriesEventsLoaded: tsUuid => {
-      if (!state.timeseriesEvents) {
-        console.log(
-          "[W] Cannot check for isFetching since state.timeseriesEvents =",
-          state.timeseriesEvents
-        );
-        return null;
-      } else {
-        let theTimeseriesEventsObject;
-        for (let longUuid in state.timeseriesEvents) {
-          if (longUuid === tsUuid) {
-            theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
-            return theTimeseriesEventsObject.isFetching === false;
-          }
-        }
-      }
-    },
-    alarms: state.alarms,
-    configuredNow: getConfiguredNow(state),
-    bootstrap: getBootstrap(state)
-  };
-}
-
 function createVerticalLine(
   timeInEpoch,
   color,
@@ -901,6 +882,56 @@ function backgroundColorBetweenTwoX(
     line: {
       width: 0
     }
+  };
+}
+
+function mapStateToProps(state) {
+  return {
+    measuringstations: state.assets.measuringstation || {},
+    getRaster: makeGetter(state.rasters),
+    timeseries: state.timeseries,
+    rasterEvents: state.rasterEvents,
+    areRasterEventsLoaded: intersectionUuid => {
+      let shortIntersectionUuid, theRasterEventsObject;
+      if (!state.rasterEvents) {
+        console.log(
+          "[W] Cannot check for isFetching since state.rasterEvents =",
+          state.rasterEvents
+        );
+        return null;
+      } else {
+        for (let longUuid in state.rasterEvents) {
+          shortIntersectionUuid = longUuid.slice(0, 7);
+          if (shortIntersectionUuid === intersectionUuid) {
+            theRasterEventsObject = Object.values(
+              state.rasterEvents[longUuid]
+            )[0];
+            return theRasterEventsObject.isFetching === false;
+          }
+        }
+      }
+    },
+    timeseriesEvents: state.timeseriesEvents,
+    areTimeseriesEventsLoaded: tsUuid => {
+      if (!state.timeseriesEvents) {
+        console.log(
+          "[W] Cannot check for isFetching since state.timeseriesEvents =",
+          state.timeseriesEvents
+        );
+        return null;
+      } else {
+        let theTimeseriesEventsObject;
+        for (let longUuid in state.timeseriesEvents) {
+          if (longUuid === tsUuid) {
+            theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
+            return theTimeseriesEventsObject.isFetching === false;
+          }
+        }
+      }
+    },
+    alarms: state.alarms,
+    configuredNow: getConfiguredNow(state),
+    bootstrap: getBootstrap(state)
   };
 }
 
