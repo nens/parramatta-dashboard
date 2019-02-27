@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import { fetchAlarms } from "../actions";
 import { IconActiveAlarmSVG, IconInactiveAlarmSVG } from "./Icons";
+import { getConfiguredNow } from "../reducers";
 
 import styles from "./FullStatistics.css";
 
@@ -10,6 +11,17 @@ class FullStatistics extends Component {
   componentDidMount() {
     if (!this.props.iframeModeActive) {
       this.props.fetchAlarms();
+    }
+  }
+  componentDidUpdate(prevProps) {
+    console.log("fullstatistics.js componentDidUpdate ", prevProps);
+    if (
+      !prevProps.configuredNow ||
+      this.props.configuredNow.getTime() != prevProps.configuredNow.getTime()
+    ) {
+      if (!this.props.iframeModeActive) {
+        this.props.fetchAlarms();
+      }
     }
   }
   getDatetimeString(utcRep) {
@@ -98,7 +110,8 @@ class FullStatistics extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     alarms: state.alarms,
-    iframeModeActive: state.iframeMode.active
+    iframeModeActive: state.iframeMode.active,
+    configuredNow: getConfiguredNow(state)
   };
 };
 
