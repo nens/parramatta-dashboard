@@ -214,6 +214,8 @@ function settings(
   state = {
     configuredDate: null,
     configuredTime: null,
+    nowDate: null,
+    nowTime: null,
     dateTimeStatic: false,
     mapBackground: MAP_BACKGROUNDS[1]
   },
@@ -238,7 +240,9 @@ function settings(
         return {
           ...state,
           configuredDate: action.data.date,
-          configuredTime: action.data.time
+          configuredTime: action.data.time,
+          nowDate: action.data.date,
+          nowTime: action.data.time
         };
       }
 

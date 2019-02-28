@@ -9,30 +9,36 @@ import { fetchAlarms, setDateTimeAction } from "./actions";
 import styles from "./App.css";
 
 class App extends Component {
+  componentWillMount() {
+    this.setDateTimeActionWithNow();
+    const that = this;
+    // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
+    setInterval(function() {
+      that.setDateTimeActionWithNow();
+    }, 60000);
+  }
+
   componentDidMount() {
     if (!this.props.iframeModeActive) {
       this.props.fetchAlarms();
     }
+  }
 
-    const props = this.props;
+  setDateTimeActionWithNow() {
+    const jsDateObject = new Date();
+    const utcMinutes = jsDateObject.getUTCMinutes();
+    const utcMinutesZeroPrefixed =
+      utcMinutes < 10 ? "0" + utcMinutes : utcMinutes;
 
-    // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
-    setInterval(function() {
-      const jsDateObject = new Date();
-      const utcMinutes = jsDateObject.getUTCMinutes();
-      const utcMinutesZeroPrefixed =
-        utcMinutes < 10 ? "0" + utcMinutes : utcMinutes;
+    const dateStr =
+      jsDateObject.getUTCFullYear() +
+      "-" +
+      (jsDateObject.getUTCMonth() + 1) +
+      "-" +
+      jsDateObject.getUTCDate();
+    const timeStr = jsDateObject.getUTCHours() + ":" + utcMinutesZeroPrefixed;
 
-      const dateStr =
-        jsDateObject.getUTCFullYear() +
-        "-" +
-        (jsDateObject.getUTCMonth() + 1) +
-        "-" +
-        jsDateObject.getUTCDate();
-      const timeStr = jsDateObject.getUTCHours() + ":" + utcMinutesZeroPrefixed;
-
-      props.setDateTimeAction(dateStr, timeStr);
-    }, 60000);
+    this.props.setDateTimeAction(dateStr, timeStr);
   }
 
   componentDidUpdate(prevProps) {

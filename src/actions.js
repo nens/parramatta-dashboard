@@ -144,7 +144,7 @@ export function fetchBootstrap(dispatch, sessionState) {
 
   dispatch(fetchBootstrapAction());
 
-  getBootstrap("tomdeboer").then(
+  getBootstrap("tdb_parra_vnrdsxt574").then(
     bootstrap => {
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },
