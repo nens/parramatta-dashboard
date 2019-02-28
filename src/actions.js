@@ -73,7 +73,6 @@ export function fetchAlarms(dispatch) {
 
   getRasterAlarms({ active: true, page_size: 1000 }).then(
     alarms => {
-      console.log("[P] Received alarms:", alarms);
       dispatch(receiveAlarmsAction(alarms, false));
     },
     error => {
@@ -165,7 +164,6 @@ export const addTimeseries = (uuid, timeseries) => {
 };
 
 const fetchTimeseriesEventsAction = (uuid, start, end) => {
-  console.log("fetchTimeseriesEventsAction 1");
   return {
     type: FETCH_TIMESERIES_EVENTS,
     uuid,
@@ -289,18 +287,13 @@ export function getTimeseriesMetadataAction(uuid) {
 }
 
 export function getTimeseriesEvents(uuid, start, end, params) {
-  console.log("getTimeseriesEvents 1", start, end);
   return (dispatch, getState) => {
-    console.log("getTimeseriesEvents 2");
     const timeseriesEvents = getState().timeseriesEvents;
     const events = timeseriesEvents[uuid];
-    console.log("getTimeseriesEvents 2.5 ", events);
 
     if (events && events.start === start && events.end === end) {
-      console.log("getTimeseriesEvents 3");
       return; // Up to date.
     } else if (!events || !events.isFetching) {
-      console.log("getTimeseriesEvents 4");
       // Fetch it
       dispatch(fetchTimeseriesEventsAction(uuid, start, end));
 

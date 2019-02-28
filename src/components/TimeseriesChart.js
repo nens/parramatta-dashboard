@@ -109,11 +109,6 @@ class TimeseriesChartComponent extends Component {
       this.props.configuredNow,
       this.props.bootstrap
     );
-    console.log(
-      "componentWillUpdate currentPeriod",
-      currentPeriod,
-      currentTime
-    );
 
     if (this.state.start != currentTime.start) {
       this.setState({
@@ -124,7 +119,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   componentDidUpdate() {
-    console.log("timeseriescharts componentDidUpdate 1");
     this.updateTimeseries();
   }
 
@@ -139,9 +133,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   updateTimeseries() {
-    console.log("updateTimeseries 1");
     (this.props.tile.timeseries || []).map(uuid => {
-      console.log("updateTimeseries 2");
       return this.props.getTimeseriesEvents(
         uuid,
         this.state.start,
@@ -662,8 +654,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   render() {
-    console.log("timeserieschart render 1");
-
     const { tile } = this.props;
 
     const timeseriesEvents = tile.timeseries
@@ -894,10 +884,6 @@ function mapStateToProps(state) {
     areRasterEventsLoaded: intersectionUuid => {
       let shortIntersectionUuid, theRasterEventsObject;
       if (!state.rasterEvents) {
-        console.log(
-          "[W] Cannot check for isFetching since state.rasterEvents =",
-          state.rasterEvents
-        );
         return null;
       } else {
         for (let longUuid in state.rasterEvents) {

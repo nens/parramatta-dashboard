@@ -14,7 +14,6 @@ class FullStatistics extends Component {
     }
   }
   componentDidUpdate(prevProps) {
-    console.log("fullstatistics.js componentDidUpdate ", prevProps);
     if (
       !prevProps.configuredNow ||
       this.props.configuredNow.getTime() != prevProps.configuredNow.getTime()

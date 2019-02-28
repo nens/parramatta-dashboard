@@ -221,7 +221,6 @@ function settings(
   },
   action
 ) {
-  console.log("reducer settings", action);
   switch (action.type) {
     // the case SET_DATE_TIME_STATIC case is for now not used, but instead done via other existing actions
     // anyway it may be used for training module. otherwise it should be removed.
@@ -231,7 +230,6 @@ function settings(
         dateTimeStatic: action.data
       };
     case SET_DATE_TIME:
-      console.log("reducer 2 settings", action);
       // only update date time is this is not static
       // date time is static if the user configured a static date time through settings
       if (state.dateTimeStatic === true) {

@@ -42,18 +42,11 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(
-      "app.js componentDidUpdate ",
-      prevProps.configuredNow,
-      this.props.configuredNow
-    );
     if (
       !prevProps.configuredNow ||
       this.props.configuredNow.getTime() != prevProps.configuredNow.getTime()
     ) {
-      console.log("app.js componentDidUpdate time did change ");
       if (!this.props.iframeModeActive) {
-        console.log("this.props.fetchAlarms() ");
         this.props.fetchAlarms();
       }
     }
