@@ -648,6 +648,7 @@ class TimeseriesChartComponent extends Component {
       this.props.isFull,
       tile.legendStrings
     );
+    console.log("combinedEvents", combinedEvents);
 
     return this.props.isFull
       ? this.renderFull(axes, combinedEvents, tile)
@@ -719,12 +720,13 @@ class TimeseriesChartComponent extends Component {
       >
         {this.areAllEventsLoaded(tile) ? (
           <Plot
-            className="gridPlot"
+            // className="gridPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes)}
-            config={{ displayModeBar: false }}
+            // layout={this.getLayout(this.state.wantedAxes)}
+            // config={{ displayModeBar: false }}
           />
         ) : (
+          // <div></div>
           <div
             style={{
               position: "relative",
