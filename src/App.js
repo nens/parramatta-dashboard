@@ -44,6 +44,7 @@ class App extends Component {
   componentDidUpdate(prevProps) {
     if (
       !prevProps.configuredNow ||
+      (prevProps.configuredNow && !this.props.configuredNow) ||
       this.props.configuredNow.getTime() != prevProps.configuredNow.getTime()
     ) {
       if (!this.props.iframeModeActive) {
