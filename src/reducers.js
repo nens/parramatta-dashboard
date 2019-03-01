@@ -216,6 +216,7 @@ function settings(
     configuredTime: null,
     nowDate: null,
     nowTime: null,
+    // dateTimeStatic is curnetly doing nothing. Remove it ?
     dateTimeStatic: false,
     mapBackground: MAP_BACKGROUNDS[1]
   },
@@ -237,8 +238,6 @@ function settings(
       } else {
         return {
           ...state,
-          configuredDate: action.data.date,
-          configuredTime: action.data.time,
           nowDate: action.data.date,
           nowTime: action.data.time
         };
@@ -370,26 +369,17 @@ export const getConfiguredTime = function(state) {
   return state.settings.configuredTime || "";
 };
 
-const _getCurrentDate = function() {
-  return new Date().toISOString().split("T")[0];
-};
-
-const _getCurrentTime = function() {
-  const isoTimeStr = new Date().toISOString().split("T")[1];
-  return isoTimeStr.slice(0, isoTimeStr.length - 1);
-};
-
 export const getConfiguredDateTime = function(state) {
   let dateResult, timeResult;
 
   if (!state.settings.configuredDate && !state.settings.configuredTime) {
     return null;
   } else if (!state.settings.configuredDate && state.settings.configuredTime) {
-    dateResult = _getCurrentDate();
+    dateResult = state.settings.nowDate;
     timeResult = state.settings.configuredTime;
   } else if (state.settings.configuredDate && !state.settings.configuredTime) {
     dateResult = state.settings.configuredDate;
-    timeResult = _getCurrentTime();
+    timeResult = state.settings.nowTime;
   } else {
     dateResult = state.settings.configuredDate;
     timeResult = state.settings.configuredTime;
