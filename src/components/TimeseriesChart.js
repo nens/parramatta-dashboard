@@ -673,7 +673,6 @@ class TimeseriesChartComponent extends Component {
       this.props.isFull,
       tile.legendStrings
     );
-    console.log("combinedEvents", combinedEvents);
 
     return this.props.isFull
       ? this.renderFull(axes, combinedEvents, tile)
