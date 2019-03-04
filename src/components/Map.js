@@ -24,6 +24,20 @@ import styles from "./Map.css";
 import { IconActiveAlarm, IconInactiveAlarm, IconNoAlarm } from "./MapIcons";
 
 class MapComponent extends Component {
+  // make this to fetch all rasters
+  constructor(props) {
+    super(props);
+    if (props.tile.rasters) {
+      props.tile.rasters.forEach(raster => {
+        getOrFetch(
+          makeGetter(this.props.rasters),
+          props.fetchRaster,
+          raster.uuid
+        );
+      });
+    }
+  }
+
   componentDidMount() {
     const { tile } = this.props;
     const inBboxFilter = this.getBbox().toLizardBbox();
@@ -59,11 +73,7 @@ class MapComponent extends Component {
   }
 
   tileLayerForRaster(raster) {
-    let rasterObject = getOrFetch(
-      this.props.getRaster,
-      this.props.fetchRaster,
-      raster.uuid
-    );
+    let rasterObject = makeGetter(this.props.rasters)(raster.uuid).object;
 
     if (!rasterObject) {
       return null;
@@ -332,21 +342,14 @@ class MapComponent extends Component {
 
   renderFull() {
     const { tile, width, height } = this.props;
+    let firstRaster = null;
+    if (this.props.tile.rasters && this.props.tile.rasters[0]) {
+      firstRaster = makeGetter(this.props.rasters)(
+        this.props.tile.rasters[0].uuid
+      ).object;
+    }
 
     let legend = null;
-
-    let firstRasterUuid = null;
-    let firstRaster = null;
-
-    if (tile.rasters && tile.rasters.length > 0) {
-      // Only show a legend for the first raster.
-      firstRasterUuid = tile.rasters[0].uuid;
-      firstRaster = getOrFetch(
-        this.props.getRaster,
-        this.props.fetchRaster,
-        firstRasterUuid
-      );
-    }
 
     if (!firstRaster) {
       legend = (
@@ -362,7 +365,7 @@ class MapComponent extends Component {
           drawRaster={true}
           drawVectorIcons={this.tileHasVectors(tile)}
           tile={tile}
-          uuid={firstRasterUuid}
+          uuid={firstRaster.uuid}
           title={firstRaster.name}
           wmsInfo={firstRaster.wms_info}
           observationType={firstRaster.observation_type}
@@ -455,7 +458,6 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
-    getRaster: makeGetter(state.rasters),
     alarms: state.alarms,
     timeseriesMetadata: state.timeseries,
     allTiles: getAllTiles(state),
