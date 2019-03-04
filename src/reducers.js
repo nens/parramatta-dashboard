@@ -7,7 +7,7 @@ import {
   RECEIVE_TIMESERIES_EVENTS,
   FETCH_RASTER_EVENTS,
   RECEIVE_RASTER_EVENTS,
-  SET_DATE_TIME,
+  SET_NOW,
   SET_DATE,
   SET_TIME,
   RESET_DATETIME,
@@ -213,18 +213,17 @@ function settings(
   state = {
     configuredDate: null,
     configuredTime: null,
-    nowDate: null,
-    nowTime: null,
+    nowDateTime: new Date().toISOString(),
     mapBackground: MAP_BACKGROUNDS[1]
   },
   action
 ) {
   switch (action.type) {
-    case SET_DATE_TIME:
+    case SET_NOW:
+      console.log("SETTING DATETIME TO", action.data.dateTime);
       return {
         ...state,
-        nowDate: action.data.date,
-        nowTime: action.data.time
+        nowDateTime: action.data.dateTime
       };
 
     case SET_DATE:
@@ -342,39 +341,31 @@ export const getTileById = function(state, id) {
   });
 };
 
+export const getNow = function(state) {
+  // Return a *string* containing the current UTC date/time.
+  // This is not the "real" current time, but either a time configured
+  // by the user, or the time updated by the main App component.
+  // Use a string instead of a datetime so React can see that it hasn't
+  // changed.
+
+  if (state.settings.configuredDate && state.settings.configuredTime) {
+    console.log("Using configured date/time");
+    return (
+      state.settings.configuredDate + "T" + state.settings.configuredTime + "Z"
+    );
+  } else {
+    console.log("Using current time from app");
+    return state.settings.nowDateTime;
+  }
+};
+
+// These two are for the settings page only
 export const getConfiguredDate = function(state) {
   return state.settings.configuredDate || "";
 };
 
 export const getConfiguredTime = function(state) {
   return state.settings.configuredTime || "";
-};
-
-export const getConfiguredDateTime = function(state) {
-  let dateResult, timeResult;
-
-  if (!state.settings.configuredDate && !state.settings.configuredTime) {
-    dateResult = state.settings.nowDate;
-    timeResult = state.settings.nowTime;
-  } else if (!state.settings.configuredDate && state.settings.configuredTime) {
-    dateResult = state.settings.nowDate;
-    timeResult = state.settings.configuredTime;
-  } else if (state.settings.configuredDate && !state.settings.configuredTime) {
-    dateResult = state.settings.configuredDate;
-    timeResult = state.settings.nowTime;
-  } else {
-    dateResult = state.settings.configuredDate;
-    timeResult = state.settings.configuredTime;
-  }
-
-  const resultISOString = dateResult + "T" + timeResult + "Z";
-  return new Date(resultISOString);
-};
-
-export const getConfiguredNow = function(state) {
-  // Usually the current date/time, but sometimes a different one is configured
-  const configured = getConfiguredDateTime(state);
-  return configured || null;
 };
 
 export const getCurrentMapBackground = function(state) {

@@ -3,18 +3,17 @@ import GridLayout from "./components/GridLayout";
 import FullLayout from "./components/FullLayout";
 import { connect } from "react-redux";
 import { Route, withRouter } from "react-router-dom";
-import { getConfiguredNow } from "./reducers";
+import { getNow } from "./reducers";
 
-import { fetchAlarms, setDateTimeAction } from "./actions";
+import { fetchAlarms, setNowAction } from "./actions";
 import styles from "./App.css";
 
 class App extends Component {
   componentWillMount() {
-    this.setDateTimeActionWithNow();
     const that = this;
     // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
     setInterval(function() {
-      that.setDateTimeActionWithNow();
+      that.props.setNowAction();
     }, 60000);
   }
 
@@ -42,14 +41,8 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      !prevProps.configuredNow ||
-      (prevProps.configuredNow && !this.props.configuredNow) ||
-      this.props.configuredNow.getTime() != prevProps.configuredNow.getTime()
-    ) {
-      if (!this.props.iframeModeActive) {
-        this.props.fetchAlarms();
-      }
+    if (prevProps.now !== this.props.now && !this.props.iframeModeActive) {
+      this.props.fetchAlarms();
     }
   }
 
@@ -66,14 +59,14 @@ class App extends Component {
 function mapStateToProps(state) {
   return {
     iframeModeActive: state.iframeMode.active,
-    configuredNow: getConfiguredNow(state)
+    now: getNow(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     fetchAlarms: () => fetchAlarms(dispatch),
-    setDateTimeAction: (date, time) => setDateTimeAction(dispatch)(date, time)
+    setNowAction: setNowAction(dispatch)
   };
 }
 

@@ -11,7 +11,7 @@ import {
   fetchRaster
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
-import { getBootstrap, getConfiguredNow } from "../reducers";
+import { getBootstrap, getNow } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
 import plotComponentFactory from "react-plotly.js/factory";
@@ -20,7 +20,6 @@ import {
   axisLabel,
   indexForType,
   combineEventSeries,
-  getNow,
   currentPeriod
 } from "./TimeseriesChartUtils.js";
 
@@ -28,7 +27,7 @@ class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
-    const curPer = currentPeriod(props.configuredNow, props.bootstrap);
+    const curPer = currentPeriod(new Date(props.now), props.bootstrap);
     this.state = {
       ...curPer,
       componentHasMountedOnce: false,
@@ -105,8 +104,9 @@ class TimeseriesChartComponent extends Component {
   }
 
   componentWillUpdate() {
+    console.log("Updating with time ", this.props.now);
     const currentTime = currentPeriod(
-      this.props.configuredNow,
+      new Date(this.props.now),
       this.props.bootstrap
     );
 
@@ -128,7 +128,7 @@ class TimeseriesChartComponent extends Component {
 
   updateDateTimeState() {
     this.setState(
-      currentPeriod(this.props.configuredNow, this.props.bootstrap)
+      currentPeriod(new Date(this.props.now), this.props.bootstrap)
     );
   }
 
@@ -258,6 +258,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   areAllEventsLoaded(tile) {
+    return true;
     const allEventsAreFinishedLoading =
       this._areAllRasterEventsLoaded(tile) &&
       this._areAllTimeseriesEventsLoaded(tile);
@@ -410,7 +411,7 @@ class TimeseriesChartComponent extends Component {
     let annotations = [];
     let thresholdLines, thresholdAnnotations;
 
-    const now = getNow(this.props.configuredNow).getTime();
+    const now = new Date(this.props.now).getTime();
     const alarmReferenceLines = this.alarmReferenceLines(axes);
 
     if (thresholds) {
@@ -453,7 +454,7 @@ class TimeseriesChartComponent extends Component {
     const nowAnnotation = createAnnotationForVerticalLine(
       0,
       "#C0392B", // red in Lizard colors
-      "NOW",
+      this.props.now,
       true,
       now
     );
@@ -916,7 +917,7 @@ function mapStateToProps(state) {
       }
     },
     alarms: state.alarms,
-    configuredNow: getConfiguredNow(state),
+    now: getNow(state),
     bootstrap: getBootstrap(state)
   };
 }

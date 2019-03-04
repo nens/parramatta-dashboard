@@ -23,7 +23,7 @@ export const RECEIVE_BOOTSTRAP_SUCCESS = "RECEIVE_BOOTSTRAP_SUCCESS";
 export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 
 // SettingsActions
-export const SET_DATE_TIME = "SET_DATE_TIME";
+export const SET_NOW = "SET_NOW";
 export const SET_DATE = "SET_DATE";
 export const SET_TIME = "SET_TIME";
 export const RESET_DATETIME = "RESET_DATETIME";
@@ -202,13 +202,14 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
   };
 };
 
-export const setDateTimeAction = function(dispatch) {
-  return (date, time) => {
+export const setNowAction = function(dispatch) {
+  return () => {
+    const now = new Date();
+
     dispatch({
-      type: SET_DATE_TIME,
+      type: SET_NOW,
       data: {
-        date: date,
-        time: time
+        dateTime: now.toISOString()
       }
     });
   };
@@ -329,6 +330,8 @@ export function getRasterEvents(raster, geometry, start, end) {
       // Fetch it.
       dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
 
+      console.log("START IS HIER", start);
+      console.log("END IS HIER", end);
       raster.getDataAtPoint(geometry, start, end).then(results => {
         let data;
 
