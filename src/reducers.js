@@ -231,17 +231,11 @@ function settings(
         dateTimeStatic: action.data
       };
     case SET_DATE_TIME:
-      // only update date time is this is not static
-      // date time is static if the user configured a static date time through settings
-      if (state.dateTimeStatic === true) {
-        return state;
-      } else {
-        return {
-          ...state,
-          nowDate: action.data.date,
-          nowTime: action.data.time
-        };
-      }
+      return {
+        ...state,
+        nowDate: action.data.date,
+        nowTime: action.data.time
+      };
 
     case SET_DATE:
       return {
@@ -373,7 +367,8 @@ export const getConfiguredDateTime = function(state) {
   let dateResult, timeResult;
 
   if (!state.settings.configuredDate && !state.settings.configuredTime) {
-    return null;
+    dateResult = state.settings.nowDate;
+    timeResult = state.settings.nowTime;
   } else if (!state.settings.configuredDate && state.settings.configuredTime) {
     dateResult = state.settings.nowDate;
     timeResult = state.settings.configuredTime;
