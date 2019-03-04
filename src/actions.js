@@ -26,7 +26,6 @@ export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 export const SET_DATE_TIME = "SET_DATE_TIME";
 export const SET_DATE = "SET_DATE";
 export const SET_TIME = "SET_TIME";
-export const SET_DATE_TIME_STATIC = "SET_DATE_TIME_STATIC";
 export const RESET_DATETIME = "RESET_DATETIME";
 export const SET_MAP_BACKGROUND = "SET_MAP_BACKGROUND";
 
@@ -211,16 +210,6 @@ export const setDateTimeAction = function(dispatch) {
         date: date,
         time: time
       }
-    });
-  };
-};
-
-export const setDateTimeStaticAction = function(dispatch) {
-  return isStatic => {
-    // isStatic = bool
-    dispatch({
-      type: SET_DATE_TIME_STATIC,
-      data: isStatic
     });
   };
 };

@@ -10,7 +10,6 @@ import {
   SET_DATE_TIME,
   SET_DATE,
   SET_TIME,
-  SET_DATE_TIME_STATIC,
   RESET_DATETIME,
   SET_MAP_BACKGROUND,
   RECEIVE_ALARMS,
@@ -216,20 +215,11 @@ function settings(
     configuredTime: null,
     nowDate: null,
     nowTime: null,
-    // dateTimeStatic is curnetly doing nothing. Remove it ?
-    dateTimeStatic: false,
     mapBackground: MAP_BACKGROUNDS[1]
   },
   action
 ) {
   switch (action.type) {
-    // the case SET_DATE_TIME_STATIC case is for now not used, but instead done via other existing actions
-    // anyway it may be used for training module. otherwise it should be removed.
-    case SET_DATE_TIME_STATIC:
-      return {
-        ...state,
-        dateTimeStatic: action.data
-      };
     case SET_DATE_TIME:
       return {
         ...state,
@@ -240,21 +230,18 @@ function settings(
     case SET_DATE:
       return {
         ...state,
-        configuredDate: action.date,
-        dateTimeStatic: true
+        configuredDate: action.date
       };
     case SET_TIME:
       return {
         ...state,
-        configuredTime: action.time,
-        dateTimeStatic: true
+        configuredTime: action.time
       };
     case RESET_DATETIME:
       return {
         ...state,
         configuredDate: null,
-        configuredTime: null,
-        dateTimeStatic: false
+        configuredTime: null
       };
     case SET_MAP_BACKGROUND:
       return { ...state, mapBackground: action.mapBackground };
