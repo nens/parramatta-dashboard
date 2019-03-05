@@ -135,14 +135,15 @@ export function receiveBootstrapErrorAction(error) {
   };
 }
 
-export function fetchBootstrap(dispatch, sessionState) {
+export function fetchBootstrap(dispatch, sessionState, dashboardName) {
   if (sessionState && (sessionState.isFetching || sessionState.hasBootstrap)) {
     return;
   }
 
   dispatch(fetchBootstrapAction());
 
-  getBootstrap("parramatta-dashboard").then(
+  const finalDashboardName = dashboardName || "parramatta-dashboard";
+  getBootstrap(finalDashboardName).then(
     bootstrap => {
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },
