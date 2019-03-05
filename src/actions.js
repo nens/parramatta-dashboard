@@ -330,8 +330,6 @@ export function getRasterEvents(raster, geometry, start, end) {
       // Fetch it.
       dispatch(fetchRasterEventsAction(raster.uuid, geomKey, start, end));
 
-      console.log("START IS HIER", start);
-      console.log("END IS HIER", end);
       raster.getDataAtPoint(geometry, start, end).then(results => {
         let data;
 

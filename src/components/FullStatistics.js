@@ -14,11 +14,7 @@ class FullStatistics extends Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if (
-      ((!prevProps.now && this.props.now) ||
-        prevProps.now.getTime() !== this.props.now.getTime()) &&
-      !this.props.iframeModeActive
-    ) {
+    if (prevProps.now !== this.props.now && !this.props.iframeModeActive) {
       this.props.fetchAlarms();
     }
   }

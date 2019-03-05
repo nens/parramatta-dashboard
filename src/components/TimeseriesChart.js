@@ -104,7 +104,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   componentWillUpdate() {
-    console.log("Updating with time ", this.props.now);
     const currentTime = currentPeriod(
       new Date(this.props.now),
       this.props.bootstrap
@@ -258,7 +257,6 @@ class TimeseriesChartComponent extends Component {
   }
 
   areAllEventsLoaded(tile) {
-    return true;
     const allEventsAreFinishedLoading =
       this._areAllRasterEventsLoaded(tile) &&
       this._areAllTimeseriesEventsLoaded(tile);
@@ -454,7 +452,7 @@ class TimeseriesChartComponent extends Component {
     const nowAnnotation = createAnnotationForVerticalLine(
       0,
       "#C0392B", // red in Lizard colors
-      this.props.now,
+      "NOW",
       true,
       now
     );

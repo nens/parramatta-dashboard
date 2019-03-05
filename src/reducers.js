@@ -349,12 +349,10 @@ export const getNow = function(state) {
   // changed.
 
   if (state.settings.configuredDate && state.settings.configuredTime) {
-    console.log("Using configured date/time");
     return (
       state.settings.configuredDate + "T" + state.settings.configuredTime + "Z"
     );
   } else {
-    console.log("Using current time from app");
     return state.settings.nowDateTime;
   }
 };

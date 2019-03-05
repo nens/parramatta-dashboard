@@ -9,12 +9,9 @@ import { fetchAlarms, setNowAction } from "./actions";
 import styles from "./App.css";
 
 class App extends Component {
-  componentWillMount() {
-    const that = this;
+  constructor() {
     // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
-    setInterval(function() {
-      that.props.setNowAction();
-    }, 60000);
+    setInterval(this.props.setNowAction, 60000);
   }
 
   componentDidMount() {
