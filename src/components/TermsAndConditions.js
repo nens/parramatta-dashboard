@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
 import { DEV_MODE_DOMAIN } from "../config.js";
-import { createCookie, readCookie, eraseCookie } from "../util/cookies.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
@@ -20,9 +19,8 @@ class TermsAndConditionsComponent extends Component {
     if (this.props.clientConfiguration.showTermsAndConditions !== true) {
       this.props.termsSigned();
     } else if (
-      this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
-        true &&
-      readCookie("termsAndConditionsSigned") === "true"
+      this.props.clientConfiguration.saveTermsAndConditionsSigned === true &&
+      localStorage.getItem("termsAndConditionsSigned") === "true"
     ) {
       this.props.termsSigned();
     } else if (this.state.devMode) {
@@ -42,10 +40,9 @@ class TermsAndConditionsComponent extends Component {
       this.props.termsSigned();
 
       if (
-        this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
-        true
+        this.props.clientConfiguration.saveTermsAndConditionsSigned === true
       ) {
-        createCookie("termsAndConditionsSigned", true, 100); // 100 days
+        localStorage.setItem("termsAndConditionsSigned", "true");
       }
     }
   }
