@@ -2,17 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
-import { DEV_MODE_DOMAIN } from "../config.js";
-import { createCookie, readCookie, eraseCookie } from "../util/cookies.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
-    const APP_RUNS_IN_DEV_MODE =
-      window.location.href.indexOf(DEV_MODE_DOMAIN) > -1;
     super();
     this.state = {
-      boxChecked: APP_RUNS_IN_DEV_MODE,
-      devMode: APP_RUNS_IN_DEV_MODE
+      boxChecked: false
     };
   }
 
@@ -20,12 +15,10 @@ class TermsAndConditionsComponent extends Component {
     if (this.props.clientConfiguration.showTermsAndConditions !== true) {
       this.props.termsSigned();
     } else if (
-      this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
-        true &&
-      readCookie("termsAndConditionsSigned") === "true"
+      this.props.clientConfiguration.saveTermsAndConditionsSigned === true &&
+      // localstorage always returns string so we test it as string explicitly
+      localStorage.getItem("termsAndConditionsSigned") === "true"
     ) {
-      this.props.termsSigned();
-    } else if (this.state.devMode) {
       this.props.termsSigned();
     }
   }
@@ -42,10 +35,10 @@ class TermsAndConditionsComponent extends Component {
       this.props.termsSigned();
 
       if (
-        this.props.clientConfiguration.termsAndConditionsSetAgreedCookie ===
-        true
+        this.props.clientConfiguration.saveTermsAndConditionsSigned === true
       ) {
-        createCookie("termsAndConditionsSigned", true, 100); // 100 days
+        // localstorage always returns string so we set it as string explicitly
+        localStorage.setItem("termsAndConditionsSigned", "true");
       }
     }
   }

@@ -2,8 +2,6 @@
 
 import { BoundingBox } from "./util/bounds";
 
-export const DEV_MODE_DOMAIN = "http://localhost:3000";
-
 export const MOBILE_BREAKPOINT = 700;
 
 // A parramatta bbox.
