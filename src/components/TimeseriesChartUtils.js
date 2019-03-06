@@ -91,22 +91,9 @@ export function combineEventSeries(series, axes, colors, full, legendStrings) {
   });
 }
 
-export function getNow(configuredNow) {
-  if (configuredNow !== null) {
-    return configuredNow;
-  }
-  // Use modulo operator so the "now" time only changes every five minutes, so we
-  // don't have to fetch different data for each chart after every second.
-  const currentTimestamp = new Date().getTime();
-  const FIVE_MIN_IN_MS = 5 * 60 * 1000;
-  const newNow = new Date(currentTimestamp - currentTimestamp % FIVE_MIN_IN_MS);
-  return newNow;
-}
-
-export function currentPeriod(configuredNow, bootstrap) {
+export function currentPeriod(now, bootstrap) {
   // Return start and end of the current period in charts, as UTC timestamps.
   // Defined as a period around 'now', in hours.
-  const now = getNow(configuredNow);
   let offsets;
 
   if (

@@ -3,12 +3,18 @@ import { connect } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import { fetchAlarms } from "../actions";
 import { IconActiveAlarmSVG, IconInactiveAlarmSVG } from "./Icons";
+import { getNow } from "../reducers";
 
 import styles from "./FullStatistics.css";
 
 class FullStatistics extends Component {
   componentDidMount() {
     if (!this.props.iframeModeActive) {
+      this.props.fetchAlarms();
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.now !== this.props.now && !this.props.iframeModeActive) {
       this.props.fetchAlarms();
     }
   }
@@ -98,7 +104,8 @@ class FullStatistics extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     alarms: state.alarms,
-    iframeModeActive: state.iframeMode.active
+    iframeModeActive: state.iframeMode.active,
+    now: getNow(state)
   };
 };
 

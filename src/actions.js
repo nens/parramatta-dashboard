@@ -23,6 +23,7 @@ export const RECEIVE_BOOTSTRAP_SUCCESS = "RECEIVE_BOOTSTRAP_SUCCESS";
 export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 
 // SettingsActions
+export const SET_NOW = "SET_NOW";
 export const SET_DATE = "SET_DATE";
 export const SET_TIME = "SET_TIME";
 export const RESET_DATETIME = "RESET_DATETIME";
@@ -71,7 +72,6 @@ export function fetchAlarms(dispatch) {
 
   getRasterAlarms({ active: true, page_size: 1000 }).then(
     alarms => {
-      console.log("[P] Received alarms:", alarms);
       dispatch(receiveAlarmsAction(alarms, false));
     },
     error => {
@@ -199,6 +199,19 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
     start,
     end,
     events
+  };
+};
+
+export const setNowAction = function(dispatch) {
+  return () => {
+    const now = new Date();
+
+    dispatch({
+      type: SET_NOW,
+      data: {
+        dateTime: now.toISOString()
+      }
+    });
   };
 };
 

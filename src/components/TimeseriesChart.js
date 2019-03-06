@@ -11,7 +11,7 @@ import {
   fetchRaster
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
-import { getBootstrap, getConfiguredNow } from "../reducers";
+import { getBootstrap, getNow } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
 import plotComponentFactory from "react-plotly.js/factory";
@@ -20,7 +20,6 @@ import {
   axisLabel,
   indexForType,
   combineEventSeries,
-  getNow,
   currentPeriod
 } from "./TimeseriesChartUtils.js";
 
@@ -28,7 +27,7 @@ class TimeseriesChartComponent extends Component {
   constructor(props) {
     super(props);
 
-    const curPer = currentPeriod(props.configuredNow, props.bootstrap);
+    const curPer = currentPeriod(new Date(props.now), props.bootstrap);
     this.state = {
       ...curPer,
       componentHasMountedOnce: false,
@@ -36,7 +35,9 @@ class TimeseriesChartComponent extends Component {
       wantedAxes: null,
       combinedEvents: null,
       isFinishedFetchingRasterEvents: false,
-      isFinishedFetchingTimeseriesEvents: false
+      isFinishedFetchingTimeseriesEvents: false,
+      // keep xaxis of plotly graph in case data is refreshed by timer but user zoomed in and likes to preserve the zoom level
+      zoomedXaxis: null
     };
 
     this._areAllRasterEventsLoaded = this._areAllRasterEventsLoaded.bind(this);
@@ -102,22 +103,45 @@ class TimeseriesChartComponent extends Component {
     });
   }
 
+  componentWillUpdate() {
+    const currentTime = currentPeriod(
+      new Date(this.props.now),
+      this.props.bootstrap
+    );
+
+    if (this.state.start != currentTime.start) {
+      this.setState({
+        start: currentTime.start,
+        end: currentTime.end
+      });
+    }
+  }
+
+  componentDidUpdate() {
+    this.updateTimeseries();
+  }
+
   /////////////////////////////////////////////////////////////////////////////
   // Component - custom functions /////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
   updateDateTimeState() {
     this.setState(
-      currentPeriod(this.props.configuredNow, this.props.bootstrap)
+      currentPeriod(new Date(this.props.now), this.props.bootstrap)
     );
   }
 
   updateTimeseries() {
-    (this.props.tile.timeseries || []).map(uuid =>
-      this.props.getTimeseriesEvents(uuid, this.state.start, this.state.end, {
-        minpoints: MAX_TIMESERIES_POINTS
-      })
-    );
+    (this.props.tile.timeseries || []).map(uuid => {
+      return this.props.getTimeseriesEvents(
+        uuid,
+        this.state.start,
+        this.state.end,
+        {
+          minpoints: MAX_TIMESERIES_POINTS
+        }
+      );
+    });
 
     (this.props.tile.rasterIntersections || []).map(intersection =>
       this.props.getRasterEvents(
@@ -385,7 +409,7 @@ class TimeseriesChartComponent extends Component {
     let annotations = [];
     let thresholdLines, thresholdAnnotations;
 
-    const now = getNow(this.props.configuredNow).getTime();
+    const now = new Date(this.props.now).getTime();
     const alarmReferenceLines = this.alarmReferenceLines(axes);
 
     if (thresholds) {
@@ -687,6 +711,13 @@ class TimeseriesChartComponent extends Component {
     const verticalOffset =
       Math.round(this.props.height / 2) - Math.round(SPINNER_SIZE / 2);
 
+    // set Xaxis of state in case user is zoomed in so zooming is preserved if component is updated by time refresh
+    let tmpLayout = this.getLayout(this.state.wantedAxes, thresholds);
+    // only set xaxis if it is actually set in state of component
+    if (this.state.zoomedXaxis) {
+      tmpLayout.xaxis = this.state.zoomedXaxis;
+    }
+
     return (
       <div
         id={this.state.componentRef}
@@ -703,8 +734,12 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="fullPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes, thresholds)}
+            layout={tmpLayout}
             config={{ displayModeBar: true }}
+            onUpdate={figure => {
+              // set Xaxis of state when user zoomes in so zooming is preserved if component is updated by time refresh
+              this.setState({ zoomedXaxis: figure.layout.xaxis });
+            }}
           />
         ) : (
           <div
@@ -762,56 +797,6 @@ class TimeseriesChartComponent extends Component {
       </div>
     );
   }
-}
-
-function mapStateToProps(state) {
-  return {
-    measuringstations: state.assets.measuringstation || {},
-    getRaster: makeGetter(state.rasters),
-    timeseries: state.timeseries,
-    rasterEvents: state.rasterEvents,
-    areRasterEventsLoaded: intersectionUuid => {
-      let shortIntersectionUuid, theRasterEventsObject;
-      if (!state.rasterEvents) {
-        console.log(
-          "[W] Cannot check for isFetching since state.rasterEvents =",
-          state.rasterEvents
-        );
-        return null;
-      } else {
-        for (let longUuid in state.rasterEvents) {
-          shortIntersectionUuid = longUuid.slice(0, 7);
-          if (shortIntersectionUuid === intersectionUuid) {
-            theRasterEventsObject = Object.values(
-              state.rasterEvents[longUuid]
-            )[0];
-            return theRasterEventsObject.isFetching === false;
-          }
-        }
-      }
-    },
-    timeseriesEvents: state.timeseriesEvents,
-    areTimeseriesEventsLoaded: tsUuid => {
-      if (!state.timeseriesEvents) {
-        console.log(
-          "[W] Cannot check for isFetching since state.timeseriesEvents =",
-          state.timeseriesEvents
-        );
-        return null;
-      } else {
-        let theTimeseriesEventsObject;
-        for (let longUuid in state.timeseriesEvents) {
-          if (longUuid === tsUuid) {
-            theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
-            return theTimeseriesEventsObject.isFetching === false;
-          }
-        }
-      }
-    },
-    alarms: state.alarms,
-    configuredNow: getConfiguredNow(state),
-    bootstrap: getBootstrap(state)
-  };
 }
 
 function createVerticalLine(
@@ -886,6 +871,52 @@ function backgroundColorBetweenTwoX(
     line: {
       width: 0
     }
+  };
+}
+
+function mapStateToProps(state) {
+  return {
+    measuringstations: state.assets.measuringstation || {},
+    getRaster: makeGetter(state.rasters),
+    timeseries: state.timeseries,
+    rasterEvents: state.rasterEvents,
+    areRasterEventsLoaded: intersectionUuid => {
+      let shortIntersectionUuid, theRasterEventsObject;
+      if (!state.rasterEvents) {
+        return null;
+      } else {
+        for (let longUuid in state.rasterEvents) {
+          shortIntersectionUuid = longUuid.slice(0, 7);
+          if (shortIntersectionUuid === intersectionUuid) {
+            theRasterEventsObject = Object.values(
+              state.rasterEvents[longUuid]
+            )[0];
+            return theRasterEventsObject.isFetching === false;
+          }
+        }
+      }
+    },
+    timeseriesEvents: state.timeseriesEvents,
+    areTimeseriesEventsLoaded: tsUuid => {
+      if (!state.timeseriesEvents) {
+        console.log(
+          "[W] Cannot check for isFetching since state.timeseriesEvents =",
+          state.timeseriesEvents
+        );
+        return null;
+      } else {
+        let theTimeseriesEventsObject;
+        for (let longUuid in state.timeseriesEvents) {
+          if (longUuid === tsUuid) {
+            theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
+            return theTimeseriesEventsObject.isFetching === false;
+          }
+        }
+      }
+    },
+    alarms: state.alarms,
+    now: getNow(state),
+    bootstrap: getBootstrap(state)
   };
 }
 
