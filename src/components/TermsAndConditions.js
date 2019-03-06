@@ -23,8 +23,6 @@ class TermsAndConditionsComponent extends Component {
       localStorage.getItem("termsAndConditionsSigned") === "true"
     ) {
       this.props.termsSigned();
-    } else if (this.state.devMode) {
-      this.props.termsSigned();
     }
   }
 
