@@ -220,7 +220,6 @@ function settings(
 ) {
   switch (action.type) {
     case SET_NOW:
-      console.log("SETTING DATETIME TO", action.data.dateTime);
       return {
         ...state,
         nowDateTime: action.data.dateTime
