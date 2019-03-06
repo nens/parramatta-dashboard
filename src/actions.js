@@ -142,7 +142,7 @@ export function fetchBootstrap(dispatch, sessionState) {
 
   dispatch(fetchBootstrapAction());
 
-  getBootstrap("tdb_parra_vnrdsxt574").then(
+  getBootstrap("parramatta-dashboard").then(
     bootstrap => {
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },
