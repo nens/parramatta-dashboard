@@ -2,16 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import styles from "./TermsAndConditions.css";
-import { DEV_MODE_DOMAIN } from "../config.js";
 
 class TermsAndConditionsComponent extends Component {
   constructor() {
-    const APP_RUNS_IN_DEV_MODE =
-      window.location.href.indexOf(DEV_MODE_DOMAIN) > -1;
     super();
     this.state = {
-      boxChecked: APP_RUNS_IN_DEV_MODE,
-      devMode: APP_RUNS_IN_DEV_MODE
+      boxChecked: false
     };
   }
 
@@ -20,6 +16,7 @@ class TermsAndConditionsComponent extends Component {
       this.props.termsSigned();
     } else if (
       this.props.clientConfiguration.saveTermsAndConditionsSigned === true &&
+      // localstorage always returns string so we test it as string explicitly
       localStorage.getItem("termsAndConditionsSigned") === "true"
     ) {
       this.props.termsSigned();
@@ -40,6 +37,7 @@ class TermsAndConditionsComponent extends Component {
       if (
         this.props.clientConfiguration.saveTermsAndConditionsSigned === true
       ) {
+        // localstorage always returns string so we set it as string explicitly
         localStorage.setItem("termsAndConditionsSigned", "true");
       }
     }
