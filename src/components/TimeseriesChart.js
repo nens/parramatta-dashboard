@@ -740,6 +740,9 @@ class TimeseriesChartComponent extends Component {
               // set Xaxis of state when user zoomes in so zooming is preserved if component is updated by time refresh
               this.setState({ zoomedXaxis: figure.layout.xaxis });
             }}
+            onDoubleClick={e => {
+              this.setState({ zoomedXaxis: null });
+            }}
           />
         ) : (
           <div
