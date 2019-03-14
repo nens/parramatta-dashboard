@@ -25,13 +25,57 @@ class TermsOrLoginOrAppComponent extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchBootstrap(this.props.sessionState);
+    const dashboardName = this.getDashboardName();
+    this.props.fetchBootstrap(this.props.sessionState, dashboardName);
     this.props.setIframeMode(getParameterByName("iframe") === "true");
   }
 
   termsSigned() {
     this.setState({ termsSigned: true });
   }
+
+  getDashboardName = () => {
+    // gets dashboard name from url as defined in /admin/lizard_nxt/clientconfiguration/ "client slug" field
+    // the url should be in format of /floodsmart/<dashboard_name>/
+
+    // if no dashboard name is given this function should return undefined
+    // this is required to create the basename of the JSX Router component (see in this file)
+
+    //  if a dashboard name of undefined is returned then the default name 'parramatta-dashboard' will be used by function getBootstrap (in file actions.js).
+    // when no dashboard is in the url at all this function should return undefined. this should only be the case on dev
+
+    // if dashboardname = 'full' we assume it is not really the dashboardname but the url path to a full tile
+    // this rule should ensures that the url /floodsmart/full/ returns  undefined
+
+    // examples:
+    // /floodsmart/my_name/ -> my_name
+    // /floodsmart/my_name -> my_name
+    // /floodsmart/dashboard/ -> dashboard
+    // /floodsmart/dashboard -> dashboard
+    // /floodsmart/full/1 -> undefined
+    // /floodsmart/ -> undefined
+    // /floodsmart -> undefined
+    // / -> undefined
+
+    // split on /floodsmart/
+    // slashes are included in split so we do not also split on the second floodsmart in /floodsmart/floodsmart
+    const urlPostDashboard = window.location.href.split("/floodsmart/")[1];
+    // if there was no /floodsmart/ in the url, should only happen in dev or with a url of /floodsmart (no tailing slash)
+    if (!urlPostDashboard) {
+      return undefined;
+    }
+    const dashboardName = urlPostDashboard.split("/")[0];
+    // if dashboardname = 'full' we assume it is not really the dashboardname but the url path to a full tile
+    // this rule should ensures that the url /dashboard/full/ returns  undefined
+    if (dashboardName === "full") {
+      return undefined;
+    } else if (dashboardName === "") {
+      // if dashboardname = '' then we assume that no dashboard name is given and we return undefined which will resolve to the default
+      return undefined;
+    } else {
+      return dashboardName;
+    }
+  };
 
   hasBootstrap() {
     const session = this.props.sessionState;
@@ -41,6 +85,11 @@ class TermsOrLoginOrAppComponent extends Component {
 
   render() {
     const { iframeModeActive } = this.props;
+    const dashboardName = this.getDashboardName();
+
+    const basename = dashboardName
+      ? "/floodsmart/" + dashboardName
+      : "/floodsmart";
 
     if (!this.hasBootstrap() || iframeModeActive === null) {
       return (
@@ -62,14 +111,14 @@ class TermsOrLoginOrAppComponent extends Component {
         );
       } else {
         return (
-          <Router basename="/floodsmart">
+          <Router basename={basename}>
             <App />
           </Router>
         );
       }
     } else {
       return (
-        <Router basename="/floodsmart">
+        <Router basename={basename}>
           <App />
         </Router>
       );
@@ -86,7 +135,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchBootstrap: sessionState => fetchBootstrap(dispatch, sessionState),
+    fetchBootstrap: (sessionState, dashboardName) =>
+      fetchBootstrap(dispatch, sessionState, dashboardName),
     setIframeMode: bool => setIframeMode(dispatch, bool)
   };
 }
