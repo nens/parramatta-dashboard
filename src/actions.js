@@ -206,6 +206,7 @@ const receiveRasterEventsAction = (uuid, geomKey, start, end, events) => {
 export const setNowAction = function(dispatch) {
   return () => {
     const now = new Date();
+    console.log("setNowAction _____________________");
 
     dispatch({
       type: SET_NOW,

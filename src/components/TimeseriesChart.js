@@ -763,12 +763,20 @@ class TimeseriesChartComponent extends Component {
   }
 
   renderTile(axes, combinedEvents, tile) {
+    console.log(
+      "renderTile 1",
+      this.props.height,
+      this.props.width,
+      window.Plotly
+    );
     if (!this.props.height || !this.props.width || !window.Plotly) {
       return null;
     }
+    console.log("renderTile 2");
 
     const Plot = plotComponentFactory(window.Plotly);
 
+    console.log("renderTile 3", combinedEvents);
     return (
       <div
         id={this.state.componentRef}
