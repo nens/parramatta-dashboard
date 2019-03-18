@@ -14,46 +14,22 @@ import { getTimeseriesMetadataAction, fetchRaster } from "../actions";
 class TimeseriesTileComponent extends Component {
   constructor(props) {
     super(props);
-    // this.setTheDivRef = this.setTheDivRef.bind(this);
-    // this.theDiv = React.createRef();
-    // this.getTheDiv = this.getTheDiv.bind(this);
-    // this.getTheDivHeight = this.getTheDivHeight.bind(this);
-    // this.getTheDivWidth = this.getTheDivWidth.bind(this);
-    // this.theDiv = null;
     this.state = {
       theDiv: null
     };
-
     this.setTheDivRef = theDiv => {
-      // this.theDiv = theDiv;
       this.setState({
         theDiv: theDiv
       });
     };
   }
-  // getTheDiv(){
-  //   return this.theDiv;
-  // }
-  // getTheDivHeight(){
-  //   return this.theDiv.clientHeight;
-  // }
-  // getTheDivWidth(){
-  //   return this.theDiv.clientWidth;
-  // }
-  // setTheDivRef(theDiv) {
-  //   this.theDiv = theDiv;
-  // }
 
   componentWillMount() {
     (this.props.tile.timeseries || []).map(
       this.props.getTimeseriesMetadataAction
     );
-    console.log(
-      "tile.id ______________________________________________________________",
-      this.props.tile.id
-    );
+
     (this.props.tile.rasterIntersections || []).map(intersection => {
-      console.log("tile.id rasterIntersections ");
       return getOrFetch(
         this.props.getRaster,
         this.props.fetchRaster,
@@ -82,27 +58,13 @@ class TimeseriesTileComponent extends Component {
   render() {
     let { width, height, iframeModeActive } = this.props;
 
-    console.log("thediv 0 ", width, height);
-
     if (!width && !height) {
-      console.log("thediv 1 ", width, height, this.theDiv);
       if (this.props.isFull) {
-        console.log("thediv 2 ", width, height);
-        // debugger;
         width = window.innerWidth;
         height = window.innerHeight;
       } else if (this.state.theDiv) {
-        // else if (this.theDiv) {
-        // else if (this.getTheDiv()) {
-
         width = this.state.theDiv.clientWidth;
         height = this.state.theDiv.clientHeight;
-        // width = this.theDiv.clientWidth;
-        // height = this.theDiv.clientHeight;
-
-        // width = this.getTheDivWidth();
-        // height = this.getTheDivHeight();
-        console.log("thediv ", width, height);
       }
     }
 
@@ -116,13 +78,9 @@ class TimeseriesTileComponent extends Component {
 
     newProps.marginLeft = marginLeft;
 
-    // console.log('timeseriesTile, render ', this.props.tile.id, this.allAssetsPresent())
-
     return (
       <div
-        // ref={theDiv => (this.theDiv = theDiv)}
         ref={this.setTheDivRef}
-        // ref={this.theDiv}
         style={{
           width: "100%",
           height: "100%"

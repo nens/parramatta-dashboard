@@ -12,10 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
-    console.log(
-      "app.js constructor called ! this should only happen once or timeout should be removed"
-    );
-    // setInterval(this.props.setNowAction, 60000);
+    setInterval(this.props.setNowAction, 60000);
   }
 
   componentDidMount() {
