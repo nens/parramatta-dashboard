@@ -21,35 +21,27 @@ class SettingsMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: window.innerWidth,
-      height: window.innerHeight,
       settingsMenuId: 0
     };
-    this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
+    // this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
   componentDidMount() {
-    window.addEventListener(
-      "resize",
-      debounce(this.handleUpdateDimensions),
-      false
-    );
+    // window.addEventListener(
+    //   "resize",
+    //   debounce(this.handleUpdateDimensions),
+    //   false
+    // );
     document.addEventListener("keydown", debounce(this.handleKeyPress), false);
   }
   componentWillUnMount() {
-    window.removeEventListener("resize", this.handleUpdateDimensions, false);
+    // window.removeEventListener("resize", this.handleUpdateDimensions, false);
     document.removeEventListener("keydown", this.handleKeyPress, false);
   }
   handleKeyPress(e) {
     if (e.key === "Escape" || e.keyCode === 27) {
       this.props.closeSettingsMenu();
     }
-  }
-  handleUpdateDimensions() {
-    this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
   }
 
   toggleMapBackground() {
@@ -63,8 +55,8 @@ class SettingsMenu extends Component {
   }
 
   render() {
-    const { width, height, settingsMenuId } = this.state;
-    const { tiles, history } = this.props;
+    const { settingsMenuId } = this.state;
+    const { tiles, history, height } = this.props;
 
     const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
     const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
@@ -130,6 +122,25 @@ class SettingsMenu extends Component {
                 Contact
               </span>
             </div>
+            {this.props.trainingsDashboards &&
+            this.props.trainingsDashboards.length > 0 ? (
+              <div
+                className={styles.SettingsMenuItem}
+                onClick={() =>
+                  this.setState({
+                    settingsMenuId: 3
+                  })}
+              >
+                <i className="material-icons">school</i>
+                <span
+                  className={`${settingsMenuId === 0
+                    ? styles.ActiveMenu
+                    : null}`}
+                >
+                  Training
+                </span>
+              </div>
+            ) : null}
           </div>
 
           <main style={{ height: height - 100 }}>
@@ -222,6 +233,33 @@ class SettingsMenu extends Component {
                 </p>
               </div>
             ) : null}
+            {settingsMenuId === 3 ? (
+              <div style={{ padding: 20 }}>
+                <h4 style={{ padding: 0, margin: 0 }}>
+                  Choose another dashboard for training
+                </h4>
+                <hr />
+                <p>Choose training dashboard</p>
+                <select
+                  onChange={e => {
+                    console.log(e.target.value);
+                    const value = e.target.value;
+                    const url = "/floodsmart/" + value;
+                    window.location.href = url;
+                  }}
+                >
+                  <option disabled selected value>
+                    {" "}
+                    -- select an option --{" "}
+                  </option>
+                  {this.props.trainingsDashboards.map(e => (
+                    <option key={e.url} value={e.url}>
+                      {e.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
           </main>
         </div>
       </DocumentTitle>
@@ -231,6 +269,8 @@ class SettingsMenu extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    trainingsDashboards:
+      state.session.bootstrap.configuration.trainingDashboards,
     session: state.session,
     tiles: getAllTiles(state),
     alarms: state.alarms,
