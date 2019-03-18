@@ -11,8 +11,14 @@ import styles from "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
-    // update redux time every minute (60000 miliseconds) because redux only saves time on the minute accurate
-    setInterval(this.props.setNowAction, 60000);
+    // update redux time every x miliseconds -  redux only saves time on the minute accurate
+    // see in client config: "refreshAutomatic"=bool "refreshEveryMiliseconds"=INT
+    if (props.refreshAutomatic === true) {
+      setInterval(
+        this.props.setNowAction,
+        props.refreshEveryMiliseconds || 300000
+      );
+    }
   }
 
   componentDidMount() {

@@ -112,14 +112,30 @@ class TermsOrLoginOrAppComponent extends Component {
       } else {
         return (
           <Router basename={basename}>
-            <App />
+            <App
+              refreshAutomatic={
+                this.props.sessionState.bootstrap.configuration.refreshAutomatic
+              }
+              refreshEveryMiliseconds={
+                this.props.sessionState.bootstrap.configuration
+                  .refreshEveryMiliseconds
+              }
+            />
           </Router>
         );
       }
     } else {
       return (
         <Router basename={basename}>
-          <App />
+          <App
+            refreshAutomatic={
+              this.props.sessionState.bootstrap.configuration.refreshAutomatic
+            }
+            refreshEveryMiliseconds={
+              this.props.sessionState.bootstrap.configuration
+                .refreshEveryMiliseconds
+            }
+          />
         </Router>
       );
     }
