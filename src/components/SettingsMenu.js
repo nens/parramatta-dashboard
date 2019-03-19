@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import DocumentTitle from "react-document-title";
 import { connect } from "react-redux";
-import Ink from "react-ink";
 import { withRouter } from "react-router-dom";
 import logoCombo from "../graphics/logo-combo.png";
 import styles from "./SettingsMenu.css";
-import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
+import { getConfiguredDate, getConfiguredTime } from "../reducers";
 import {
   setDateAction,
   setTimeAction,
@@ -13,7 +12,7 @@ import {
   setMapBackgroundAction
 } from "../actions";
 import { getCurrentMapBackground } from "../reducers";
-import { MAP_BACKGROUNDS, MOBILE_BREAKPOINT } from "../config";
+import { MAP_BACKGROUNDS } from "../config";
 
 import debounce from "lodash/debounce";
 
@@ -23,19 +22,12 @@ class SettingsMenu extends Component {
     this.state = {
       settingsMenuId: 0
     };
-    // this.handleUpdateDimensions = this.handleUpdateDimensions.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
   componentDidMount() {
-    // window.addEventListener(
-    //   "resize",
-    //   debounce(this.handleUpdateDimensions),
-    //   false
-    // );
     document.addEventListener("keydown", debounce(this.handleKeyPress), false);
   }
   componentWillUnMount() {
-    // window.removeEventListener("resize", this.handleUpdateDimensions, false);
     document.removeEventListener("keydown", this.handleKeyPress, false);
   }
   handleKeyPress(e) {
@@ -56,7 +48,7 @@ class SettingsMenu extends Component {
 
   render() {
     const { settingsMenuId } = this.state;
-    const { tiles, history, height } = this.props;
+    const { height } = this.props;
 
     const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
     const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
@@ -272,8 +264,6 @@ const mapStateToProps = (state, ownProps) => {
     trainingsDashboards:
       state.session.bootstrap.configuration.trainingDashboards,
     session: state.session,
-    tiles: getAllTiles(state),
-    alarms: state.alarms,
     date: getConfiguredDate(state),
     time: getConfiguredTime(state),
     currentMapBackground: getCurrentMapBackground(state)

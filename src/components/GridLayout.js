@@ -12,14 +12,8 @@ import Map from "./Map";
 import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
 import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
-import {
-  setDateAction,
-  setTimeAction,
-  resetDateTimeAction,
-  setMapBackgroundAction
-} from "../actions";
-import { getCurrentMapBackground } from "../reducers";
-import { MAP_BACKGROUNDS, MOBILE_BREAKPOINT } from "../config";
+
+import { MOBILE_BREAKPOINT } from "../config";
 
 import debounce from "lodash/debounce";
 
@@ -67,24 +61,9 @@ class GridLayout extends Component {
     });
   }
 
-  // toggleMapBackground() {
-  //   const current = this.props.currentMapBackground;
-
-  //   if (current.url === MAP_BACKGROUNDS[1].url) {
-  //     this.props.setMapBackground(MAP_BACKGROUNDS[0]);
-  //   } else {
-  //     this.props.setMapBackground(MAP_BACKGROUNDS[1]);
-  //   }
-  // }
-
   render() {
-    const { width, height, settingsMenu } = this.state;
+    const { width, settingsMenu } = this.state;
     const { tiles, history } = this.props;
-
-    const nensMail = () => unescape("servicedesk%40nelen%2Dschuurmans%2Enl");
-    const chrisTel = () => unescape("%30%34%30%35%20%30%35%32%20%34%36%32");
-    const chrisMail = () =>
-      unescape("cgooch%40cityofparramatta%2Ensw%2Egov%2Eau");
 
     if (settingsMenu) {
       return (
@@ -255,20 +234,7 @@ const mapStateToProps = (state, ownProps) => {
     alarms: state.alarms,
     date: getConfiguredDate(state),
     time: getConfiguredTime(state)
-    // currentMapBackground: getCurrentMapBackground(state)
   };
 };
 
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//   return {
-//     changeDate: setDateAction(dispatch),
-//     changeTime: setTimeAction(dispatch),
-//     resetDateTime: resetDateTimeAction(dispatch),
-//     setMapBackground: setMapBackgroundAction(dispatch)
-//   };
-// };
-
-export default withRouter(
-  // connect(mapStateToProps, mapDispatchToProps)(GridLayout)
-  connect(mapStateToProps)(GridLayout)
-);
+export default withRouter(connect(mapStateToProps)(GridLayout));
