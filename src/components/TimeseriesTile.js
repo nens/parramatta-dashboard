@@ -12,6 +12,18 @@ import { getTimeseriesMetadataAction, fetchRaster } from "../actions";
 // This is a fix for various "do-this-async-first-then-that-async" issues.
 
 class TimeseriesTileComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      theDiv: null
+    };
+    this.setTheDivRef = theDiv => {
+      this.setState({
+        theDiv: theDiv
+      });
+    };
+  }
+
   componentWillMount() {
     (this.props.tile.timeseries || []).map(
       this.props.getTimeseriesMetadataAction
@@ -50,9 +62,9 @@ class TimeseriesTileComponent extends Component {
       if (this.props.isFull) {
         width = window.innerWidth;
         height = window.innerHeight;
-      } else if (this.theDiv) {
-        width = this.theDiv.clientWidth;
-        height = this.theDiv.clientHeight;
+      } else if (this.state.theDiv) {
+        width = this.state.theDiv.clientWidth;
+        height = this.state.theDiv.clientHeight;
       }
     }
 
@@ -68,7 +80,7 @@ class TimeseriesTileComponent extends Component {
 
     return (
       <div
-        ref={theDiv => (this.theDiv = theDiv)}
+        ref={this.setTheDivRef}
         style={{
           width: "100%",
           height: "100%"
