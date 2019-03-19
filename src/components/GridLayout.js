@@ -231,9 +231,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
     tiles: getAllTiles(state),
-    alarms: state.alarms,
-    date: getConfiguredDate(state),
-    time: getConfiguredTime(state)
+    alarms: state.alarms
   };
 };
 

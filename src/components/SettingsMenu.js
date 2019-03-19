@@ -234,7 +234,6 @@ class SettingsMenu extends Component {
                 <p>Choose training dashboard</p>
                 <select
                   onChange={e => {
-                    console.log(e.target.value);
                     const value = e.target.value;
                     const url = "/floodsmart/" + value;
                     window.location.href = url;
