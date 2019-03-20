@@ -109,7 +109,7 @@ class TimeseriesChartComponent extends Component {
       this.props.bootstrap
     );
 
-    if (this.state.start != currentTime.start) {
+    if (this.state.start !== currentTime.start) {
       this.setState({
         start: currentTime.start,
         end: currentTime.end
