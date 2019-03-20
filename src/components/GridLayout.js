@@ -68,7 +68,6 @@ class GridLayout extends Component {
     if (settingsMenu) {
       return (
         <SettingsMenu
-          {...this.props}
           closeSettingsMenu={this.closeSettingsMenu}
           height={this.state.height}
         />
