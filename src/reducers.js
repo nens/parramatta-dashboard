@@ -368,3 +368,17 @@ export const getConfiguredTime = function(state) {
 export const getCurrentMapBackground = function(state) {
   return state.settings.mapBackground;
 };
+
+// Trainings page in the settings
+
+export const hasTrainingDashboards = function(state) {
+  return true;
+  return (
+    state.session.bootstrap.configuration.trainingDashboards &&
+    state.session.bootstrap.configuration.trainingDashboards.length > 0
+  );
+};
+
+export const trainingDashboards = function(state) {
+  return state.session.bootstrap.configuration.trainingDashboards || [];
+};
