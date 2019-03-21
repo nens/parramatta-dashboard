@@ -8,9 +8,9 @@ import {
   FETCH_RASTER_EVENTS,
   RECEIVE_RASTER_EVENTS,
   SET_NOW,
-  SET_DATE,
-  SET_TIME,
+  SET_DATETIME,
   RESET_DATETIME,
+  SET_CHOSEN_TIMEZONE,
   SET_MAP_BACKGROUND,
   RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
@@ -22,6 +22,12 @@ import {
 import { MAP_BACKGROUNDS } from "./config";
 
 import { makeReducer } from "lizard-api-client";
+
+// We keep track of offsets as hours to add to UTC, so
+// UTC+10:00 is 10. The browser reports minutes to subtract
+// from the local time to get to UTC, so UTC+10:00 is -600.
+// Convert here.
+const TIMEZONE_OFFSET = -(new Date().getTimezoneOffset() / 60);
 
 function assets(
   state = {
@@ -211,10 +217,10 @@ function rasterEvents(state = {}, action) {
 
 function settings(
   state = {
-    configuredDate: null,
-    configuredTime: null,
+    configuredDateTime: null, // "DD-MM-YYYYTHH:MMZ" *in UTC*
     nowDateTime: new Date().toISOString(),
-    mapBackground: MAP_BACKGROUNDS[1]
+    mapBackground: MAP_BACKGROUNDS[1],
+    chosenTimezone: "browser" // Used by datetime settings page
   },
   action
 ) {
@@ -225,24 +231,34 @@ function settings(
         nowDateTime: action.data.dateTime
       };
 
-    case SET_DATE:
+    case SET_DATETIME:
       return {
         ...state,
-        configuredDate: action.date
-      };
-    case SET_TIME:
-      return {
-        ...state,
-        configuredTime: action.time
+        configuredDateTime: action.dateTime
       };
     case RESET_DATETIME:
       return {
         ...state,
-        configuredDate: null,
-        configuredTime: null
+        configuredDateTime: null,
+        chosenTimezone: "browser"
+      };
+    case SET_CHOSEN_TIMEZONE:
+      return {
+        ...state,
+        chosenTimezone: action.timezone
       };
     case SET_MAP_BACKGROUND:
       return { ...state, mapBackground: action.mapBackground };
+    case RECEIVE_BOOTSTRAP_SUCCESS:
+      if (action.bootstrap.configuration.nowDateTimeUTC) {
+        // Update configured date and time from bootstrap.
+        return {
+          ...state,
+          configuredDateTime: action.bootstrap.configuration.nowDateTimeUTC
+        };
+      } else {
+        return state;
+      }
     default:
       return state;
   }
@@ -347,22 +363,52 @@ export const getNow = function(state) {
   // Use a string instead of a datetime so React can see that it hasn't
   // changed.
 
-  if (state.settings.configuredDate && state.settings.configuredTime) {
-    return (
-      state.settings.configuredDate + "T" + state.settings.configuredTime + "Z"
-    );
-  } else {
-    return state.settings.nowDateTime;
+  return state.settings.configuredDateTime || state.settings.nowDateTime;
+};
+
+// These two are for the settings pages only
+export const hasConfiguredDateTime = function(state) {
+  return !!state.settings.configuredDateTime;
+};
+
+export const getConfiguredDateTime = function(state) {
+  return state.settings.configuredDateTime || "";
+};
+
+export const disableDateTimeSettings = function(state) {
+  // If configured time and state were set in the configuration,
+  // do not allow changing or resetting it.
+  return !!state.session.bootstrap.configuration.nowDateTimeUTC;
+};
+
+export const getChosenTimezone = function(state) {
+  return state.settings.chosenTimezone;
+};
+
+export const getTimezones = function(state) {
+  let timezones = [
+    ["browser", "Your browser's current timezone", TIMEZONE_OFFSET]
+  ];
+
+  // Add configured timezones in the middle.
+  if (state.session.bootstrap.configuration.timezones) {
+    state.session.bootstrap.configuration.timezones.forEach(tz => {
+      timezones.push(tz);
+    });
   }
+
+  timezones.push(["utc", "UTC", 0]);
+
+  console.log(timezones);
+
+  return timezones;
 };
 
-// These two are for the settings page only
-export const getConfiguredDate = function(state) {
-  return state.settings.configuredDate || "";
-};
-
-export const getConfiguredTime = function(state) {
-  return state.settings.configuredTime || "";
+export const getTimezone = function(state) {
+  // Return chosen timezone, label, offset
+  return getTimezones(state).find(
+    timezone => timezone[0] === state.settings.chosenTimezone
+  );
 };
 
 export const getCurrentMapBackground = function(state) {
@@ -372,7 +418,6 @@ export const getCurrentMapBackground = function(state) {
 // Trainings page in the settings
 
 export const hasTrainingDashboards = function(state) {
-  return true;
   return (
     state.session.bootstrap.configuration.trainingDashboards &&
     state.session.bootstrap.configuration.trainingDashboards.length > 0

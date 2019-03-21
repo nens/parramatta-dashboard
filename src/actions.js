@@ -24,10 +24,10 @@ export const RECEIVE_BOOTSTRAP_ERROR = "RECEIVE_BOOTSTRAP_ERROR";
 
 // SettingsActions
 export const SET_NOW = "SET_NOW";
-export const SET_DATE = "SET_DATE";
-export const SET_TIME = "SET_TIME";
+export const SET_DATETIME = "SET_DATETIME";
 export const RESET_DATETIME = "RESET_DATETIME";
 export const SET_MAP_BACKGROUND = "SET_MAP_BACKGROUND";
+export const SET_CHOSEN_TIMEZONE = "SET_CHOSEN_TIMEZONE";
 
 // TimeseriesActions
 export const ADD_TIMESERIES = "ADD_TIMESERIES";
@@ -216,19 +216,13 @@ export const setNowAction = function(dispatch) {
   };
 };
 
-export const setDateAction = function(dispatch) {
-  return date =>
+export const setDateTimeAction = function(dispatch) {
+  // dateTime must be a string of the form "YYYY-MM-DDTHH:MMZ"
+  // respresenting a UTC date time.
+  return dateTime =>
     dispatch({
-      type: SET_DATE,
-      date: date
-    });
-};
-
-export const setTimeAction = function(dispatch) {
-  return time =>
-    dispatch({
-      type: SET_TIME,
-      time: time
+      type: SET_DATETIME,
+      dateTime: dateTime
     });
 };
 
@@ -236,6 +230,14 @@ export const resetDateTimeAction = function(dispatch) {
   return () =>
     dispatch({
       type: RESET_DATETIME
+    });
+};
+
+export const setChosenTimezone = function(dispatch) {
+  return timezone =>
+    dispatch({
+      type: SET_CHOSEN_TIMEZONE,
+      timezone: timezone
     });
 };
 
