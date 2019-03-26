@@ -32,7 +32,6 @@ class TimeseriesChartComponent extends Component {
       ...curPer,
       componentHasMountedOnce: false,
       componentRef: "comp-" + parseInt(Math.random(), 10),
-      wantedAxes: null,
       combinedEvents: null,
       isFinishedFetchingRasterEvents: false,
       isFinishedFetchingTimeseriesEvents: false
@@ -96,8 +95,7 @@ class TimeseriesChartComponent extends Component {
     );
 
     this.setState({
-      combinedEvents,
-      wantedAxes: axes
+      combinedEvents
     });
   }
 
@@ -725,7 +723,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="fullPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes, thresholds)}
+            layout={this.getLayout(axes, thresholds)}
             config={{ displayModeBar: true }}
           />
         ) : (
@@ -768,7 +766,7 @@ class TimeseriesChartComponent extends Component {
           <Plot
             className="gridPlot"
             data={combinedEvents}
-            layout={this.getLayout(this.state.wantedAxes)}
+            layout={this.getLayout(axes)}
             config={{ displayModeBar: false }}
           />
         ) : (
