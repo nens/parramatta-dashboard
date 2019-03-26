@@ -1,14 +1,8 @@
 import React, { Component } from "react";
+import { setDateTimeAction, resetDateTimeAction } from "../../actions";
 import {
-  setDateTimeAction,
-  resetDateTimeAction,
-  setChosenTimezone
-} from "../../actions";
-import {
-  getChosenTimezone,
   getTimezones,
-  getTimezone,
-  getConfiguredDateTime,
+  getChosenTimezone,
   getNow,
   hasConfiguredDateTime,
   disableDateTimeSettings
@@ -70,80 +64,79 @@ const getDateAndTimeStrings = function(dateTime, offset) {
   return [iso.slice(0, 10), iso.slice(11, 16)];
 };
 
-class DateTimeMenu extends Component {
+class PickDateTime extends Component {
   constructor(props) {
     super(props);
+
+    const { initial, initialTimezone } = props;
+
+    const dateAndTimeString = getDateAndTimeStrings(
+      initial,
+      this.timezoneOffset(initialTimezone)
+    );
+
+    this.state = {
+      date: dateAndTimeString[0],
+      time: dateAndTimeString[1],
+      timezone: initialTimezone
+    };
+
+    this.setDate = this.setDate.bind(this);
     this.setTime = this.setTime.bind(this);
+    this.setTimezone = this.setTimezone.bind(this);
+    this.apply = this.apply.bind(this);
   }
 
-  setDateTimeUsingLocalTimestamp(timestamp) {
-    timestamp -= this.props.currentTimezoneOffset * 3600000;
-    const newUtcDateTime = new Date(timestamp);
-    this.props.changeDateTime(newUtcDateTime.toISOString());
-  }
-
-  setTime(time) {
-    if (!time || !this.props.currentDate) return;
-
-    const fakeUtcDateTime = this.props.currentDate + "T" + time + "Z";
-    const timestamp = new Date(fakeUtcDateTime).getTime();
-    this.setDateTimeUsingLocalTimestamp(timestamp);
+  timezoneOffset(timezone) {
+    // Translate a string like "browser" to a UTC offset in hours
+    if (!timezone) {
+      timezone = this.state.timezone;
+    }
+    const currentTimezone = this.props.timezones.find(tz => tz[0] === timezone);
+    const tzOffset = currentTimezone[2];
+    return tzOffset;
   }
 
   setDate(date) {
-    if (!date) return;
-    const fakeUtcDateTime =
-      date + "T" + (this.props.currentTime || "00:00") + "Z";
-    let timestamp = new Date(fakeUtcDateTime).getTime();
-    this.setDateTimeUsingLocalTimestamp(timestamp);
+    this.setState({ date: date });
+  }
+  setTime(time) {
+    this.setState({ time: time });
+  }
+  setTimezone(timezone) {
+    this.setState({ timezone: timezone });
   }
 
-  disabledRender() {
-    return (
-      <div style={{ padding: 20 }}>
-        <h4 style={{ padding: 0, margin: 0 }}>
-          Date/time settings &nbsp;
-          <button onClick={this.props.resetDateTime}>Reset</button>
-        </h4>
-        <hr />
-        <p>
-          The date and time have been set to a fixed value in this dashboard's
-          configuration, and can not be changed manually.
-        </p>
-        <button
-          className={styles.OKButton}
-          onClick={() => {
-            this.props.closeSettingsMenu();
-          }}
-        >
-          OK
-        </button>
-      </div>
+  apply() {
+    // Ugly but I don't know the datetime APIs well enough
+    const fakeUtcDateTime = this.state.date + "T" + this.state.time + "Z";
+    let timestamp = new Date(fakeUtcDateTime).getTime();
+    timestamp -= this.timezoneOffset() * 3600000;
+
+    const newUtcDateTime = new Date(timestamp);
+    this.props.changeDateTime(
+      newUtcDateTime.toISOString(),
+      this.state.timezone
     );
+
+    // Then close the edit field
+    this.props.close();
   }
 
   render() {
-    if (this.props.disableDateTimeSettings) {
-      return this.disabledRender();
-    }
-
     return (
-      <div style={{ padding: 20 }}>
-        <h4 style={{ padding: 0, margin: 0 }}>
-          Date/time settings &nbsp;
-          <button onClick={this.props.resetDateTime}>Reset</button>
-        </h4>
-        <hr />
+      <div>
+        <p>
+          Please choose *both* a date and a time, and optionally a time zone.
+        </p>
         <div className={styles.DateTimePicker}>
           <div>
             <h5>Date (e.g. "23/12/2018")</h5>
             <input
               type="date"
               name="date"
-              value={this.props.currentDate}
-              onChange={event => {
-                this.setDate(event.target.value);
-              }}
+              value={this.state.date}
+              onChange={event => this.setDate(event.target.value)}
             />
           </div>
           <div>
@@ -151,19 +144,16 @@ class DateTimeMenu extends Component {
             <input
               type="time"
               name="time"
-              value={this.props.currentTime}
-              onChange={event => {
-                this.setTime(event.target.value);
-              }}
+              value={this.state.time}
+              onChange={event => this.setTime(event.target.value)}
             />
           </div>
           <div>
             <h5>Timezone</h5>
             <select
               name="timezone"
-              value={this.props.chosenTimezone}
-              onChange={event =>
-                this.props.setChosenTimezone(event.target.value)}
+              value={this.state.timezone}
+              onChange={event => this.setTimezone(event.target.value)}
             >
               {this.props.timezones.map(tz => {
                 return (
@@ -176,32 +166,111 @@ class DateTimeMenu extends Component {
           </div>
         </div>
         <p>
-          To change the date/time used in the application instead of current
-          local time, please enter a date and time.
+          <button className={styles.OKButton} onClick={this.apply}>
+            Apply
+          </button>
+          &nbsp;
+          <button className={styles.OKButton} onClick={this.props.close}>
+            Cancel
+          </button>
         </p>
+      </div>
+    );
+  }
+}
+
+class DateTimeMenu extends Component {
+  constructor(props) {
+    super(props);
+
+    this.openEdit = this.openEdit.bind(this);
+    this.closeEdit = this.closeEdit.bind(this);
+
+    this.state = {
+      editOpen: false
+    };
+  }
+
+  disabledRender() {
+    return (
+      <div style={{ padding: 20 }}>
+        <h4 style={{ padding: 0, margin: 0 }}>Date/time settings &nbsp;</h4>
+        <hr />
         <p>
-          Currently using
-          <strong>
-            {this.props.hasConfiguredDateTime
-              ? " your configured time"
-              : " local time"}.
-          </strong>
+          The date and time have been set to a fixed value in this dashboard's
+          configuration, and can not be changed manually.
         </p>
-        <p>
-          By default the time entered is in your browser's current timezone. For
-          internal use in the application it will be converted to UTC using the
-          current offset between your time zone and UTC. In case a date is
-          entered that has a different daylight savings status compared to
-          today, please explicitly pick the timezone your entered time is in.
-        </p>
-        <br />
         <button
           className={styles.OKButton}
           onClick={() => {
             this.props.closeSettingsMenu();
           }}
         >
-          OK
+          Close
+        </button>
+      </div>
+    );
+  }
+
+  openEdit() {
+    this.setState({ editOpen: true });
+  }
+
+  closeEdit() {
+    this.setState({ editOpen: false });
+  }
+
+  render() {
+    if (this.props.disableDateTimeSettings) {
+      return this.disabledRender();
+    }
+
+    return (
+      <div style={{ padding: 20 }}>
+        <h4 style={{ padding: 0, margin: 0 }}>Date/time settings</h4>
+        <hr />
+
+        <p>
+          The Dashboard is currently using
+          <strong>
+            {this.props.hasConfiguredDateTime
+              ? " a fixed configured time "
+              : " your local time "}
+            ({new Date(this.props.now).toLocaleString()})
+          </strong>
+          &nbsp;as "now".
+        </p>
+
+        {this.state.editOpen ? (
+          <PickDateTime
+            initial={this.props.now}
+            initialTimezone={this.props.chosenTimezone}
+            timezones={this.props.timezones}
+            changeDateTime={this.props.changeDateTime}
+            close={this.closeEdit}
+          />
+        ) : (
+          <p>
+            <button className={styles.OKButton} onClick={this.openEdit}>
+              Choose new fixed time
+            </button>
+            &nbsp;
+            <button
+              className={styles.OKButton}
+              onClick={this.props.resetDateTime}
+            >
+              Reset to local time
+            </button>
+          </p>
+        )}
+        <hr />
+        <button
+          className={styles.OKButton}
+          onClick={() => {
+            this.props.closeSettingsMenu();
+          }}
+        >
+          Close
         </button>
       </div>
     );
@@ -209,18 +278,7 @@ class DateTimeMenu extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const currentTimezoneOffset = getTimezone(state)[2];
-  const dateTime = getConfiguredDateTime(state);
-
-  const currentDateAndTime = getDateAndTimeStrings(
-    dateTime,
-    currentTimezoneOffset
-  );
-
   return {
-    currentDate: currentDateAndTime[0],
-    currentTime: currentDateAndTime[1],
-    currentTimezoneOffset: currentTimezoneOffset,
     chosenTimezone: getChosenTimezone(state),
     timezones: getTimezones(state),
     now: getNow(state),
@@ -232,8 +290,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     changeDateTime: setDateTimeAction(dispatch),
-    resetDateTime: resetDateTimeAction(dispatch),
-    setChosenTimezone: setChosenTimezone(dispatch)
+    resetDateTime: resetDateTimeAction(dispatch)
   };
 };
 

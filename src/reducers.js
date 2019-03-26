@@ -10,7 +10,6 @@ import {
   SET_NOW,
   SET_DATETIME,
   RESET_DATETIME,
-  SET_CHOSEN_TIMEZONE,
   SET_MAP_BACKGROUND,
   RECEIVE_ALARMS,
   FETCH_BOOTSTRAP,
@@ -234,18 +233,14 @@ function settings(
     case SET_DATETIME:
       return {
         ...state,
-        configuredDateTime: action.dateTime
+        configuredDateTime: action.dateTime,
+        chosenTimezone: action.timezone
       };
     case RESET_DATETIME:
       return {
         ...state,
         configuredDateTime: null,
         chosenTimezone: "browser"
-      };
-    case SET_CHOSEN_TIMEZONE:
-      return {
-        ...state,
-        chosenTimezone: action.timezone
       };
     case SET_MAP_BACKGROUND:
       return { ...state, mapBackground: action.mapBackground };
@@ -371,10 +366,6 @@ export const hasConfiguredDateTime = function(state) {
   return !!state.settings.configuredDateTime;
 };
 
-export const getConfiguredDateTime = function(state) {
-  return state.settings.configuredDateTime || "";
-};
-
 export const disableDateTimeSettings = function(state) {
   // If configured time and state were set in the configuration,
   // do not allow changing or resetting it.
@@ -386,9 +377,7 @@ export const getChosenTimezone = function(state) {
 };
 
 export const getTimezones = function(state) {
-  let timezones = [
-    ["browser", "Your browser's current timezone", TIMEZONE_OFFSET]
-  ];
+  let timezones = [["browser", "Browser", TIMEZONE_OFFSET]];
 
   // Add configured timezones in the middle.
   if (state.session.bootstrap.configuration.timezones) {
@@ -402,13 +391,6 @@ export const getTimezones = function(state) {
   console.log(timezones);
 
   return timezones;
-};
-
-export const getTimezone = function(state) {
-  // Return chosen timezone, label, offset
-  return getTimezones(state).find(
-    timezone => timezone[0] === state.settings.chosenTimezone
-  );
 };
 
 export const getCurrentMapBackground = function(state) {

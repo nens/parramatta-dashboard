@@ -219,10 +219,13 @@ export const setNowAction = function(dispatch) {
 export const setDateTimeAction = function(dispatch) {
   // dateTime must be a string of the form "YYYY-MM-DDTHH:MMZ"
   // respresenting a UTC date time.
-  return dateTime =>
+  // Timezone is a string like "browser", "utc" or one of the
+  // configured timezones.
+  return (dateTime, timezone) =>
     dispatch({
       type: SET_DATETIME,
-      dateTime: dateTime
+      dateTime: dateTime,
+      timezone: timezone
     });
 };
 
@@ -230,14 +233,6 @@ export const resetDateTimeAction = function(dispatch) {
   return () =>
     dispatch({
       type: RESET_DATETIME
-    });
-};
-
-export const setChosenTimezone = function(dispatch) {
-  return timezone =>
-    dispatch({
-      type: SET_CHOSEN_TIMEZONE,
-      timezone: timezone
     });
 };
 
