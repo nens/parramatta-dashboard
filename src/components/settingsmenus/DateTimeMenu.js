@@ -198,7 +198,7 @@ class DateTimeMenu extends Component {
         <hr />
         <p>
           The date and time have been set to a fixed value in this
-          dashboard&quot;s configuration, and can not be changed manually.
+          dashboard&#39;s configuration, and can not be changed manually.
         </p>
         <button
           className={styles.OKButton}
