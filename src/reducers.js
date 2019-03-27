@@ -18,6 +18,7 @@ import {
   RECEIVE_BOOTSTRAP_SUCCESS,
   SET_IFRAME_MODE
 } from "./actions";
+import { fakeDataReducer } from "./fakeData";
 import { MAP_BACKGROUNDS } from "./config";
 
 import { makeReducer } from "lizard-api-client";
@@ -292,6 +293,8 @@ function alarms(
   }
 }
 
+// Fake Data for the training modes.
+
 const rootReducer = combineReducers({
   alarms,
   assets,
@@ -302,7 +305,8 @@ const rootReducer = combineReducers({
   timeseriesEvents,
   rasterEvents,
   settings,
-  iframeMode
+  iframeMode,
+  fakeData: fakeDataReducer
 });
 
 export default rootReducer;

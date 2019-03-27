@@ -274,27 +274,37 @@ export function getTimeseriesMetadataAction(uuid) {
   };
 }
 
+function receiveTimeseriesEvents(dispatch, uuid, start, end, results) {
+  if (results && results.length === 1) {
+    const result = results[0];
+
+    // Events
+    dispatch(receiveTimeseriesEventsAction(uuid, start, end, result.events));
+  }
+}
+
 export function getTimeseriesEvents(uuid, start, end, params) {
   return (dispatch, getState) => {
-    const timeseriesEvents = getState().timeseriesEvents;
+    const state = getState();
+
+    const timeseriesEvents = state.timeseriesEvents;
     const events = timeseriesEvents[uuid];
 
     if (events && events.start === start && events.end === end) {
       return; // Up to date.
     } else if (!events || !events.isFetching) {
-      // Fetch it
-      dispatch(fetchTimeseriesEventsAction(uuid, start, end));
+      // If this is a training situation, there may be fake data
+      const fakeResults = state.fakeData.timeseries[uuid];
+      if (fakeResults) {
+        receiveTimeseriesEvents(dispatch, uuid, start, end, fakeResults);
+      } else {
+        // Fetch it
+        dispatch(fetchTimeseriesEventsAction(uuid, start, end));
 
-      getTimeseries(uuid, start, end, params).then(results => {
-        if (results && results.length === 1) {
-          const result = results[0];
-
-          // Events
-          dispatch(
-            receiveTimeseriesEventsAction(uuid, start, end, result.events)
-          );
-        }
-      });
+        getTimeseries(uuid, start, end, params).then(results => {
+          receiveTimeseriesEvents(dispatch, uuid, start, end, results);
+        });
+      }
     }
   };
 }
