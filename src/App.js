@@ -63,7 +63,10 @@ class App extends Component {
 function mapStateToProps(state) {
   return {
     iframeModeActive: state.iframeMode.active,
-    now: getNow(state)
+    now: getNow(state),
+    refreshAutomatic: state.session.bootstrap.configuration.refreshAutomatic,
+    refreshEveryMiliseconds:
+      state.session.bootstrap.configuration.refreshEveryMiliseconds
   };
 }
 
