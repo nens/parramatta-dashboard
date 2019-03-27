@@ -1,6 +1,6 @@
 {
   "name": "parramatta-dashboard",
-  "version": "0.3.18",
+  "version": "0.3.19",
   "repository": {
     "type": "git",
     "name": "nens/parramatta-dashboard",
@@ -55,7 +55,7 @@
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
     "promise": "8.0.1",
-    "prop-types":"^15.5.0",
+    "prop-types": "^15.5.0",
     "react": "^16.4.0",
     "react-custom-scrollbars": "^4.2.1",
     "react-dev-utils": "^4.1.0",
