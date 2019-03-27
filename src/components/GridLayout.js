@@ -11,7 +11,7 @@ import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
-import { getAllTiles, getConfiguredDate, getConfiguredTime } from "../reducers";
+import { getAllTiles } from "../reducers";
 
 import { MOBILE_BREAKPOINT } from "../config";
 
