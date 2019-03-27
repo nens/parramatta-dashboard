@@ -98,10 +98,14 @@ class PickDateTime extends Component {
   }
 
   setDate(date) {
-    this.setState({ date: date });
+    if (date) {
+      this.setState({ date: date });
+    }
   }
   setTime(time) {
-    this.setState({ time: time });
+    if (time) {
+      this.setState({ time: time });
+    }
   }
   setTimezone(timezone) {
     this.setState({ timezone: timezone });
@@ -125,7 +129,7 @@ class PickDateTime extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ background: "#eee", padding: "10px" }}>
         <p>
           Please choose *both* a date and a time, and optionally a time zone.
         </p>
@@ -144,6 +148,7 @@ class PickDateTime extends Component {
             <input
               type="time"
               name="time"
+              required
               value={this.state.time}
               onChange={event => this.setTime(event.target.value)}
             />
@@ -152,6 +157,7 @@ class PickDateTime extends Component {
             <h5>Timezone</h5>
             <select
               name="timezone"
+              required
               value={this.state.timezone}
               onChange={event => this.setTimezone(event.target.value)}
             >
