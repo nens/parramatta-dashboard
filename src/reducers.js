@@ -382,18 +382,16 @@ export const getChosenTimezone = function(state) {
 
 export const getTimezones = function(state) {
   let timezones = [["browser", "Browser", TIMEZONE_OFFSET]];
+  const configuration = getConfiguration(state);
 
   // Add configured timezones in the middle.
-  if (state.session.bootstrap.configuration.timezones) {
+  if (configuration && configuration.timezones) {
     state.session.bootstrap.configuration.timezones.forEach(tz => {
       timezones.push(tz);
     });
   }
 
   timezones.push(["utc", "UTC", 0]);
-
-  console.log(timezones);
-
   return timezones;
 };
 
@@ -404,12 +402,30 @@ export const getCurrentMapBackground = function(state) {
 // Trainings page in the settings
 
 export const hasTrainingDashboards = function(state) {
+  const configuration = getConfiguration(state);
   return (
-    state.session.bootstrap.configuration.trainingDashboards &&
-    state.session.bootstrap.configuration.trainingDashboards.length > 0
+    configuration &&
+    configuration.trainingDashboards &&
+    configuration.trainingDashboards.length > 0
   );
 };
 
 export const trainingDashboards = function(state) {
-  return state.session.bootstrap.configuration.trainingDashboards || [];
+  if (hasTrainingDashboards(state)) {
+    return getConfiguration(state).trainingDashboards;
+  } else {
+    return [];
+  }
+};
+
+// Misc
+
+export const getDashboardTitle = function(state) {
+  const configuration = getConfiguration(state);
+
+  if (configuration && configuration.dashboardTitle) {
+    return configuration.dashboardTitle;
+  } else {
+    return "FloodSmart Parramatta Dashboard";
+  }
 };
