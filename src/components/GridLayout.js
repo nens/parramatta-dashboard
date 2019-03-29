@@ -11,7 +11,7 @@ import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
-import { getAllTiles } from "../reducers";
+import { getAllTiles, getDashboardTitle } from "../reducers";
 
 import { MOBILE_BREAKPOINT } from "../config";
 
@@ -149,7 +149,7 @@ class GridLayout extends Component {
             }}
           >
             <span className={styles.HeaderTitle}>
-              FloodSmart Parramatta Dashboard
+              {this.props.dashboardTitle}
             </span>
           </div>
           <img
@@ -230,7 +230,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
     tiles: getAllTiles(state),
-    alarms: state.alarms
+    alarms: state.alarms,
+    dashboardTitle: getDashboardTitle(state)
   };
 };
 
