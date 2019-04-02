@@ -155,7 +155,7 @@
   },
   "proxy": {
     "/bootstrap/": {
-      "target": "https://ijgenzon.lizard.net/",
+      "target": "http://localhost:8000/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
@@ -165,7 +165,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://ijgenzon.lizard.net/",
+      "target": "http://localhost:8000/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,

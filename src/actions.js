@@ -142,7 +142,7 @@ export function fetchBootstrap(dispatch, sessionState) {
 
   dispatch(fetchBootstrapAction());
 
-  getBootstrap("tomdeboer").then(
+  getBootstrap("dashboard_tom_plotly").then(
     bootstrap => {
       dispatch(receiveBootstrapSuccessAction(bootstrap));
     },

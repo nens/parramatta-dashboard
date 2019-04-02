@@ -350,22 +350,22 @@ class PlotlyChartComponent extends Component {
     return null;
   }
 
-  getThresholdLine(threshold, yref) {
-    return {
-      type: "line",
-      layer: "above",
-      x0: 0,
-      x1: 1,
-      xref: "paper",
-      yref: yref,
-      y0: threshold.value,
-      y1: threshold.value,
-      line: {
-        width: 1,
-        color: threshold.color
-      }
-    };
-  }
+  // getThresholdLine(threshold, yref) {
+  //   return {
+  //     type: "line",
+  //     layer: "above",
+  //     x0: 0,
+  //     x1: 1,
+  //     xref: "paper",
+  //     yref: yref,
+  //     y0: threshold.value,
+  //     y1: threshold.value,
+  //     line: {
+  //       width: 1,
+  //       color: threshold.color
+  //     }
+  //   };
+  // }
 
   getThresholdAnnotation(threshold, yref) {
     return {
@@ -391,24 +391,24 @@ class PlotlyChartComponent extends Component {
     const now = getNow(this.props.configuredNow).getTime();
     const alarmReferenceLines = this.alarmReferenceLines(axes);
 
-    if (thresholds) {
-      thresholdLines = thresholds.map(th => {
-        // Welke y as?
-        let yref = "y";
-        if (axes.length === 2 && axes[1].unit === th.unitReference) {
-          yref = "y2";
-        }
-        return this.getThresholdLine(th, yref);
-      });
-      thresholdAnnotations = thresholds.map(th => {
-        // Welke y as?
-        let yref = "y";
-        if (axes.length === 2 && axes[1].unit === th.unitReference) {
-          yref = "y2";
-        }
-        return this.getThresholdAnnotation(th, yref);
-      });
-    }
+    // if (thresholds) {
+    //   thresholdLines = thresholds.map(th => {
+    //     // Welke y as?
+    //     let yref = "y";
+    //     if (axes.length === 2 && axes[1].unit === th.unitReference) {
+    //       yref = "y2";
+    //     }
+    //     return this.getThresholdLine(th, yref);
+    //   });
+    //   thresholdAnnotations = thresholds.map(th => {
+    //     // Welke y as?
+    //     let yref = "y";
+    //     if (axes.length === 2 && axes[1].unit === th.unitReference) {
+    //       yref = "y2";
+    //     }
+    //     return this.getThresholdAnnotation(th, yref);
+    //   });
+    // }
 
     if (alarmReferenceLines) {
       shapes = alarmReferenceLines.shapes;
@@ -557,6 +557,8 @@ class PlotlyChartComponent extends Component {
       });
 
     const retrievedTileData = tile.data.map(dataItem => {
+      // // temporarily to debug;
+      // return dataItem;
       console.log("retrievedTileData before breakouts 0", dataItem);
       if (!dataItem.xy) return dataItem;
       console.log("retrievedTileData between breakouts 1");
@@ -572,6 +574,7 @@ class PlotlyChartComponent extends Component {
         return dataItem;
       }
       console.log("retrievedTileData after breakouts");
+
       const timeseriesX = this.props.timeseriesEvents[
         dataItem.xy.uuid
       ].events.map(dataX => new Date(dataX.timestamp));
@@ -670,8 +673,8 @@ class PlotlyChartComponent extends Component {
           // />
           <Plot
             className="fullPlot"
-            data={retrievedTileData}
-            // data={this.props.tile.data}
+            // data={retrievedTileData}
+            data={this.props.tile.data}
             // data={combinedEvents}
             // layout={this.props.tile.layout}
             layout={layout}
@@ -696,11 +699,22 @@ class PlotlyChartComponent extends Component {
   }
 
   renderTile(axes, retrievedTileData, combinedEvents, tile) {
+    console.log(
+      "[F] renderTile PlotlyChart ",
+      tile,
+      this.props.height,
+      this.props.width,
+      window.Plotly
+    );
+
     if (!this.props.height || !this.props.width || !window.Plotly) {
+      console.log("!this.props.height || !this.props.width || !window.Plotly");
       return null;
     }
 
     const Plot = plotComponentFactory(window.Plotly);
+
+    console.log("this.areAllEventsLoaded(tile)", this.areAllEventsLoaded(tile));
 
     return (
       <div
@@ -722,8 +736,28 @@ class PlotlyChartComponent extends Component {
           // />
           <Plot
             className="gridPlot"
-            data={retrievedTileData}
-            layout={this.props.tile.layout}
+            // data={retrievedTileData}
+            // data={this.props.tile.data}
+            data={[
+              {
+                x: [1, 2, 3],
+                y: [2, 6, 3],
+                xy: {
+                  type: "timeseries",
+                  uuid: "86cefeba-6a03-4998-b8b0-aae61083dc5b"
+                },
+                type: "scatter",
+                mode: "lines+points",
+                marker: { color: "red" }
+              },
+              {
+                type: "bar",
+                x: [1, 2, 3],
+                y: [2, 5, 3]
+              }
+            ]}
+            // layout={this.props.tile.layout}
+            layout={{ width: 320, height: 240, title: "A Fancy Plot" }}
             config={{ displayModeBar: false }}
           />
         ) : (
