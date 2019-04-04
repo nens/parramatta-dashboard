@@ -18,7 +18,7 @@ class StatisticsTile extends Component {
     });
   }
   numTriggeredAlarms() {
-    return this.props.alarms.data.filter(alarm => alarm.activeWarning()).length;
+    return this.props.alarms.filter(alarm => alarm.activeWarning()).length;
   }
   pluralizeAlarms(n) {
     return n === 1 ? "alarm" : "alarms";
@@ -27,9 +27,9 @@ class StatisticsTile extends Component {
     const { width } = this.state;
 
     let content;
-    if (this.props.alarms && this.props.alarms.data) {
+    if (this.props.alarms) {
       const triggerdAlarmCount = this.numTriggeredAlarms();
-      const alarmCount = this.props.alarms.data.length;
+      const alarmCount = this.props.alarms.length;
       content = (
         <div>
           <p>{triggerdAlarmCount}</p>

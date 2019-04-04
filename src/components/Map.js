@@ -6,7 +6,8 @@ import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import {
   getReferenceLevels,
   getAllTiles,
-  getCurrentMapBackground
+  getCurrentMapBackground,
+  getAlarms
 } from "../reducers";
 import { withRouter } from "react-router-dom";
 
@@ -458,7 +459,7 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
-    alarms: state.alarms,
+    alarms: getAlarms(state),
     timeseriesMetadata: state.timeseries,
     allTiles: getAllTiles(state),
     mapBackground: getCurrentMapBackground(state),

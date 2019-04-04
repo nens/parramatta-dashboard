@@ -7,11 +7,11 @@ import "moment/locale/en-au";
 import {
   addAsset,
   getRasterEvents,
-  getTimeseriesEvents,
+  fetchTimeseriesEvents,
   fetchRaster
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
-import { getBootstrap, getNow } from "../reducers";
+import { getBootstrap, getNow, getAlarms, getRasterEvents } from "../reducers";
 
 import { makeGetter } from "lizard-api-client";
 import plotComponentFactory from "react-plotly.js/factory";
@@ -74,7 +74,10 @@ class TimeseriesChartComponent extends Component {
           return null;
         }
 
-        const events = this.getRasterEvents(raster, intersection.geometry);
+        const events = this.props.getRasterEvents(
+          raster,
+          intersection.geometry
+        );
         if (!events) {
           return null;
         }
@@ -140,7 +143,7 @@ class TimeseriesChartComponent extends Component {
     });
 
     (this.props.tile.rasterIntersections || []).map(intersection =>
-      this.props.getRasterEvents(
+      this.props.fetchRasterEvents(
         this.props.getRaster(intersection.uuid).object,
         intersection.geometry,
         this.state.start,
@@ -262,13 +265,13 @@ class TimeseriesChartComponent extends Component {
   alarmReferenceLines(axes) {
     const { alarms, isFull } = this.props;
 
-    if (!alarms.data || !alarms.data.length) {
+    if (!alarms || !alarms.length) {
       return null;
     }
 
     // Select those alarms that are related to one of the timeseries on
     // this tile.
-    const relevantAlarms = alarms.data.filter(
+    const relevantAlarms = alarms.filter(
       alarm =>
         this.isRelevantTimeseriesAlarm(alarm) ||
         this.isRelevantRasterAlarm(alarm)
@@ -342,19 +345,6 @@ class TimeseriesChartComponent extends Component {
     });
 
     return { shapes, annotations };
-  }
-
-  getRasterEvents(raster, geometry) {
-    const allEvents = this.props.rasterEvents;
-    const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
-
-    if (allEvents[raster.uuid] && allEvents[raster.uuid][geomKey]) {
-      const events = allEvents[raster.uuid][geomKey];
-      if (events.start === this.state.start && events.end === this.state.end) {
-        return events.events;
-      }
-    }
-    return null;
   }
 
   getThresholdLine(threshold, yref) {
@@ -673,7 +663,10 @@ class TimeseriesChartComponent extends Component {
           return null;
         }
 
-        const events = this.getRasterEvents(raster, intersection.geometry);
+        const events = this.props.getRasterEvents(
+          raster,
+          intersection.geometry
+        );
         if (!events) return null;
 
         return {
@@ -864,6 +857,8 @@ function mapStateToProps(state) {
     measuringstations: state.assets.measuringstation || {},
     getRaster: makeGetter(state.rasters),
     timeseries: state.timeseries,
+    getRasterEvents: (raster, geometry) =>
+      getRasterEvents(state, raster, geometry),
     rasterEvents: state.rasterEvents,
     areRasterEventsLoaded: intersectionUuid => {
       let shortIntersectionUuid, theRasterEventsObject;
@@ -899,7 +894,7 @@ function mapStateToProps(state) {
         }
       }
     },
-    alarms: state.alarms,
+    alarms: getAlarms(state),
     now: getNow(state),
     bootstrap: getBootstrap(state)
   };
@@ -912,8 +907,8 @@ function mapDispatchToProps(dispatch) {
     fetchRaster: uuid => fetchRaster(dispatch, uuid),
     getTimeseriesEvents: (uuid, start, end) =>
       dispatch(getTimeseriesEvents(uuid, start, end)),
-    getRasterEvents: (raster, geometry, start, end) =>
-      dispatch(getRasterEvents(raster, geometry, start, end))
+    fetchRasterEvents: (raster, geometry, start, end) =>
+      dispatch(fetchRasterEvents(raster, geometry, start, end))
   };
 }
 

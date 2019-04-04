@@ -429,3 +429,28 @@ export const getDashboardTitle = function(state) {
     return "FloodSmart Parramatta Dashboard";
   }
 };
+
+// Alarms. Return fake if present
+
+export const getAlarms = state => (state.fakeData.alarms || state.alarms.data);
+
+// Raster Events
+
+getRasterEvents(state, raster, geometry) {
+  // If we have fake events, return those
+  const fakeEvents = getFakeData(state, fakeRasterKey(raster.uuid, geometry));
+  if (fakeEvents) {
+    return fakeEvents;
+  }
+
+  const allEvents = this.props.rasterEvents;
+  const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
+
+  if (allEvents[raster.uuid] && allEvents[raster.uuid][geomKey]) {
+    const events = allEvents[raster.uuid][geomKey];
+    if (events.start === this.state.start && events.end === this.state.end) {
+      return events.events;
+    }
+  }
+  return null;
+}

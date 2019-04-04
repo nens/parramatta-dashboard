@@ -13,7 +13,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { NavLink, withRouter } from "react-router-dom";
 import styles from "./FullLayout.css";
-import { getAllTiles, getTileById } from "../reducers";
+import { getAllTiles, getTileById, getAlarms } from "../reducers";
 
 class FullLayout extends Component {
   constructor(props) {
@@ -223,7 +223,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     allTiles: getAllTiles(state),
     getTileById: id => getTileById(state, id),
-    alarms: state.iframeMode.active ? [] : state.alarms,
+    alarms: state.iframeMode.active ? [] : getAlarms(state),
     iframeModeActive: state.iframeMode.active,
     iframeModeBaseTileId: state.iframeMode.baseTileId
   };
