@@ -11,7 +11,6 @@ class TrainingsMenu extends Component {
           Choose another dashboard for training
         </h4>
         <hr />
-        <p>Choose training dashboard</p>
         <select
           onChange={e => {
             const value = e.target.value;

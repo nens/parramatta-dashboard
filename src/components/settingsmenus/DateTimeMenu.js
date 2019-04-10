@@ -10,6 +10,8 @@ import {
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import styles from "../SettingsMenu.css";
+import Ink from "react-ink";
+import buttons from "../Buttons.css";
 
 /*
 
@@ -172,11 +174,24 @@ class PickDateTime extends Component {
           </div>
         </div>
         <p>
-          <button className={styles.OKButton} onClick={this.apply}>
+          <button
+            // className={styles.OKButton}
+            onClick={this.apply}
+          >
             Apply
           </button>
           &nbsp;
-          <button className={styles.OKButton} onClick={this.props.close}>
+          <button
+            // style={{
+            //   boxShadow: "1px 1px 4px 0 rgba(0, 0, 0, 0.4)",
+            //   paddingTop: "4px",
+            //   paddingBottom: "4px"
+            // }}
+            className={buttons.ButtonSettings}
+            // className={styles.OKButton}
+            onClick={this.props.close}
+          >
+            {/* <Ink/> */}
             Cancel
           </button>
         </p>
@@ -207,7 +222,7 @@ class DateTimeMenu extends Component {
           dashboard&#39;s configuration, and can not be changed manually.
         </p>
         <button
-          className={styles.OKButton}
+          // className={styles.OKButton}
           onClick={() => {
             this.props.closeSettingsMenu();
           }}
@@ -257,12 +272,15 @@ class DateTimeMenu extends Component {
           />
         ) : (
           <p>
-            <button className={styles.OKButton} onClick={this.openEdit}>
+            <button
+              // className={styles.OKButton}
+              onClick={this.openEdit}
+            >
               Choose new fixed time
             </button>
             &nbsp;
             <button
-              className={styles.OKButton}
+              // className={styles.OKButton}
               onClick={this.props.resetDateTime}
             >
               Reset to local time
@@ -271,7 +289,7 @@ class DateTimeMenu extends Component {
         )}
         <hr />
         <button
-          className={styles.OKButton}
+          // className={styles.OKButton}
           onClick={() => {
             this.props.closeSettingsMenu();
           }}
@@ -301,5 +319,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(DateTimeMenu)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DateTimeMenu)
 );

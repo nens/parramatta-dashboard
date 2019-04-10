@@ -40,9 +40,10 @@ class MapSettingsMenu extends Component {
           </p>
           <button onClick={this.toggleMapBackground}>Switch</button>
         </div>
-        <br />
+        <hr />
+        {/* <br /> */}
         <button
-          className={styles.OKButton}
+          // className={styles.OKButton}
           onClick={this.props.closeSettingsMenu}
         >
           OK
@@ -65,5 +66,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(MapSettingsMenu)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MapSettingsMenu)
 );

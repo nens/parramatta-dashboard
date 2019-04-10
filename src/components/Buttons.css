@@ -1,0 +1,9 @@
+.ButtonSettings {
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 4px;
+}
+.ButtonSettings:hover {
+  background: #eeeeee;
+}
