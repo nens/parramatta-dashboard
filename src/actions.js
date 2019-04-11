@@ -245,15 +245,20 @@ export const setMapBackgroundAction = function(dispatch) {
 };
 
 export function updateTimeseriesMetadata(uuid) {
-  return dispatch => {
+  return (dispatch, getState) => {
     // Get timeseries with uuid, update its metadata. Does not
     // pass a start and end time, so does not receive any events,
     // although the metadata may contain a last value.
-    getTimeseries(uuid).then(results => {
-      if (results && results.length) {
-        dispatch(addTimeseries(uuid, results[0]));
-      }
-    });
+    const fakeResults = getState().fakeData.timeseries[uuid];
+    if (fakeResults) {
+      dispatch(addTimeseries(uuid, fakeResults[0]));
+    } else {
+      getTimeseries(uuid).then(results => {
+        if (results && results.length) {
+          dispatch(addTimeseries(uuid, results[0]));
+        }
+      });
+    }
   };
 }
 
@@ -262,12 +267,17 @@ export function getTimeseriesMetadataAction(uuid) {
     const timeseriesState = getState().timeseries;
 
     if (!timeseriesState[uuid]) {
-      return getTimeseries(uuid).then(results => {
-        if (results && results.length) {
-          dispatch(addTimeseries(uuid, results[0]));
-          return results[0];
-        }
-      });
+      const fakeResults = getState().fakeData.timeseries[uuid];
+      if (fakeResults) {
+        dispatch(addTimeseries(uuid, fakeResults[0]));
+      } else {
+        return getTimeseries(uuid).then(results => {
+          if (results && results.length) {
+            dispatch(addTimeseries(uuid, results[0]));
+            return results[0];
+          }
+        });
+      }
     } else {
       return Promise.resolve(timeseriesState[uuid]);
     }
