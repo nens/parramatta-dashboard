@@ -10,6 +10,7 @@ import {
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import styles from "../SettingsMenu.css";
+import buttons from "../Buttons.css";
 
 /*
 
@@ -172,11 +173,11 @@ class PickDateTime extends Component {
           </div>
         </div>
         <p>
-          <button className={styles.OKButton} onClick={this.apply}>
+          <button className={buttons.ButtonSettings} onClick={this.apply}>
             Apply
           </button>
           &nbsp;
-          <button className={styles.OKButton} onClick={this.props.close}>
+          <button className={buttons.ButtonSettings} onClick={this.props.close}>
             Cancel
           </button>
         </p>
@@ -207,7 +208,7 @@ class DateTimeMenu extends Component {
           dashboard&#39;s configuration, and can not be changed manually.
         </p>
         <button
-          className={styles.OKButton}
+          className={buttons.ButtonSettings}
           onClick={() => {
             this.props.closeSettingsMenu();
           }}
@@ -257,12 +258,12 @@ class DateTimeMenu extends Component {
           />
         ) : (
           <p>
-            <button className={styles.OKButton} onClick={this.openEdit}>
+            <button className={buttons.ButtonSettings} onClick={this.openEdit}>
               Choose new fixed time
             </button>
             &nbsp;
             <button
-              className={styles.OKButton}
+              className={buttons.ButtonSettings}
               onClick={this.props.resetDateTime}
             >
               Reset to local time
@@ -271,7 +272,7 @@ class DateTimeMenu extends Component {
         )}
         <hr />
         <button
-          className={styles.OKButton}
+          className={buttons.ButtonSettings}
           onClick={() => {
             this.props.closeSettingsMenu();
           }}
@@ -301,5 +302,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(DateTimeMenu)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DateTimeMenu)
 );

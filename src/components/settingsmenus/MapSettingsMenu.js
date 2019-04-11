@@ -5,6 +5,7 @@ import { MAP_BACKGROUNDS } from "../../config";
 import styles from "../SettingsMenu.css";
 import { setMapBackgroundAction } from "../../actions";
 import { getCurrentMapBackground } from "../../reducers";
+import buttons from "../Buttons.css";
 
 class MapSettingsMenu extends Component {
   constructor(props) {
@@ -38,11 +39,16 @@ class MapSettingsMenu extends Component {
             Currently selected:&nbsp;
             <strong>{this.props.currentMapBackground.description}</strong>.
           </p>
-          <button onClick={this.toggleMapBackground}>Switch</button>
+          <button
+            className={buttons.ButtonSettings}
+            onClick={this.toggleMapBackground}
+          >
+            Switch
+          </button>
         </div>
-        <br />
+        <hr />
         <button
-          className={styles.OKButton}
+          className={buttons.ButtonSettings}
           onClick={this.props.closeSettingsMenu}
         >
           OK
@@ -65,5 +71,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(MapSettingsMenu)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MapSettingsMenu)
 );
