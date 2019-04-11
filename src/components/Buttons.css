@@ -1,15 +1,19 @@
 .ButtonSettings {
   box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.4);
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   border-radius: 4px;
   background: #ffffff;
 }
 .ButtonSettings:hover {
   background: #eeeeee;
 }
+.ButtonSettings:focus {
+  background: #eeeeee;
+}
 
 .ButtonSettings::-moz-focus-inner {
   border:0;
 }
+
 
