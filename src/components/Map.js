@@ -5,6 +5,7 @@ import { find } from "lodash";
 import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import {
   getReferenceLevels,
+  getTimeseriesMetadata,
   getAllTiles,
   getCurrentMapBackground,
   getAlarms
@@ -167,15 +168,14 @@ class MapComponent extends Component {
       timeseriesTable = <p>This asset has no timeseries.</p>;
     } else {
       link = this.getTileLinkForTimeseries(asset.timeseries.map(ts => ts.uuid));
-
-      const timeseriesWithMetadata = asset.timeseries.filter(
-        ts => this.props.timeseriesMetadata[ts.uuid]
+      const timeseriesWithMetadata = asset.timeseries.filter(ts =>
+        this.props.getTimeseriesMetadata(ts.uuid)
       );
 
       if (timeseriesWithMetadata.length) {
         // Create a table with units and latest values.
         const rows = timeseriesWithMetadata.map((ts, idx) => {
-          const metadata = this.props.timeseriesMetadata[ts.uuid];
+          const metadata = this.props.getTimeseriesMetadata(ts.uuid);
           return (
             <tr key={idx}>
               <td>{metadata.name}</td>
@@ -460,7 +460,7 @@ function mapStateToProps(state) {
     assets: state.assets,
     rasters: state.rasters,
     alarms: getAlarms(state),
-    timeseriesMetadata: state.timeseries,
+    getTimeseriesMetadata: uuid => getTimeseriesMetadata(state, uuid),
     allTiles: getAllTiles(state),
     mapBackground: getCurrentMapBackground(state),
     referenceLevels: getReferenceLevels(state)

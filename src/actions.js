@@ -245,7 +245,14 @@ export const setMapBackgroundAction = function(dispatch) {
 };
 
 export function updateTimeseriesMetadata(uuid) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    // No need to fetch if we have this as fake data
+    // Unfortunately we can't import these functions from fakeData.js
+    // because of circular imports.
+    if (getState().fakeData[`timeseries-${uuid}`]) {
+      return;
+    }
+
     // Get timeseries with uuid, update its metadata. Does not
     // pass a start and end time, so does not receive any events,
     // although the metadata may contain a last value.

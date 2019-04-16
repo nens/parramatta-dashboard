@@ -6,12 +6,13 @@ import moment from "moment";
 import "moment/locale/en-au";
 import {
   addAsset,
-  getRasterEvents,
-  fetchTimeseriesEvents,
-  fetchRaster
+  getTimeseriesEvents,
+  fetchRaster,
+  fetchRasterEvents
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
-import { getBootstrap, getNow, getAlarms, getRasterEvents } from "../reducers";
+import { getBootstrap, getNow, getAlarms } from "../reducers";
+import { getFakeData, fakeRasterKey } from "../fakeData";
 
 import { makeGetter } from "lizard-api-client";
 import plotComponentFactory from "react-plotly.js/factory";
@@ -42,6 +43,27 @@ class TimeseriesChartComponent extends Component {
       this
     );
   }
+
+  getRasterEvents = function(raster, geometry) {
+    // If we have fake events, return those
+    const fakeEvents = this.props.getFakeData(
+      fakeRasterKey(raster.uuid, geometry)
+    );
+    if (fakeEvents) {
+      return fakeEvents;
+    }
+
+    const allEvents = this.props.rasterEvents;
+    const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
+
+    if (allEvents[raster.uuid] && allEvents[raster.uuid][geomKey]) {
+      const events = allEvents[raster.uuid][geomKey];
+      if (events.start === this.state.start && events.end === this.state.end) {
+        return events.events;
+      }
+    }
+    return null;
+  };
 
   /////////////////////////////////////////////////////////////////////////////
   // Component - lifecycle functions //////////////////////////////////////////
@@ -74,10 +96,7 @@ class TimeseriesChartComponent extends Component {
           return null;
         }
 
-        const events = this.props.getRasterEvents(
-          raster,
-          intersection.geometry
-        );
+        const events = this.getRasterEvents(raster, intersection.geometry);
         if (!events) {
           return null;
         }
@@ -663,10 +682,7 @@ class TimeseriesChartComponent extends Component {
           return null;
         }
 
-        const events = this.props.getRasterEvents(
-          raster,
-          intersection.geometry
-        );
+        const events = this.getRasterEvents(raster, intersection.geometry);
         if (!events) return null;
 
         return {
@@ -857,8 +873,6 @@ function mapStateToProps(state) {
     measuringstations: state.assets.measuringstation || {},
     getRaster: makeGetter(state.rasters),
     timeseries: state.timeseries,
-    getRasterEvents: (raster, geometry) =>
-      getRasterEvents(state, raster, geometry),
     rasterEvents: state.rasterEvents,
     areRasterEventsLoaded: intersectionUuid => {
       let shortIntersectionUuid, theRasterEventsObject;
@@ -896,7 +910,8 @@ function mapStateToProps(state) {
     },
     alarms: getAlarms(state),
     now: getNow(state),
-    bootstrap: getBootstrap(state)
+    bootstrap: getBootstrap(state),
+    getFakeData: key => getFakeData(state, key)
   };
 }
 
