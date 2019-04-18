@@ -12,7 +12,7 @@ import {
 } from "../actions";
 import { MAX_TIMESERIES_POINTS } from "../config";
 import { getBootstrap, getNow, getAlarms } from "../reducers";
-import { getFakeData, fakeRasterKey } from "../fakeData";
+import { getFakeData, fakeTimeseriesKey, fakeRasterKey } from "../fakeData";
 
 import { makeGetter } from "lizard-api-client";
 import plotComponentFactory from "react-plotly.js/factory";
@@ -33,10 +33,11 @@ class TimeseriesChartComponent extends Component {
       ...curPer,
       componentHasMountedOnce: false,
       componentRef: "comp-" + parseInt(Math.random(), 10),
-      combinedEvents: null,
       isFinishedFetchingRasterEvents: false,
       isFinishedFetchingTimeseriesEvents: false
     };
+
+    this.updateTimeseries();
 
     this._areAllRasterEventsLoaded = this._areAllRasterEventsLoaded.bind(this);
     this._areAlltimeseriesEventsLoaded = this._areAllTimeseriesEventsLoaded.bind(
@@ -44,7 +45,7 @@ class TimeseriesChartComponent extends Component {
     );
   }
 
-  getRasterEvents = function(raster, geometry) {
+  getRasterEvents(raster, geometry) {
     // If we have fake events, return those
     const fakeEvents = this.props.getFakeData(
       fakeRasterKey(raster.uuid, geometry)
@@ -63,63 +64,11 @@ class TimeseriesChartComponent extends Component {
       }
     }
     return null;
-  };
+  }
 
   /////////////////////////////////////////////////////////////////////////////
   // Component - lifecycle functions //////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
-
-  componentWillMount() {
-    this.updateTimeseries();
-
-    const axes = this.getAxesData();
-
-    const timeseriesEvents = this.props.tile.timeseries
-      .filter(
-        uuid =>
-          this.props.timeseries[uuid] &&
-          this.props.timeseriesEvents[uuid] &&
-          this.props.timeseriesEvents[uuid].events
-      )
-      .map(uuid => {
-        return {
-          uuid: uuid,
-          observation_type: this.props.timeseries[uuid].observation_type,
-          events: this.props.timeseriesEvents[uuid].events
-        };
-      });
-
-    const rasterEvents = (this.props.tile.rasterIntersections || [])
-      .map(intersection => {
-        const raster = this.props.getRaster(intersection.uuid).object;
-        if (!raster) {
-          return null;
-        }
-
-        const events = this.getRasterEvents(raster, intersection.geometry);
-        if (!events) {
-          return null;
-        }
-
-        return {
-          uuid: intersection.uuid,
-          observation_type: raster.observation_type,
-          events: events
-        };
-      })
-      .filter(e => e !== null); // Remove nulls
-
-    const combinedEvents = combineEventSeries(
-      timeseriesEvents.concat(rasterEvents),
-      axes,
-      this.props.tile.colors,
-      this.props.isFull
-    );
-
-    this.setState({
-      combinedEvents
-    });
-  }
 
   componentWillUpdate() {
     const currentTime = currentPeriod(
@@ -660,20 +609,35 @@ class TimeseriesChartComponent extends Component {
   render() {
     const { tile } = this.props;
 
-    const timeseriesEvents = tile.timeseries
-      .filter(
-        uuid =>
+    const timeseriesEvents = this.props.tile.timeseries
+      .map(uuid => {
+        const fakeTimeseries = this.props.getFakeData(fakeTimeseriesKey(uuid));
+
+        console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
+
+        if (fakeTimeseries) {
+          return {
+            uuid: uuid,
+            observation_type: fakeTimeseries.observation_type,
+            events: fakeTimeseries.events
+          };
+        }
+
+        if (
           this.props.timeseries[uuid] &&
           this.props.timeseriesEvents[uuid] &&
           this.props.timeseriesEvents[uuid].events
-      )
-      .map(uuid => {
-        return {
-          uuid: uuid,
-          observation_type: this.props.timeseries[uuid].observation_type,
-          events: this.props.timeseriesEvents[uuid].events
-        };
-      });
+        ) {
+          return {
+            uuid: uuid,
+            observation_type: this.props.timeseries[uuid].observation_type,
+            events: this.props.timeseriesEvents[uuid].events
+          };
+        }
+
+        return null;
+      })
+      .filter(ts => ts !== null);
 
     const rasterEvents = (tile.rasterIntersections || [])
       .map(intersection => {

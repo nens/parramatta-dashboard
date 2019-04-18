@@ -39,6 +39,8 @@ export const fakeDataReducer = function(state = {}, action) {
         data,
         "http://example.com"
       );
+
+      parsed = parsed && parsed.length > 0 ? parsed[0] : null;
     } else if (/^raster-/.test(key)) {
       parsed = data;
     } else if (key === "timeseriesAlarms" || key === "rasterAlarms") {
