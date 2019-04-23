@@ -6,7 +6,7 @@ import { getTimeseriesMetadataAction, fetchRaster } from "../actions";
 
 // Wrapper for TimeseriesChart.
 
-// The TimeseriesTile fetches the assets, timeseries objects and alarms
+// The TimeseriesTile fetches the assets and timeseries objects
 // that the TimeseriesChart uses; then, when all are present, it renders
 // a TimeseriesChart (which fetches the actual timeseries events).
 // This is a fix for various "do-this-async-first-then-that-async" issues.

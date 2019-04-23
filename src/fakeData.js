@@ -1,59 +1,76 @@
-import { combineReducers } from "redux";
 import { RECEIVE_BOOTSTRAP_SUCCESS } from "./actions";
 import { processMultipleResultsResponse } from "lizard-api-client";
 
 // Redux reducer and selectors for storing and using fake data,
-// to use in the Training Mode. Consists of separate sub-reducers for
-// timeseries, rasterdata, timeseriesalarms and rasteralarms.
+// to use in the Training Mode.
 
-// The state of fakeData is only changed once, when the Bootstrap is received;
-// if it contains fake data, then it is parsed using lizard-api-client here
-// and saved. Then it can be used instead of sending actual API requests.
+// It is a key-value store, each type of request has its own key;
+// the values are *processed* API responses. E.g. responses from
+// the Timeseries endpoint are processed using processMultipleResultsResponse
+// in lizard-api-client, so the same happens here.
+
+// The state of fakeData is currently only changed once, when the
+// Bootstrap is received.
 
 // "Start" and "end" timestamps are ignored as it assumed all fake data covers
 // the same time period.
 
-// Each type of request has its own reducer, that are combined in the Redux state.
-
-function fakeTimeseriesData(state = {}, action) {
-  // The state of fakeTimeseriesData has uuids as keys, and parsed
-  // results of API calls as values.
+export const fakeDataReducer = function(state = {}, action) {
   if (action.type !== RECEIVE_BOOTSTRAP_SUCCESS) {
+    // We only need to update based on received bootstraps.
     return state;
   }
 
   const config = action.bootstrap.configuration;
 
-  if (!config || !config.fakeData || !config.fakeData.timeseries) {
+  if (!config || !config.fakeData) {
     return state;
   }
 
   const newState = {};
 
-  Object.keys(config.fakeData.timeseries).forEach(uuid => {
-    const timeseriesData = config.fakeData.timeseries[uuid];
-    const parsed = processMultipleResultsResponse(
-      "Timeseries",
-      timeseriesData,
-      "http://example.com"
-    );
+  Object.keys(config.fakeData).forEach(key => {
+    const data = config.fakeData[key];
+    let parsed = null;
+
+    if (/^timeseries-/.test(key)) {
+      parsed = processMultipleResultsResponse(
+        "Timeseries",
+        data,
+        "http://example.com"
+      );
+
+      parsed = parsed && parsed.length > 0 ? parsed[0] : null;
+    } else if (/^raster-/.test(key)) {
+      parsed = data;
+    } else if (key === "timeseriesAlarms" || key === "rasterAlarms") {
+      const valueObject =
+        key === "timeseriesAlarms" ? "TimeseriesAlarm" : "RasterAlarm";
+
+      parsed = processMultipleResultsResponse(
+        valueObject,
+        data,
+        "http://example.com"
+      ).filter(alarm => alarm.active);
+
+      // Also store a *combined* list of parsed alarms in newState.alarms
+      newState.alarms = (newState.alarms || []).concat(parsed);
+    }
 
     if (parsed) {
-      newState[uuid] = parsed;
+      newState[key] = parsed;
     }
   });
 
   return newState;
-}
-
-export const fakeDataReducer = combineReducers({
-  timeseries: fakeTimeseriesData
-});
+};
 
 // Selectors
 
-// It is a bit sad that functions in this file have to know that they are called
-// fakeData in the global state, but I don't know how to avoid that.
-export const getFakeTimeseriesData = function(state, uuid) {
-  return state.fakeData && state.fakeData.timeseries[uuid];
-};
+export const fakeTimeseriesKey = uuid => `timeseries-${uuid}`;
+
+export const fakeRasterKey = (uuid, geometry) =>
+  `raster-${uuid}-${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
+
+export const getFakeData = (state, key) =>
+  state.fakeData && state.fakeData[key];

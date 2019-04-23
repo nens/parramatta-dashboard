@@ -5,8 +5,10 @@ import { find } from "lodash";
 import { updateTimeseriesMetadata, fetchRaster, addAsset } from "../actions";
 import {
   getReferenceLevels,
+  getTimeseriesMetadata,
   getAllTiles,
-  getCurrentMapBackground
+  getCurrentMapBackground,
+  getRasterAlarms
 } from "../reducers";
 import { withRouter } from "react-router-dom";
 
@@ -103,10 +105,10 @@ class MapComponent extends Component {
 
   iconForAsset(asset) {
     // Return true if there is a raster alarm at the same location and it is active.
-    if (!this.props.alarms.rasterData) return IconNoAlarm;
+    if (!this.props.rasterAlarms) return IconNoAlarm;
 
     // Get the first alarm for this geometry
-    const alarm = find(this.props.alarms.rasterData, alarm =>
+    const alarm = find(this.props.rasterAlarms, alarm =>
       alarm.sameGeometry(asset.geometry)
     );
 
@@ -166,15 +168,14 @@ class MapComponent extends Component {
       timeseriesTable = <p>This asset has no timeseries.</p>;
     } else {
       link = this.getTileLinkForTimeseries(asset.timeseries.map(ts => ts.uuid));
-
-      const timeseriesWithMetadata = asset.timeseries.filter(
-        ts => this.props.timeseriesMetadata[ts.uuid]
+      const timeseriesWithMetadata = asset.timeseries.filter(ts =>
+        this.props.getTimeseriesMetadata(ts.uuid)
       );
 
       if (timeseriesWithMetadata.length) {
         // Create a table with units and latest values.
         const rows = timeseriesWithMetadata.map((ts, idx) => {
-          const metadata = this.props.timeseriesMetadata[ts.uuid];
+          const metadata = this.props.getTimeseriesMetadata(ts.uuid);
           return (
             <tr key={idx}>
               <td>{metadata.name}</td>
@@ -276,10 +277,10 @@ class MapComponent extends Component {
 
   iconForGeometry(point) {
     // Return true if there is a raster alarm at the same location and it is active.
-    if (!this.props.alarms.rasterData) return IconNoAlarm;
+    if (!this.props.rasterAlarms) return IconNoAlarm;
 
     // Get the first alarm for this geometry
-    const alarm = find(this.props.alarms.rasterData, alarm =>
+    const alarm = find(this.props.rasterAlarms, alarm =>
       alarm.sameGeometry(point)
     );
 
@@ -458,8 +459,8 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
-    alarms: state.alarms,
-    timeseriesMetadata: state.timeseries,
+    rasterAlarms: getRasterAlarms(state),
+    getTimeseriesMetadata: uuid => getTimeseriesMetadata(state, uuid),
     allTiles: getAllTiles(state),
     mapBackground: getCurrentMapBackground(state),
     referenceLevels: getReferenceLevels(state)

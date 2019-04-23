@@ -18,7 +18,7 @@ import {
   RECEIVE_BOOTSTRAP_SUCCESS,
   SET_IFRAME_MODE
 } from "./actions";
-import { fakeDataReducer } from "./fakeData";
+import { fakeDataReducer, getFakeData, fakeTimeseriesKey } from "./fakeData";
 import { MAP_BACKGROUNDS } from "./config";
 
 import { makeReducer } from "lizard-api-client";
@@ -429,3 +429,20 @@ export const getDashboardTitle = function(state) {
     return "FloodSmart Parramatta Dashboard";
   }
 };
+
+// Timeseries
+
+export const getTimeseriesMetadata = (state, uuid) => {
+  const fakeTimeseries = getFakeData(state, fakeTimeseriesKey(uuid));
+
+  if (fakeTimeseries) return fakeTimeseries;
+
+  return state.timeseries[uuid];
+};
+
+// Alarms. Return fake if present
+
+export const getAlarms = state => state.fakeData.alarms || state.alarms.data;
+
+export const getRasterAlarms = state =>
+  state.fakeData.rasterAlarms || state.alarms.rasterData;

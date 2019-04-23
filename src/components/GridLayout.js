@@ -11,7 +11,7 @@ import ExternalTile from "./ExternalTile";
 import Map from "./Map";
 import logoCombo from "../graphics/logo-combo.png";
 import styles from "./GridLayout.css";
-import { getAllTiles, getDashboardTitle } from "../reducers";
+import { getAllTiles, getDashboardTitle, getAlarms } from "../reducers";
 
 import { MOBILE_BREAKPOINT } from "../config";
 
@@ -230,7 +230,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
     tiles: getAllTiles(state),
-    alarms: state.alarms,
+    alarms: getAlarms(state),
     dashboardTitle: getDashboardTitle(state)
   };
 };

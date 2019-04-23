@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import { fetchAlarms } from "../actions";
 import { IconActiveAlarmSVG, IconInactiveAlarmSVG } from "./Icons";
-import { getNow } from "../reducers";
+import { getNow, getAlarms } from "../reducers";
 
 import styles from "./FullStatistics.css";
 
@@ -28,8 +28,8 @@ class FullStatistics extends Component {
   }
   getAlarmsTable() {
     const { alarms } = this.props;
-    const alarmsSortedByName = alarms.data
-      ? alarms.data.slice().sort((a, b) => {
+    const alarmsSortedByName = alarms
+      ? alarms.slice().sort((a, b) => {
           if (a.name < b.name) {
             return -1;
           }
@@ -75,7 +75,7 @@ class FullStatistics extends Component {
   }
   render() {
     const { height, isMobile, alarms } = this.props;
-    const numberOfAlarms = alarms.data ? alarms.data.length : 0;
+    const numberOfAlarms = alarms ? alarms.length : 0;
     return (
       <div
         className={styles.FullStatistics}
@@ -103,7 +103,7 @@ class FullStatistics extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    alarms: state.alarms,
+    alarms: getAlarms(state),
     iframeModeActive: state.iframeMode.active,
     now: getNow(state)
   };

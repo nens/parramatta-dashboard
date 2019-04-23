@@ -245,7 +245,14 @@ export const setMapBackgroundAction = function(dispatch) {
 };
 
 export function updateTimeseriesMetadata(uuid) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    // No need to fetch if we have this as fake data
+    // Unfortunately we can't import these functions from fakeData.js
+    // because of circular imports.
+    if (getState().fakeData[`timeseries-${uuid}`]) {
+      return;
+    }
+
     // Get timeseries with uuid, update its metadata. Does not
     // pass a start and end time, so does not receive any events,
     // although the metadata may contain a last value.
@@ -293,18 +300,12 @@ export function getTimeseriesEvents(uuid, start, end, params) {
     if (events && events.start === start && events.end === end) {
       return; // Up to date.
     } else if (!events || !events.isFetching) {
-      // If this is a training situation, there may be fake data
-      const fakeResults = state.fakeData.timeseries[uuid];
-      if (fakeResults) {
-        receiveTimeseriesEvents(dispatch, uuid, start, end, fakeResults);
-      } else {
-        // Fetch it
-        dispatch(fetchTimeseriesEventsAction(uuid, start, end));
+      // Fetch it
+      dispatch(fetchTimeseriesEventsAction(uuid, start, end));
 
-        getTimeseries(uuid, start, end, params).then(results => {
-          receiveTimeseriesEvents(dispatch, uuid, start, end, results);
-        });
-      }
+      getTimeseries(uuid, start, end, params).then(results => {
+        receiveTimeseriesEvents(dispatch, uuid, start, end, results);
+      });
     }
   };
 }
@@ -317,7 +318,7 @@ export function getTimeseriesAction(uuid, start, end, params) {
   };
 }
 
-export function getRasterEvents(raster, geometry, start, end) {
+export function fetchRasterEvents(raster, geometry, start, end) {
   return (dispatch, getState) => {
     if (!raster) return null;
     // There can be multiple points on a raster where we store raster events from.
