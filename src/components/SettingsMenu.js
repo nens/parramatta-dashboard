@@ -69,6 +69,14 @@ class SettingsMenu extends Component {
             <i className="material-icons">close</i>
           </div>
           <div className={styles.SettingsMenuItemsWrapper}>
+            {this.props.hasTrainingsDashboards ? (
+              <SettingsMenuTitle
+                icon="school"
+                title="Training"
+                active={settingsMenuId === 3}
+                setSettingsMenu={() => this.setSettingsMenu(3)}
+              />
+            ) : null}
             <SettingsMenuTitle
               icon="access_time"
               title="Date/time settings"
@@ -89,17 +97,9 @@ class SettingsMenu extends Component {
               active={settingsMenuId === 2}
               setSettingsMenu={() => this.setSettingsMenu(2)}
             />
-
-            {this.props.hasTrainingsDashboards ? (
-              <SettingsMenuTitle
-                icon="school"
-                title="Training"
-                active={settingsMenuId === 3}
-                setSettingsMenu={() => this.setSettingsMenu(3)}
-              />
-            ) : null}
           </div>
           <main style={{ height: height - 100 }}>
+            {settingsMenuId === 3 ? <TrainingsMenu /> : null}
             {settingsMenuId === 0 ? (
               <DateTimeMenu closeSettingsMenu={this.props.closeSettingsMenu} />
             ) : null}
@@ -109,7 +109,6 @@ class SettingsMenu extends Component {
               />
             ) : null}
             {settingsMenuId === 2 ? <ContactMenu /> : null}
-            {settingsMenuId === 3 ? <TrainingsMenu /> : null}
           </main>
         </div>
       </DocumentTitle>
