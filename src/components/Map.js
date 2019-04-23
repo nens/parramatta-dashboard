@@ -8,7 +8,7 @@ import {
   getTimeseriesMetadata,
   getAllTiles,
   getCurrentMapBackground,
-  getAlarms
+  getRasterAlarms
 } from "../reducers";
 import { withRouter } from "react-router-dom";
 
@@ -105,10 +105,10 @@ class MapComponent extends Component {
 
   iconForAsset(asset) {
     // Return true if there is a raster alarm at the same location and it is active.
-    if (!this.props.alarms.rasterData) return IconNoAlarm;
+    if (!this.props.rasterAlarms) return IconNoAlarm;
 
     // Get the first alarm for this geometry
-    const alarm = find(this.props.alarms.rasterData, alarm =>
+    const alarm = find(this.props.rasterAlarms, alarm =>
       alarm.sameGeometry(asset.geometry)
     );
 
@@ -277,10 +277,10 @@ class MapComponent extends Component {
 
   iconForGeometry(point) {
     // Return true if there is a raster alarm at the same location and it is active.
-    if (!this.props.alarms.rasterData) return IconNoAlarm;
+    if (!this.props.rasterAlarms) return IconNoAlarm;
 
     // Get the first alarm for this geometry
-    const alarm = find(this.props.alarms.rasterData, alarm =>
+    const alarm = find(this.props.rasterAlarms, alarm =>
       alarm.sameGeometry(point)
     );
 
@@ -459,7 +459,7 @@ function mapStateToProps(state) {
   return {
     assets: state.assets,
     rasters: state.rasters,
-    alarms: getAlarms(state),
+    rasterAlarms: getRasterAlarms(state),
     getTimeseriesMetadata: uuid => getTimeseriesMetadata(state, uuid),
     allTiles: getAllTiles(state),
     mapBackground: getCurrentMapBackground(state),

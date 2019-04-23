@@ -443,3 +443,6 @@ export const getTimeseriesMetadata = (state, uuid) => {
 // Alarms. Return fake if present
 
 export const getAlarms = state => state.fakeData.alarms || state.alarms.data;
+
+export const getRasterAlarms = state =>
+  state.fakeData.rasterAlarms || state.alarms.rasterData;
