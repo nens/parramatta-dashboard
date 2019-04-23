@@ -73,42 +73,42 @@ class SettingsMenu extends Component {
               <SettingsMenuTitle
                 icon="school"
                 title="Training"
-                active={settingsMenuId === 3}
-                setSettingsMenu={() => this.setSettingsMenu(3)}
+                active={settingsMenuId === 0}
+                setSettingsMenu={() => this.setSettingsMenu(0)}
               />
             ) : null}
             <SettingsMenuTitle
               icon="access_time"
               title="Date/time settings"
-              active={settingsMenuId === 0}
-              setSettingsMenu={() => this.setSettingsMenu(0)}
-            />
-
-            <SettingsMenuTitle
-              icon="layers"
-              title="Background layers"
               active={settingsMenuId === 1}
               setSettingsMenu={() => this.setSettingsMenu(1)}
             />
 
             <SettingsMenuTitle
-              icon="copyright"
-              title="Contact"
+              icon="layers"
+              title="Background layers"
               active={settingsMenuId === 2}
               setSettingsMenu={() => this.setSettingsMenu(2)}
             />
+
+            <SettingsMenuTitle
+              icon="copyright"
+              title="Contact"
+              active={settingsMenuId === 3}
+              setSettingsMenu={() => this.setSettingsMenu(3)}
+            />
           </div>
           <main style={{ height: height - 100 }}>
-            {settingsMenuId === 3 ? <TrainingsMenu /> : null}
-            {settingsMenuId === 0 ? (
+            {settingsMenuId === 0 ? <TrainingsMenu /> : null}
+            {settingsMenuId === 1 ? (
               <DateTimeMenu closeSettingsMenu={this.props.closeSettingsMenu} />
             ) : null}
-            {settingsMenuId === 1 ? (
+            {settingsMenuId === 2 ? (
               <MapSettingsMenu
                 closeSettingsMenu={this.props.closeSettingsMenu}
               />
             ) : null}
-            {settingsMenuId === 2 ? <ContactMenu /> : null}
+            {settingsMenuId === 3 ? <ContactMenu /> : null}
           </main>
         </div>
       </DocumentTitle>
