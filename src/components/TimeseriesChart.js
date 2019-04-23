@@ -130,6 +130,12 @@ class TimeseriesChartComponent extends Component {
   }
 
   observationType(uuid) {
+    const fakeTimeseries = this.props.getFakeData(fakeTimeseriesKey(uuid));
+
+    if (fakeTimeseries) {
+      return fakeTimeseries.observation_type;
+    }
+
     if (this.props.tile.timeseries.indexOf(uuid) !== -1) {
       // It's a timeseries.
       if (this.props.timeseries[uuid]) {
@@ -658,6 +664,8 @@ class TimeseriesChartComponent extends Component {
       .filter(e => e !== null); // Remove nulls
 
     const axes = this.getAxesData();
+
+    console.log("AXES", JSON.parse(JSON.stringify(axes)));
 
     const combinedEvents = combineEventSeries(
       timeseriesEvents.concat(rasterEvents),
