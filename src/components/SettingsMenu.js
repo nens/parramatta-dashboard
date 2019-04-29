@@ -69,14 +69,12 @@ class SettingsMenu extends Component {
             <i className="material-icons">close</i>
           </div>
           <div className={styles.SettingsMenuItemsWrapper}>
-            {this.props.hasTrainingsDashboards ? (
-              <SettingsMenuTitle
-                icon="school"
-                title="Training"
-                active={settingsMenuId === 0}
-                setSettingsMenu={() => this.setSettingsMenu(0)}
-              />
-            ) : null}
+            <SettingsMenuTitle
+              icon="school"
+              title="Training"
+              active={settingsMenuId === 0}
+              setSettingsMenu={() => this.setSettingsMenu(0)}
+            />
             <SettingsMenuTitle
               icon="access_time"
               title="Date/time settings"
