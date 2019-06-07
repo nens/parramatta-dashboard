@@ -50,15 +50,21 @@ class TermsOrLoginOrAppComponent extends Component {
     // examples:
     // /floodsmart/my_name/ -> my_name
     // /floodsmart/my_name -> my_name
+    // /floodsmart/my_name/?iframe=true -> my_name
     // /floodsmart/dashboard/ -> dashboard
     // /floodsmart/dashboard -> dashboard
+    // /floodsmart/dashboard/?iframe=true -> dashboard
     // /floodsmart/full/1 -> undefined
+    // /floodsmart/full/1/?iframe=true -> undefined
     // /floodsmart/ -> undefined
     // /floodsmart -> undefined
+    // /floodsmart/?iframe=true -> undefined
     // / -> undefined
 
     // split on /floodsmart/
     // slashes are included in split so we do not also split on the second floodsmart in /floodsmart/floodsmart
+    // const urlPreQueryParameters = window.location.href.split('?')[0];
+    // const urlPostDashboard = urlPreQueryParameters.split("/floodsmart/")[1];
     const urlPostDashboard = window.location.href.split("/floodsmart/")[1];
 
     if (
