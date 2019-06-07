@@ -110,14 +110,14 @@ class TimeseriesChartComponent extends Component {
       );
     });
 
-    (this.props.tile.rasterIntersections || []).map(intersection =>
-      this.props.fetchRasterEvents(
-        this.props.getRaster(intersection.uuid).object,
-        intersection.geometry,
-        this.state.start,
-        this.state.end
-      )
-    );
+    // (this.props.tile.rasterIntersections || []).map(intersection =>
+    //   this.props.fetchRasterEvents(
+    //     this.props.getRaster(intersection.uuid).object,
+    //     intersection.geometry,
+    //     this.state.start,
+    //     this.state.end
+    //   )
+    // );
   }
 
   allUuids() {
@@ -145,8 +145,9 @@ class TimeseriesChartComponent extends Component {
       }
     } else {
       // It's a raster.
-      const raster = this.props.getRaster(uuid).object;
-      return raster ? raster.observation_type : null;
+      // const raster = this.props.getRaster(uuid).object;
+      // return raster ? raster.observation_type : null;
+      return null;
     }
   }
 
@@ -188,6 +189,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   isRelevantRasterAlarm(alarm) {
+    return true;
     const { tile } = this.props;
 
     if (!tile.rasterIntersections) {
@@ -207,6 +209,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   _areAllRasterEventsLoaded(tile) {
+    return true;
     let result = true;
     if (tile.rasterIntersections) {
       const SHORT_UUIDS = tile.rasterIntersections.map(is => is.uuid);
@@ -219,6 +222,7 @@ class TimeseriesChartComponent extends Component {
   }
 
   _areAllTimeseriesEventsLoaded(tile) {
+    return true;
     let result = true;
     if (tile.timeseries) {
       tile.timeseries.forEach(
@@ -615,65 +619,67 @@ class TimeseriesChartComponent extends Component {
   render() {
     const { tile } = this.props;
 
-    const timeseriesEvents = this.props.tile.timeseries
-      .map(uuid => {
-        const fakeTimeseries = this.props.getFakeData(fakeTimeseriesKey(uuid));
+    // const timeseriesEvents = this.props.tile.timeseries
+    //   .map(uuid => {
+    //     const fakeTimeseries = this.props.getFakeData(fakeTimeseriesKey(uuid));
 
-        console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
+    //     // console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
 
-        if (fakeTimeseries) {
-          return {
-            uuid: uuid,
-            observation_type: fakeTimeseries.observation_type,
-            events: fakeTimeseries.events
-          };
-        }
+    //     if (fakeTimeseries) {
+    //       return {
+    //         uuid: uuid,
+    //         observation_type: fakeTimeseries.observation_type,
+    //         events: fakeTimeseries.events
+    //       };
+    //     }
 
-        if (
-          this.props.timeseries[uuid] &&
-          this.props.timeseriesEvents[uuid] &&
-          this.props.timeseriesEvents[uuid].events
-        ) {
-          return {
-            uuid: uuid,
-            observation_type: this.props.timeseries[uuid].observation_type,
-            events: this.props.timeseriesEvents[uuid].events
-          };
-        }
+    //     if (
+    //       this.props.timeseries[uuid] &&
+    //       this.props.timeseriesEvents[uuid] &&
+    //       this.props.timeseriesEvents[uuid].events
+    //     ) {
+    //       return {
+    //         uuid: uuid,
+    //         observation_type: this.props.timeseries[uuid].observation_type,
+    //         events: this.props.timeseriesEvents[uuid].events
+    //       };
+    //     }
 
-        return null;
-      })
-      .filter(ts => ts !== null);
+    //     return null;
+    //   })
+    //   .filter(ts => ts !== null);
 
-    const rasterEvents = (tile.rasterIntersections || [])
-      .map(intersection => {
-        const raster = this.props.getRaster(intersection.uuid).object;
-        if (!raster) {
-          return null;
-        }
+    // const rasterEvents = (tile.rasterIntersections || [])
+    //   .map(intersection => {
+    //     const raster = this.props.getRaster(intersection.uuid).object;
+    //     if (!raster) {
+    //       return null;
+    //     }
 
-        const events = this.getRasterEvents(raster, intersection.geometry);
-        if (!events) return null;
+    //     const events = this.getRasterEvents(raster, intersection.geometry);
+    //     if (!events) return null;
 
-        return {
-          uuid: intersection.uuid,
-          observation_type: raster.observation_type,
-          events: events
-        };
-      })
-      .filter(e => e !== null); // Remove nulls
+    //     return {
+    //       uuid: intersection.uuid,
+    //       observation_type: raster.observation_type,
+    //       events: events
+    //     };
+    //   })
+    //   .filter(e => e !== null); // Remove nulls
 
-    const axes = this.getAxesData();
+    // const axes = this.getAxesData();
 
-    console.log("AXES", JSON.parse(JSON.stringify(axes)));
+    // console.log("AXES", JSON.parse(JSON.stringify(axes)));
 
-    const combinedEvents = combineEventSeries(
-      timeseriesEvents.concat(rasterEvents),
-      axes,
-      tile.colors,
-      this.props.isFull,
-      tile.legendStrings
-    );
+    // const combinedEvents = combineEventSeries(
+    //   timeseriesEvents.concat(rasterEvents),
+    //   axes,
+    //   tile.colors,
+    //   this.props.isFull,
+    //   tile.legendStrings
+    // );
+    const combinedEvents = {};
+    const axes = {};
 
     return this.props.isFull
       ? this.renderFull(axes, combinedEvents, tile)
@@ -732,6 +738,10 @@ class TimeseriesChartComponent extends Component {
 
     const Plot = plotComponentFactory(window.Plotly);
 
+    if (this.props.tile.id == 8)
+      console.log("combinedEvents", this.props.timeseries, this.props.alarms); //, combinedEvents, this.props); //
+    // console.log('this.getLayout(axes)', this.getLayout(axes));
+
     return (
       <div
         id={this.state.componentRef}
@@ -744,12 +754,17 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         {this.areAllEventsLoaded(tile) ? (
-          <Plot
-            className="gridPlot"
-            data={combinedEvents}
-            layout={this.getLayout(axes)}
-            config={{ displayModeBar: false }}
-          />
+          // <Plot
+          //   className="gridPlot"
+          //   data={combinedEvents}
+          //   layout={this.getLayout(axes)}
+          //   config={{ displayModeBar: false }}
+          // />
+          <div>
+            this is plotly
+            <div>this is plotly</div>
+            <div>this is plotly</div>
+          </div>
         ) : (
           <div
             style={{
@@ -840,52 +855,74 @@ function backgroundColorBetweenTwoX(
   };
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
-    measuringstations: state.assets.measuringstation || {},
-    getRaster: makeGetter(state.rasters),
-    timeseries: state.timeseries,
-    rasterEvents: state.rasterEvents,
-    areRasterEventsLoaded: intersectionUuid => {
-      let shortIntersectionUuid, theRasterEventsObject;
-      if (!state.rasterEvents) {
-        return null;
-      } else {
-        for (let longUuid in state.rasterEvents) {
-          shortIntersectionUuid = longUuid.slice(0, 7);
-          if (shortIntersectionUuid === intersectionUuid) {
-            theRasterEventsObject = Object.values(
-              state.rasterEvents[longUuid]
-            )[0];
-            return theRasterEventsObject.isFetching === false;
-          }
-        }
-      }
-    },
-    timeseriesEvents: state.timeseriesEvents,
-    areTimeseriesEventsLoaded: tsUuid => {
-      if (!state.timeseriesEvents) {
-        console.log(
-          "[W] Cannot check for isFetching since state.timeseriesEvents =",
-          state.timeseriesEvents
-        );
-        return null;
-      } else {
-        let theTimeseriesEventsObject;
-        for (let longUuid in state.timeseriesEvents) {
-          if (longUuid === tsUuid) {
-            theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
-            return theTimeseriesEventsObject.isFetching === false;
-          }
-        }
-      }
-    },
-    alarms: getAlarms(state),
-    now: getNow(state),
-    bootstrap: getBootstrap(state),
-    getFakeData: key => getFakeData(state, key)
+    // measuringstations: constantTimeseries, // state.assets.measuringstation || {},
+    // getRaster: makeGetter(state.rasters),
+    // timeseries: state.timeseries,
+    // timeseries: (function () {
+    //   let timeseries = {};
+    //   props.tile.timeseries.forEach( function (uuid) {
+    //     timeseries[uuid] = state.timeseries[uuid];
+    //   });
+    //   return timeseries;
+    // }()),
+    // timeseries: constantTimeseries,
+
+    // rasterEvents: state.rasterEvents,
+    // rasterEvents: constantRasterEvents,
+    // areRasterEventsLoaded: intersectionUuid => {
+    //   let shortIntersectionUuid, theRasterEventsObject;
+    //   if (!state.rasterEvents) {
+    //     return null;
+    //   } else {
+    //     for (let longUuid in state.rasterEvents) {
+    //       shortIntersectionUuid = longUuid.slice(0, 7);
+    //       if (shortIntersectionUuid === intersectionUuid) {
+    //         theRasterEventsObject = Object.values(
+    //           state.rasterEvents[longUuid]
+    //         )[0];
+    //         return theRasterEventsObject.isFetching === false;
+    //       }
+    //     }
+    //   }
+    // },
+    // timeseriesEvents: state.timeseriesEvents,
+    // timeseriesEvents: (function () {
+    //   let timeseriesEvents = {};
+    //   props.tile.timeseries.forEach( function (uuid) {
+    //     timeseriesEvents[uuid] = state.timeseriesEvents[uuid];
+    //   });
+    //   return timeseriesEvents;
+    // }()),
+    // timeseriesEvents: constantTimeseriesEvents,
+    // areTimeseriesEventsLoaded: tsUuid => {
+    //   if (!state.timeseriesEvents) {
+    //     console.log(
+    //       "[W] Cannot check for isFetching since state.timeseriesEvents =",
+    //       state.timeseriesEvents
+    //     );
+    //     return null;
+    //   } else {
+    //     let theTimeseriesEventsObject;
+    //     for (let longUuid in state.timeseriesEvents) {
+    //       if (longUuid === tsUuid) {
+    //         theTimeseriesEventsObject = state.timeseriesEvents[tsUuid];
+    //         return theTimeseriesEventsObject.isFetching === false;
+    //       }
+    //     }
+    //   }
+    // },
+    // alarms: getAlarms(state),
+    now: getNow(state)
+    // bootstrap: getBootstrap(state),
+    // getFakeData: key => getFakeData(state, key)
   };
 }
+
+const constantTimeseriesEvents = {};
+const constantTimeseries = {};
+const constantRasterEvents = {};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -899,8 +936,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const TimeseriesChart = connect(mapStateToProps, mapDispatchToProps)(
-  TimeseriesChartComponent
-);
+const TimeseriesChart = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimeseriesChartComponent);
 
 export default TimeseriesChart;
