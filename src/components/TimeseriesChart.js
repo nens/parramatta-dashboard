@@ -738,9 +738,19 @@ class TimeseriesChartComponent extends Component {
 
     const Plot = plotComponentFactory(window.Plotly);
 
-    if (this.props.tile.id == 8)
-      console.log("combinedEvents", this.props.timeseries, this.props.alarms); //, combinedEvents, this.props); //
-    // console.log('this.getLayout(axes)', this.getLayout(axes));
+    if (this.props.tile.id == 8) {
+      if (!window.i) {
+        window.i = 1;
+      }
+      console.log(
+        "combinedEvents",
+        window.i,
+        this.props.timeseries,
+        this.props.alarms
+      ); //, combinedEvents, this.props); //
+      // console.log('this.getLayout(axes)', this.getLayout(axes));
+      window.i++;
+    }
 
     return (
       <div
@@ -914,7 +924,7 @@ function mapStateToProps(state, props) {
     //   }
     // },
     // alarms: getAlarms(state),
-    now: getNow(state)
+    now: "2019-06-24 00:00:00" //getNow(state)
     // bootstrap: getBootstrap(state),
     // getFakeData: key => getFakeData(state, key)
   };
