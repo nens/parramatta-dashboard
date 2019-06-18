@@ -742,12 +742,14 @@ class TimeseriesChartComponent extends Component {
       if (!window.i) {
         window.i = 1;
       }
-      console.log(
-        "combinedEvents",
-        window.i,
-        this.props.timeseries,
-        this.props.alarms
-      ); //, combinedEvents, this.props); //
+      // console.log(
+      //   "combinedEvents",
+      //   window.i,
+      //   this.props.timeseries,
+      //   this.props.alarms
+      // );
+
+      //, combinedEvents, this.props); //
       // console.log('this.getLayout(axes)', this.getLayout(axes));
       window.i++;
     }

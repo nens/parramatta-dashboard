@@ -92,11 +92,41 @@ class TimeseriesTileComponent extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  if (ownProps.tile.id === 8) {
+    // console.log('ownProps.tile',ownProps.tile, state.rasters);
+  }
+  const rasterIntersectionsUuids =
+    (ownProps.tile.rasterIntersections &&
+      ownProps.tile.rasterIntersections.map(rasterInt => rasterInt.uuid)) ||
+    [];
+
+  const rasterData = {};
+  const rasterMetaData = {};
+  for (const key in state.rasters.metadata) {
+    const shortUuid = key.slice(0, 7);
+    if (rasterIntersectionsUuids.includes(shortUuid)) {
+      rasterMetaData[key] = state.rasters.data[key];
+    }
+  }
+  for (const key in state.rasters.data) {
+    const shortUuid = key.slice(0, 7);
+    if (rasterIntersectionsUuids.includes(shortUuid)) {
+      rasterData[key] = state.rasters.data[key];
+    }
+  }
+  if (ownProps.tile.id === 8) {
+    console.log("rasterData", rasterData, rasterMetaData);
+  }
+  const rasterObj = {
+    data: rasterData,
+    metadata: rasterMetaData
+  };
+
   return {
-    rasters: state.rasters,
+    rasters: rasterObj, // state.rasters,
     getTimeseriesMetadata: uuid => state.timeseries[uuid],
-    getRaster: makeGetter(state.rasters),
+    getRaster: makeGetter(rasterObj), // makeGetter(state.rasters),
     iframeModeActive: state.iframeMode.active
   };
 }
@@ -109,8 +139,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const TimeseriesTile = connect(mapStateToProps, mapDispatchToProps)(
-  TimeseriesTileComponent
-);
+const TimeseriesTile = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimeseriesTileComponent);
 
 export default TimeseriesTile;
