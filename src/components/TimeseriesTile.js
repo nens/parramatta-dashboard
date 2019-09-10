@@ -22,9 +22,7 @@ class TimeseriesTileComponent extends Component {
         theDiv: theDiv
       });
     };
-  }
 
-  componentWillMount() {
     (this.props.tile.timeseries || []).map(
       this.props.getTimeseriesMetadataAction
     );
@@ -38,28 +36,43 @@ class TimeseriesTileComponent extends Component {
     });
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.width !== nextProps.width) return true;
+    if (this.props.height !== nextProps.height) return true;
+    if (this.allAssetsPresent(this.props) !== this.allAssetsPresent(nextProps))
+      return true;
+    return false;
+  }
+
   timeseries() {
-    return this.props.tile.timeseries || [];
+    return;
   }
 
   rasters() {
-    return (this.props.tile.rasterIntersections || []).map(
-      intersection => intersection.uuid
-    );
+    return;
   }
 
-  allAssetsPresent() {
+  allAssetsPresent(props) {
     return (
-      this.timeseries().every(this.props.getTimeseriesMetadata) &&
-      this.rasters().every(uuid => this.props.getRaster(uuid).object)
+      (props.tile.timeseries || []).every(props.getTimeseriesMetadata) &&
+      (props.tile.rasterIntersections || [])
+        .map(intersection => intersection.uuid)
+        .every(uuid => props.getRaster(uuid).object)
     );
   }
 
   render() {
-    let { width, height, iframeModeActive } = this.props;
+    let {
+      width,
+      height,
+      iframeModeActive,
+      isFull,
+      marginLeft,
+      marginTop
+    } = this.props;
 
     if (!width && !height) {
-      if (this.props.isFull) {
+      if (isFull) {
         width = window.innerWidth;
         height = window.innerHeight;
       } else if (this.state.theDiv) {
@@ -68,15 +81,14 @@ class TimeseriesTileComponent extends Component {
       }
     }
 
-    const marginLeft = iframeModeActive ? 0 : this.props.marginLeft;
+    const newMarginLeft = iframeModeActive ? 0 : marginLeft;
 
     const newProps = {
       ...this.props,
+      marginLeft: newMarginLeft,
       width: width - marginLeft,
-      height: height - this.props.marginTop
+      height: height - marginTop
     };
-
-    newProps.marginLeft = marginLeft;
 
     return (
       <div
@@ -86,7 +98,9 @@ class TimeseriesTileComponent extends Component {
           height: "100%"
         }}
       >
-        {this.allAssetsPresent() ? <TimeseriesChart {...newProps} /> : null}
+        {this.allAssetsPresent(this.props) ? (
+          <TimeseriesChart {...newProps} />
+        ) : null}
       </div>
     );
   }
@@ -109,8 +123,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const TimeseriesTile = connect(mapStateToProps, mapDispatchToProps)(
-  TimeseriesTileComponent
-);
+const TimeseriesTile = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimeseriesTileComponent);
 
 export default TimeseriesTile;
