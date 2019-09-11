@@ -91,9 +91,10 @@ export function combineEventSeries(series, axes, colors, full, legendStrings) {
   });
 }
 
-export function currentPeriod(now, bootstrap) {
+export function currentPeriod(nowString, bootstrap) {
   // Return start and end of the current period in charts, as UTC timestamps.
   // Defined as a period around 'now', in hours.
+  const nowTime = new Date(nowString).getTime();
   let offsets;
 
   if (
@@ -108,8 +109,8 @@ export function currentPeriod(now, bootstrap) {
 
   const HOUR_IN_MS = 60 * 60 * 1000;
   const period = {
-    start: now.getTime() + offsets[0] * HOUR_IN_MS,
-    end: now.getTime() + offsets[1] * HOUR_IN_MS
+    start: nowTime + offsets[0] * HOUR_IN_MS,
+    end: nowTime + offsets[1] * HOUR_IN_MS
   };
 
   return period;
