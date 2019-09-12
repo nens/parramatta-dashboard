@@ -3,13 +3,6 @@ import React, { Component } from "react";
 import plotComponentFactory from "react-plotly.js/factory";
 
 class PlotlyWrapper extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     show: false
-  //   };
-  // }
-
   shouldComponentUpdate(nextProps) {
     const props = this.props;
     return this.didDataPropsChange(props.data, nextProps.data);
