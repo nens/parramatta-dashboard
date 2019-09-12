@@ -15,7 +15,7 @@ import { getBootstrap, getNow, getAlarms } from "../reducers";
 import { getFakeData, fakeTimeseriesKey, fakeRasterKey } from "../fakeData";
 
 import { makeGetter } from "lizard-api-client";
-import plotComponentFactory from "react-plotly.js/factory";
+import PlotlyWrapper from "./PlotlyWrapper";
 
 import {
   axisLabel,
@@ -682,7 +682,6 @@ class TimeseriesChartComponent extends Component {
 
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
-    const Plot = plotComponentFactory(window.Plotly);
 
     const SPINNER_SIZE = 48;
     const verticalOffset =
@@ -701,8 +700,8 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         {this.areAllEventsLoaded(tile) ? (
-          <Plot
-            className="fullPlot"
+          <PlotlyWrapper
+            classNameProp="fullPlot"
             data={combinedEvents}
             layout={this.getLayout(axes, thresholds)}
             config={{ displayModeBar: true }}
@@ -730,8 +729,6 @@ class TimeseriesChartComponent extends Component {
       return null;
     }
 
-    const Plot = plotComponentFactory(window.Plotly);
-
     return (
       <div
         id={this.state.componentRef}
@@ -744,8 +741,8 @@ class TimeseriesChartComponent extends Component {
         }}
       >
         {this.areAllEventsLoaded(tile) ? (
-          <Plot
-            className="gridPlot"
+          <PlotlyWrapper
+            classNameProp="gridPlot"
             data={combinedEvents}
             layout={this.getLayout(axes)}
             config={{ displayModeBar: false }}
@@ -899,8 +896,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const TimeseriesChart = connect(mapStateToProps, mapDispatchToProps)(
-  TimeseriesChartComponent
-);
+const TimeseriesChart = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimeseriesChartComponent);
 
 export default TimeseriesChart;
