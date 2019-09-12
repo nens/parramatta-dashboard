@@ -34,6 +34,82 @@ class TimeseriesChartComponent extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    // Only update if actual data changed for speed, otherwise
+    // React constantly thinks we need updating
+    // Note that the component is only shown if all assets are present,
+    // so we don't have to check that. Alarms we do.
+    const { alarms, now, start, end, plotlyData } = this.props;
+    const nextAlarms = nextProps.alarms;
+    const nextNow = nextProps.now;
+    const nextStart = nextProps.start;
+    const nextEnd = nextProps.end;
+    const nextPlotlyData = nextProps.plotlyData;
+
+    // The following if statements are split for debugging purposes
+
+    if (alarms !== nextAlarms) {
+      return true;
+    }
+
+    if (now !== nextNow) {
+      return true;
+    }
+
+    if (start !== nextStart) {
+      return true;
+    }
+
+    if (end !== nextEnd) {
+      return true;
+    }
+
+    // Check if plotlyData changed.
+    if (plotlyData.length !== nextPlotlyData.length) {
+      return true;
+    }
+
+    for (let i = 0; i < plotlyData.length; i++) {
+      // Assume that if data changes, that the length of the array changes
+      // or x or y value of the first data item.
+      const events = plotlyData[i].events;
+      const nextEvents = nextPlotlyData[i].events;
+
+      if (!events || !nextEvents) {
+        // Update if their boolean value changed
+        if (!!events !== !!nextEvents) {
+          return true;
+        }
+      }
+
+      if (events && nextEvents) {
+        // x is an array of Data objects
+        const x = events.x;
+        const nextX = nextEvents.x;
+
+        if (x.length !== nextX.length) {
+          return true;
+        }
+
+        if (x.length > 0 && x[0].getTime() !== nextX[0].getTime()) {
+          return true;
+        }
+
+        // y is an array of numbers, as strings with a fixed number of decimals
+        const y = events.y;
+        const nextY = nextEvents.y;
+        if (y.length !== nextY.length) {
+          return true;
+        }
+        if (y.length > 0 && y[0] !== nextY[0]) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   updateTimeseries() {
     const { tile, currentPeriod, rastersForTile } = this.props;
 
@@ -557,7 +633,7 @@ class TimeseriesChartComponent extends Component {
       .map(uuid => {
         const fakeTimeseries = this.props.getFakeData(fakeTimeseriesKey(uuid));
 
-        console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
+        // console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
 
         if (fakeTimeseries) {
           return {
@@ -603,7 +679,16 @@ class TimeseriesChartComponent extends Component {
 
     const axes = this.getAxesData();
 
-    console.log("AXES", JSON.parse(JSON.stringify(axes)));
+    // console.log("AXES", JSON.parse(JSON.stringify(axes)));
+
+    if (this.props.tile.id === 8) {
+      console.log(
+        "render before combineEventSeries ",
+        timeseriesEvents,
+        rasterEvents,
+        tile.legendStrings
+      );
+    }
 
     const combinedEvents = combineEventSeries(
       timeseriesEvents.concat(rasterEvents),
@@ -612,6 +697,9 @@ class TimeseriesChartComponent extends Component {
       this.props.isFull,
       tile.legendStrings
     );
+    if (this.props.tile.id === 8) {
+      console.log("render after combineEventSeries ", combinedEvents);
+    }
 
     return this.props.isFull
       ? this.renderFull(axes, combinedEvents, tile)
@@ -621,6 +709,8 @@ class TimeseriesChartComponent extends Component {
   renderFull(axes, combinedEvents, tile) {
     const thresholds = tile.thresholds;
     const Plot = plotComponentFactory(window.Plotly);
+
+    console.log("renderFull: ", tile.id);
 
     return (
       <div
@@ -634,7 +724,10 @@ class TimeseriesChartComponent extends Component {
       >
         <Plot
           className="fullPlot"
-          data={combinedEvents}
+          data={
+            // combinedEvents
+            this.props.plotlyData
+          }
           layout={this.getLayout(axes, thresholds)}
           config={{ displayModeBar: true }}
         />
@@ -647,25 +740,40 @@ class TimeseriesChartComponent extends Component {
       return null;
     }
 
-    const Plot = plotComponentFactory(window.Plotly);
+    if (this.props.tile.id === 8) {
+      console.log(
+        "render timeserieschart with tile id: ",
+        this.props.tile.id,
+        this.props.plotlyData,
+        combinedEvents
+      );
+    }
 
-    return (
-      <div
-        style={{
-          marginTop: this.props.marginTop,
-          marginLeft: this.props.marginLeft,
-          width: this.props.width,
-          height: this.props.height
-        }}
-      >
-        <Plot
-          className="gridPlot"
-          data={combinedEvents}
-          layout={this.getLayout(axes)}
-          config={{ displayModeBar: false }}
-        />
-      </div>
-    );
+    const Plot = plotComponentFactory(window.Plotly);
+    if (this.props.tile.id === 8) {
+      return (
+        <div
+          style={{
+            marginTop: this.props.marginTop,
+            marginLeft: this.props.marginLeft,
+            width: this.props.width,
+            height: this.props.height
+          }}
+        >
+          <Plot
+            className="gridPlot"
+            data={
+              // combinedEvents
+              this.props.plotlyData
+            }
+            layout={this.getLayout(axes)}
+            config={{ displayModeBar: false }}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
@@ -750,25 +858,161 @@ function mapStateToProps(state, ownProps) {
   const bootstrap = getBootstrap(state);
   const now = getNow(state);
   const period = currentPeriod(now, bootstrap);
+  const start = period.start;
+  const end = period.end;
+
+  const observationTypes = [];
+  const timeseriesEvents = [];
+  const rasterEvents = [];
+
+  (tile.timeseries || []).forEach(timeseriesUuid => {
+    const timeseries = state.timeseries[timeseriesUuid];
+    const events = state.timeseriesEvents[timeseriesUuid];
+    const observationType = timeseries.observation_type;
+
+    let axisId = indexForType(observationTypes, observationType);
+
+    if (axisId === -1) {
+      axisId = observationTypes.length;
+      if (axisId >= 2) {
+        // Already full
+        console.error("Can't have a third Y axis for timeseries", timeseries);
+        return;
+      }
+      observationTypes.push(observationType);
+    }
+
+    if (events && events.events) {
+      timeseriesEvents.push({
+        uuid: timeseriesUuid,
+        axisId: axisId,
+        observation_type: observationType,
+        events: events.events
+      });
+    }
+  });
+
+  const newTimeSeriesEvents = timeseriesEvents
+    .map(timeseriesEvent => {
+      const uuid = timeseriesEvent.uuid;
+      const fakeTimeseries = getFakeData(fakeTimeseriesKey(uuid));
+
+      // console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
+
+      if (fakeTimeseries) {
+        return {
+          uuid: uuid,
+          observation_type: fakeTimeseries.observation_type,
+          events: fakeTimeseries.events
+        };
+      }
+      if (ownProps.tile.id === 8) {
+        console.log(
+          "timeseries events uuid ",
+          timeseriesEvents,
+          state.timeseries,
+          state.timeseries[uuid],
+          state.timeseriesEvents[uuid]
+        ); //, state.timeseriesEvents[uuid].events)
+      }
+
+      if (
+        state.timeseries[uuid] &&
+        state.timeseriesEvents[uuid] &&
+        state.timeseriesEvents[uuid].events
+      ) {
+        return {
+          uuid: uuid,
+          observation_type: state.timeseries[uuid].observation_type,
+          events: state.timeseriesEvents[uuid].events
+        };
+      }
+
+      return null;
+    })
+    .filter(ts => ts !== null);
+
+  console.log("newTimeSeriesEvents", newTimeSeriesEvents);
 
   const rastersForTile = new Map();
 
+  // const getRaster = makeGetter(state.rasters);
+  // (tile.rasterIntersections || []).forEach(intersection => {
+  //   const raster = getRaster(intersection.uuid).object;
+  //   rastersForTile[intersection.uuid] = raster;
+  // });
   const getRaster = makeGetter(state.rasters);
   (tile.rasterIntersections || []).forEach(intersection => {
     const raster = getRaster(intersection.uuid).object;
     rastersForTile[intersection.uuid] = raster;
+    const observationType = raster.observation_type;
+
+    let axisId = indexForType(observationTypes, observationType);
+    if (axisId === -1) {
+      axisId = observationTypes.length;
+      if (axisId >= 2) {
+        // Already full
+        console.error("Can't have a third Y axis for raster", raster);
+        return;
+      }
+      observationTypes.push(observationType);
+    }
+
+    const allEvents = state.rasterEvents;
+    const geometry = intersection.geometry;
+    const geomKey = `${geometry.coordinates[0]}-${geometry.coordinates[1]}`;
+
+    if (allEvents[raster.uuid] && allEvents[raster.uuid][geomKey]) {
+      const events = allEvents[raster.uuid][geomKey];
+      if (events.start === start && events.end === end && events.events) {
+        rasterEvents.push({
+          uuid: raster.uuid,
+          axisId: axisId,
+          observation_type: observationType,
+          events: events.events
+        });
+      }
+    }
   });
+
+  if (ownProps.tile.id === 8) {
+    console.log(
+      "mapstatetoprops ",
+      timeseriesEvents,
+      rasterEvents,
+      tile.legendStrings
+    );
+  }
+
+  const plotlyData = combineEventSeries(
+    newTimeSeriesEvents.concat(rasterEvents),
+    null,
+    tile.colors,
+    isFull,
+    tile.legendStrings
+  );
+
+  if (ownProps.tile.id === 8) {
+    console.log(
+      "timeseriesEvents",
+      plotlyData,
+      timeseriesEvents,
+      state.timeseriesEvents
+    );
+  }
 
   return {
     rastersForTile,
     timeseries: state.timeseries,
     rasterEvents: state.rasterEvents,
-    timeseriesEvents: state.timeseriesEvents,
+    observationTypes: observationTypes,
+    timeseriesEvents: state.timeseriesEvents, //timeseriesEvents,//state.timeseriesEvents,
     alarms: getAlarms(state),
     now,
     bootstrap,
     currentPeriod: period,
-    getFakeData: key => getFakeData(state, key)
+    getFakeData: key => getFakeData(state, key),
+    plotlyData: plotlyData
   };
 }
 

@@ -156,7 +156,7 @@
   },
   "proxy": {
     "/bootstrap/": {
-      "target": "https://nxt3.staging.lizard.net/",
+      "target": "https://parramatta.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,
@@ -166,7 +166,7 @@
       }
     },
     "/api/v3/": {
-      "target": "https://nxt3.staging.lizard.net/",
+      "target": "https://parramatta.lizard.net/",
       "changeOrigin": true,
       "ssl": false,
       "secure": false,

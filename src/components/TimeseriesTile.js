@@ -15,7 +15,8 @@ class TimeseriesTileComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      theDiv: null
+      theDiv: null,
+      didEverReturnTrueFromComponenDidUpdate: false
     };
     this.setTheDivRef = theDiv => {
       this.setState({
@@ -36,13 +37,30 @@ class TimeseriesTileComponent extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props.width !== nextProps.width) return true;
-    if (this.props.height !== nextProps.height) return true;
-    if (this.allAssetsPresent(this.props) !== this.allAssetsPresent(nextProps))
-      return true;
-    return false;
-  }
+  // shouldComponentUpdate(nextProps) {
+
+  //   // if (this.state.didEverReturnTrueFromComponenDidUpdate == false) {
+  //   //   console.log('set to true for tile', this.props.tile.id);
+  //   //   this.setState({didEverReturnTrueFromComponenDidUpdate: true})
+  //   //   return true;
+  //   // }
+
+  //   if (this.props.width !== nextProps.width) return true;
+  //   if (this.props.height !== nextProps.height) return true;
+
+  //   // console.log('___ this.allAssetsPresent(this.props)', this.props.tile.id, this.allAssetsPresent(this.props), this.allAssetsPresent(nextProps))
+
+  //   // for tiles not loaded on page load (but instead after some scrolling) below if statement is likely never the case.
+  //   // Is this needed? this change was not in the tile dashboard
+  //   if (this.allAssetsPresent(this.props) !== this.allAssetsPresent(nextProps)) {
+
+  //     // console.log('this.allAssetsPresent(this.props)', this.props.tile.id, this.allAssetsPresent(this.props), this.allAssetsPresent(nextProps))
+  //     return true;
+  //   }
+  //   // return false;
+
+  //   return true;
+  // }
 
   timeseries() {
     return;

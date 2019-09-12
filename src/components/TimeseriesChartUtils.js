@@ -68,9 +68,10 @@ export function combineEventSeries(series, axes, colors, full, legendStrings) {
     const yaxis = indexForType(axes, serie.observation_type);
     const color = getColor(colors, idx);
 
-    if (yaxis > 0) {
-      events.yaxis = "y2";
-    }
+    // if (yaxis > 0) {
+    //   events.yaxis = "y2";
+    // }
+    events.yaxis = ["y1", "y2"][serie.axisId];
 
     if (isRatio) {
       // Bar plot.
