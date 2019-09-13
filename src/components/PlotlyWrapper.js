@@ -5,7 +5,10 @@ import plotComponentFactory from "react-plotly.js/factory";
 class PlotlyWrapper extends Component {
   shouldComponentUpdate(nextProps) {
     const props = this.props;
-    return this.didDataPropsChange(props.data, nextProps.data);
+    return (
+      props.tileId !== nextProps.tileId ||
+      this.didDataPropsChange(props.data, nextProps.data)
+    );
   }
 
   didDataPropsChange(plotlyData, nextPlotlyData) {

@@ -701,6 +701,7 @@ class TimeseriesChartComponent extends Component {
       >
         {this.areAllEventsLoaded(tile) ? (
           <PlotlyWrapper
+            tileId={this.props.tile.id}
             classNameProp="fullPlot"
             data={combinedEvents}
             layout={this.getLayout(axes, thresholds)}
@@ -742,6 +743,7 @@ class TimeseriesChartComponent extends Component {
       >
         {this.areAllEventsLoaded(tile) ? (
           <PlotlyWrapper
+            tileId={this.props.tile.id}
             classNameProp="gridPlot"
             data={combinedEvents}
             layout={this.getLayout(axes)}
