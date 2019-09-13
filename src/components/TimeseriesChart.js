@@ -665,8 +665,6 @@ class TimeseriesChartComponent extends Component {
 
     const axes = this.getAxesData();
 
-    console.log("AXES", JSON.parse(JSON.stringify(axes)));
-
     const combinedEvents = combineEventSeries(
       timeseriesEvents.concat(rasterEvents),
       axes,
