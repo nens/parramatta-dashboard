@@ -19,8 +19,8 @@ class PlotlyWrapper extends Component {
     for (let i = 0; i < plotlyData.length; i++) {
       // Assume that if data changes, that the length of the array changes
       // or x or y value of the first data item.
-      const events = plotlyData[i].events;
-      const nextEvents = nextPlotlyData[i].events;
+      const events = plotlyData[i];
+      const nextEvents = nextPlotlyData[i];
 
       if (!events || !nextEvents) {
         // Update if their boolean value changed
@@ -51,8 +51,20 @@ class PlotlyWrapper extends Component {
         if (y.length > 0 && y[0] !== nextY[0]) {
           return true;
         }
+
+        // Now compare last values from data as well
+        if (
+          x.length > 0 &&
+          x[x.length - 1].getTime() !== nextX[nextX.length - 1].getTime()
+        ) {
+          return true;
+        }
+        if (y.length > 0 && y[y.length - 1] !== nextY[nextY.length - 1]) {
+          return true;
+        }
       }
     }
+
     return false;
   }
   //
