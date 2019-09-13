@@ -53,15 +53,20 @@ class PlotlyWrapper extends Component {
         }
 
         // Now compare last values from data as well
-        if (
-          x.length > 0 &&
-          x[x.length - 1].getTime() !== nextX[nextX.length - 1].getTime()
-        ) {
-          return true;
-        }
-        if (y.length > 0 && y[y.length - 1] !== nextY[nextY.length - 1]) {
-          return true;
-        }
+        // Probably overkill to check last data because:
+        // -during startup data will change from empty to full
+        // -during tile change tile id will change
+        // - during update first time value will change
+        // thus for now comment out
+        // if (
+        //   x.length > 0 &&
+        //   x[x.length - 1].getTime() !== nextX[nextX.length - 1].getTime()
+        // ) {
+        //   return true;
+        // }
+        // if (y.length > 0 && y[y.length - 1] !== nextY[nextY.length - 1]) {
+        //   return true;
+        // }
       }
     }
 
