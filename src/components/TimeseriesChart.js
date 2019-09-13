@@ -665,8 +665,6 @@ class TimeseriesChartComponent extends Component {
 
     const axes = this.getAxesData();
 
-    console.log("AXES", JSON.parse(JSON.stringify(axes)));
-
     const combinedEvents = combineEventSeries(
       timeseriesEvents.concat(rasterEvents),
       axes,
@@ -701,6 +699,7 @@ class TimeseriesChartComponent extends Component {
       >
         {this.areAllEventsLoaded(tile) ? (
           <PlotlyWrapper
+            tileId={this.props.tile.id}
             classNameProp="fullPlot"
             data={combinedEvents}
             layout={this.getLayout(axes, thresholds)}
@@ -742,6 +741,7 @@ class TimeseriesChartComponent extends Component {
       >
         {this.areAllEventsLoaded(tile) ? (
           <PlotlyWrapper
+            tileId={this.props.tile.id}
             classNameProp="gridPlot"
             data={combinedEvents}
             layout={this.getLayout(axes)}
