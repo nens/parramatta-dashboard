@@ -37,6 +37,14 @@ class TimeseriesTileComponent extends Component {
       );
     });
   }
+  // Fix for tile not being updated when switching between tiles after a F5
+  componentWillUpdate(nextProps) {
+    if (this.props.tile.shortTitle !== nextProps.tile.shortTitle) {
+      (nextProps.tile.timeseries || []).map(
+        nextProps.getTimeseriesMetadataAction
+      );
+    }
+  }
 
   timeseries() {
     return this.props.tile.timeseries || [];
@@ -109,8 +117,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const TimeseriesTile = connect(mapStateToProps, mapDispatchToProps)(
-  TimeseriesTileComponent
-);
+const TimeseriesTile = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimeseriesTileComponent);
 
 export default TimeseriesTile;
