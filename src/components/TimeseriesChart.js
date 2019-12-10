@@ -619,8 +619,6 @@ class TimeseriesChartComponent extends Component {
       .map(uuid => {
         const fakeTimeseries = this.props.getFakeData(fakeTimeseriesKey(uuid));
 
-        console.log("uuid is", uuid, "fakeTimeseries is", fakeTimeseries);
-
         if (fakeTimeseries) {
           return {
             uuid: uuid,
