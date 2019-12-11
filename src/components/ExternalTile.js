@@ -24,7 +24,10 @@ class ExternalTileComponent extends Component {
 
   renderImageTiled(title, imageUrl) {
     return (
-      <div className={styles.externalWrapper} style={{ height: "80%" }}>
+      <div
+        className={styles.externalWrapper}
+        style={{ height: "80%", width: "100%" }}
+      >
         <img src={imageUrl} alt={title} className={styles.externalImage} />
       </div>
     );
