@@ -16,15 +16,17 @@ export const BOUNDS = new BoundingBox(
 // this many data points for speed purposes.
 export const MAX_TIMESERIES_POINTS = 320;
 
+// see default public token at https://account.mapbox.com/
+const mapBoxAccesToken =
+  "pk.eyJ1IjoibmVsZW5zY2h1dXJtYW5zIiwiYSI6ImhkXzhTdXcifQ.3k2-KAxQdyl5bILh_FioCw";
+
 export const MAP_BACKGROUNDS = [
   {
     description: "Labelled Satellite Map",
-    url:
-      "https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa79205/{z}/{x}/{y}.png"
+    url: `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8oabi090nys1imfdxgb6nv3/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
   },
   {
     description: "Topographical Map",
-    url:
-      "https://{s}.tiles.mapbox.com/v3/nelenschuurmans.iaa98k8k/{z}/{x}/{y}.png"
+    url: `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
   }
 ];
