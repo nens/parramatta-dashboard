@@ -23,10 +23,10 @@ const mapBoxAccesToken =
 export const MAP_BACKGROUNDS = [
   {
     description: "Labelled Satellite Map",
-    url: `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8oabi090nys1imfdxgb6nv3/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
+    url: `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8oabi090nys1imfdxgb6nv3/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`
   },
   {
     description: "Topographical Map",
-    url: `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/{z}/{x}/{y}?access_token=${mapBoxAccesToken}`
+    url: `https://api.mapbox.com/styles/v1/nelenschuurmans/ck8sgpk8h25ql1io2ccnueuj6/tiles/256/{z}/{x}/{y}@2x?access_token=${mapBoxAccesToken}`
   }
 ];
