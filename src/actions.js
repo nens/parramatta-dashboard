@@ -300,7 +300,7 @@ export function getTimeseriesEvents(uuid, start, end, params) {
     if (events && events.start === start && events.end === end) {
       return; // Up to date.
     } else if (!events || !events.isFetching) {
-      if (state.fakeData[`timeseries-${uuid}`]) {
+      if (state.fakeData && state.fakeData[`timeseries-${uuid}`]) {
         receiveTimeseriesEvents(dispatch, uuid, start, end, [
           state.fakeData[`timeseries-${uuid}`]
         ]);
