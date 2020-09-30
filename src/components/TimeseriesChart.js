@@ -848,7 +848,10 @@ function mapStateToProps(state) {
       } else {
         for (let longUuid in state.rasterEvents) {
           shortIntersectionUuid = longUuid.slice(0, 7);
-          if (shortIntersectionUuid === intersectionUuid) {
+          if (
+            shortIntersectionUuid === intersectionUuid ||
+            longUuid === intersectionUuid
+          ) {
             theRasterEventsObject = Object.values(
               state.rasterEvents[longUuid]
             )[0];
