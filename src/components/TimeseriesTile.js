@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import TimeseriesChart from "./TimeseriesChart";
 import { makeGetter, getOrFetch } from "lizard-api-client";
 import { getTimeseriesMetadataAction, fetchRaster } from "../actions";
+import { getTimeseriesMetadata } from "../reducers";
 
 // Wrapper for TimeseriesChart.
 
@@ -103,7 +104,7 @@ class TimeseriesTileComponent extends Component {
 function mapStateToProps(state) {
   return {
     rasters: state.rasters,
-    getTimeseriesMetadata: uuid => state.timeseries[uuid],
+    getTimeseriesMetadata: uuid => getTimeseriesMetadata(state, uuid),
     getRaster: makeGetter(state.rasters),
     iframeModeActive: state.iframeMode.active
   };

@@ -300,12 +300,18 @@ export function getTimeseriesEvents(uuid, start, end, params) {
     if (events && events.start === start && events.end === end) {
       return; // Up to date.
     } else if (!events || !events.isFetching) {
-      // Fetch it
-      dispatch(fetchTimeseriesEventsAction(uuid, start, end));
+      if (state.fakeData && state.fakeData[`timeseries-${uuid}`]) {
+        receiveTimeseriesEvents(dispatch, uuid, start, end, [
+          state.fakeData[`timeseries-${uuid}`]
+        ]);
+      } else {
+        // Fetch it
+        dispatch(fetchTimeseriesEventsAction(uuid, start, end));
 
-      getTimeseries(uuid, start, end, params).then(results => {
-        receiveTimeseriesEvents(dispatch, uuid, start, end, results);
-      });
+        getTimeseries(uuid, start, end, params).then(results => {
+          receiveTimeseriesEvents(dispatch, uuid, start, end, results);
+        });
+      }
     }
   };
 }
