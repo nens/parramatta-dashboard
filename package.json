@@ -60,7 +60,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dev-utils": "^4.1.0",
     "react-document-title": "^2.0.3",
-    "react-dom": "16.4.0",
+    "react-dom": "16.4.2",
     "react-grid-layout": "^0.15.3",
     "react-ink": "^6.2.0",
     "react-intl": "^2.4.0",
